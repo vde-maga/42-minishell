@@ -6,7 +6,7 @@
 /*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:10:31 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/09/08 16:33:58 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:31:40 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "42_ft_printf/ft_printf.h"
 # include "42_get_next_line/get_next_line.h"
 # include "structs.h"
+# include "lexer.h"
 # include "wrappers.h"
 
 # include <stdio.h>

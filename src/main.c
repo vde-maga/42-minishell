@@ -6,7 +6,7 @@
 /*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:16:20 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/09/08 16:55:57 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:38:31 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ int main(int ac, char **av, char **envp)
 {
     t_minishell ms_data;
     char *line;
+    // TODO: Check possibility to add the lexer structs to the main minishell struct
+    // t_lexer *lexer;
+    // t_token *tokens;
 
     (void)ac;
     (void)av;
@@ -29,14 +32,15 @@ int main(int ac, char **av, char **envp)
     ft_init_vars(&ms_data);
     while (1)
     {
-        // TODO: 
-        // 1 - Need to get line from user
+        // 1 - Get line from user
         line = get_str_readline();
-        ft_printf("%s\n", line);
-        free(line);
+        printf("%s", line);
+        if (!line)
+            break;
+    
+        // TODO: 2 - Tokenize the input (Lexing)
         
-        // 2 - Get as tokens (Lexing -> Parsing -> Evaluating)
-        // 3 - Exec and repeat
+        // TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
     return EXIT_SUCCESS;
 }

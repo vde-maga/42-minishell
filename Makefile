@@ -6,7 +6,7 @@
 #    By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/08 15:18:35 by ruiferna          #+#    #+#              #
-#    Updated: 2025/09/08 16:56:27 by ruiferna         ###   ########.fr        #
+#    Updated: 2025/09/08 17:57:08 by ruiferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SRC_DIR = src
 
 SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/user_input.c \
-       $(SRC_DIR)/wrappers.c
+       $(SRC_DIR)/wrappers.c \
+	   $(SRC_DIR)/lexer.c \
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
