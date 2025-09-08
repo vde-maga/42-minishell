@@ -6,7 +6,7 @@
 /*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:47:14 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/09/08 15:09:26 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:58:24 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,22 @@
 
 char *get_str_readline(void)
 {
-    char *input = "minishell$ ";
-    char *str = malloc(sizeof(char) * (ft_strlen(input) + 1));
-    if (!str)
-        return NULL;
-    strcpy(str, input);
-    return str;
+    char    *buffer;
+    size_t  buffsize;
+    char    cwd[BUFSIZ];
+
+    buffer = NULL;
+    ft_get_cwd(cwd, sizeof(cwd));
+    ft_printf("minishell$> %s > ", cwd);
+    if (getline(&buffer, &buffsize, stdin) == -1)
+    {
+        buffer = NULL;
+        if (feof(stdin))
+            // TODO: Need to remove the use of `feof` function.
+            //       This if is triggered when you use Ctrl + D (for example)
+            ft_printf("[EOF]");
+        else
+            ft_printf("getline func failed!");
+    }
+    return buffer;
 }
