@@ -1,59 +1,81 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/09/08 15:18:35 by ruiferna          #+#    #+#              #
-#    Updated: 2025/09/08 17:57:08 by ruiferna         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# ---------------------- Variables ---------------------------------------------
 
+# Executable
 NAME = minishell
 
+# Commands
 CC = cc
+RM            = rm -rf
+
+
+# Compiling Flags
 CFLAGS = -Wall -Wextra -Werror
 INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR)
 LDFLAGS = -lreadline -L$(LIBFT_DIR) -lft
 
+# Directorys
 INC_DIR = includes
 LIBS_DIR = libs
 LIBFT_DIR = $(LIBS_DIR)/libft
-OBJ_DIR = obj/
+OBJ_DIR = obj
 SRC_DIR = src
 
-SRCS = $(SRC_DIR)/main.c \
-       $(SRC_DIR)/user_input.c \
-       $(SRC_DIR)/wrappers.c \
-	   $(SRC_DIR)/lexer.c \
+# SRCs Find
+SRCS = $(shell find $(SRC_DIR) -name "*.c")
 
+# OBJs Location
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
+# Libft Library
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Rules
+# Colors
+GREEN         = \033[0;32m
+RED           = \033[0;31m
+YELLOW        = \033[0;33m
+CYAN          = \033[0;36m
+RESET         = \033[0m
+
+# ---------------------- Default -----------------------------------------------
+
 all: $(NAME)
 
+# ---------------------- Linking -----------------------------------------------
+
 $(NAME): $(LIBFT) $(OBJS)
+	@echo ""
+	@echo "$(YELLOW)Linking Object Files to make $(NAME)...$(RESET)"
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LDFLAGS) -o $(NAME)
+	@echo "$(GREEN)Done! Execute ./$(NAME)$(RESET)"
+
+# ---------------------- Compiling ---------------------------------------------
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+	@mkdir -p "$(dir $@)"
+	@echo  "$(CYAN)\n Compiling $(RESET)"
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo  "$(GREEN) Done Compiling $(RESET)"
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
+# ---------------------- Cleaning ----------------------------------------------
+
 clean:
-	rm -rf $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@echo  "$(CYAN)\n Cleaning Object Files $(RESET)"
+	@$(RM) $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@echo  "$(GREEN) Done Cleaning Object Files $(RESET)"
+
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "$(RED)Removing executables...$(RESET)"
+	@$(RM) $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "$(GREEN)Done Removing the Executables $(RESET)"
 
 re: fclean all
 
