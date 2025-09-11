@@ -3,8 +3,11 @@
 
 typedef struct s_minishell
 {
-    char **env;
-    int exit_status;
+	char	**env;
+	char	*input_line;
+	char	*input;
+	char	*cwd;
+	int	exit_status;
 } t_minishell;
 
 #endif

@@ -19,5 +19,5 @@ char *get_str_readline(void)
         else
             ft_printf("getline func failed!");
     }
-    return buffer;
+    return (buffer);
 }
