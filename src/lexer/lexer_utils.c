@@ -1,52 +1,24 @@
 #include "../includes/minishell.h"
 
-t_lexer	*lexer_init(char *input)
+void	ft_lexer_skip_spaces(t_lexer *lexer)
 {
-	t_lexer	*lexer;
-
-	if (!input)
-		return (NULL);
-	lexer = malloc(sizeof(t_lexer));
-	if (!lexer)
-		return (NULL);
-	lexer->input = input;
-	lexer->pos = 0;
-	lexer->len = ft_strlen(input);
-	lexer->current_char = input[0];
-	lexer->tokens = NULL;
-	return (lexer);
-}
-
-void	lexer_free(t_lexer *lexer)
-{
-	if (!lexer)
-		return ;
-	if (lexer->tokens)
-		tokens_free(lexer->tokens);
-	free(lexer);
-}
-
-void	token_free(t_token *token)
-{
-	if (!token)
-		return ;
-	if (token->value)
-		free(token->value);
-	free(token);
-}
-
-void	tokens_free(t_token *tokens)
-{
-	t_token	*current;
-	t_token	*next;
-
-	current = tokens;
-	while (current)
+	while (lexer->current_char && (lexer->current_char == ' ' || lexer->current_char == '\t'))
 	{
-		next = current->next;
-		token_free(current);
-		current = next;
+		lexer->pos++;
+		if (lexer->pos >= lexer->len)
+			lexer->current_char = '\0';
+		else
+			lexer->current_char = lexer->input[lexer->pos];
 	}
+}
+
+void ft_lexer_advance(t_lexer *lexer)
+{
+	lexer->pos++;
+	if (lexer->pos >= lexer->len)
+		lexer->current_char = '\0';
+	else
+		lexer->current_char = lexer->input[lexer->pos];
 }
 
 // TODO: Function to test lexing on main loop. Broken ATM
@@ -81,4 +53,3 @@ void	print_tokens(t_token *tokens)
 	}
 	ft_printf("==============\n");
 }
-

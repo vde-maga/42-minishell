@@ -31,10 +31,18 @@ typedef struct s_lexer
 	t_token		*tokens;
 }	t_lexer;
 
-t_lexer		*lexer_init(char *input);
-void		lexer_free(t_lexer *lexer);
-void		token_free(t_token *token);
-void		tokens_free(t_token *tokens);
-void		print_tokens(t_token *tokens);
 
+// lexer_free.c
+void	ft_lexer_free(t_lexer *lexer);
+void	ft_token_free(t_token *token);
+void	ft_tokens_free(t_token *tokens);
+
+// lexer_utils.c
+void	ft_lexer_skip_spaces(t_lexer *lexer);
+void	ft_lexer_advance(t_lexer *lexer);
+void	print_tokens(t_token *tokens);
+
+// lexer.c
+void	ft_add_token(t_lexer *lexer, t_token_type type, char *value);
+void	ft_lexer(char *input);
 #endif
