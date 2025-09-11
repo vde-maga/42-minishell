@@ -15,6 +15,11 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 
-char    *get_str_readline(void);
+char	*get_str_readline(void);
 
+// ---------------------- Init -------------------------------------------------
+void	ft_init_vars(t_minishell *ms_data);
+
+// ---------------------- Error ------------------------------------------------
+void	ft_exit_failure(t_minishell *ms_data, char *error);
 #endif
