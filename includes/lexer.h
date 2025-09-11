@@ -7,6 +7,8 @@ typedef enum e_token_type
 {
 	TOKEN_WORD,			// Regular words/commands/arguments
 	TOKEN_PIPE,			// |
+	TOKEN_OR,			// ||
+	TOKEN_AND_IF,		// &&
 	TOKEN_REDIRECT_IN,	// <
 	TOKEN_REDIRECT_OUT,	// >
 	TOKEN_APPEND,		// >>
@@ -45,4 +47,7 @@ void	print_tokens(t_token *tokens);
 // lexer.c
 void	ft_add_token(t_lexer *lexer, t_token_type type, char *value);
 void	ft_lexer(char *input);
+
+// lexer_tokenizer.c
+// void	ft_lexer_tokenizer(t_lexer lexer);
 #endif

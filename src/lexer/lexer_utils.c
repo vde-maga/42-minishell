@@ -45,6 +45,8 @@ void	print_tokens(t_token *tokens)
 			type_str = "HEREDOC";
 		else if (current->type == TOKEN_EOF)
 			type_str = "EOF";
+		else if (current->type == TOKEN_AND_IF)
+			type_str = "AND_IF";
 		else
 			type_str = "ERROR";
 		ft_printf("Type: %s, Value: %s\n", type_str, 

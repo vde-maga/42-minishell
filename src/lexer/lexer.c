@@ -44,12 +44,48 @@ void	ft_lexer(char *input)
 	t_lexer	lexer;
 
 	lexer = *lexer_init(input);
-	while (lexer.current_char != '\0')
+	while (lexer.input[lexer.pos] != '\0')
 	{
 		ft_lexer_skip_spaces(&lexer);
-		ft_printf("Current char: %c\n", lexer.current_char);
+		ft_printf("Current char: %c\n", lexer.input[lexer.pos]);
+		if (lexer.input[lexer.pos] == '|')
+			ft_add_token(&lexer, TOKEN_PIPE, NULL);
+		else if (lexer.input[lexer.pos] == '<' && lexer.input[lexer.pos + 1] == '<')
+		{
+			ft_add_token(&lexer, TOKEN_HEREDOC, NULL);
+			ft_lexer_advance(&lexer);
+		}
+		else if (lexer.input[lexer.pos] == '>' && lexer.input[lexer.pos + 1] == '>')
+		{
+			ft_add_token(&lexer, TOKEN_APPEND, NULL);
+			ft_lexer_advance(&lexer);
+		}
+		else if (lexer.input[lexer.pos] == '&' && lexer.input[lexer.pos + 1] == '&')
+		{
+			ft_add_token(&lexer, TOKEN_AND_IF, NULL);
+			ft_lexer_advance(&lexer);
+		}
+		else if (lexer.input[lexer.pos] == '<')
+			ft_add_token(&lexer, TOKEN_REDIRECT_IN, NULL);
+		else if (lexer.input[lexer.pos] == '>')
+			ft_add_token(&lexer, TOKEN_REDIRECT_OUT, NULL);
+		
+		else if (lexer.input[lexer.pos] != '|' && lexer.input[lexer.pos] != '<' && lexer.input[lexer.pos] != '>')
+		{
+			int start_pos = lexer.pos;
+			while (lexer.input[lexer.pos] && (lexer.input[lexer.pos] != ' ' && lexer.input[lexer.pos] != '\t') && lexer.input[lexer.pos] != '|' && lexer.current_char != '<' && lexer.current_char != '>')
+				ft_lexer_advance(&lexer);
+			int length = lexer.pos - start_pos;
+			char *word = malloc(length + 1);
+			if (!word)
+				return ;
+			ft_strlcpy(word, &lexer.input[start_pos], length + 1);
+			ft_add_token(&lexer, TOKEN_WORD, word);
+			continue;
+		}
+		else
+			ft_add_token(&lexer, TOKEN_ERROR, NULL);
 		ft_lexer_advance(&lexer);
 	}
+	print_tokens(lexer.tokens);
 }
-
-
