@@ -24,7 +24,7 @@ SRC_DIR = src
 SRCS = $(shell find $(SRC_DIR) -name "*.c")
 
 # OBJs Location
-OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 # Libft Library
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -50,11 +50,11 @@ $(NAME): $(LIBFT) $(OBJS)
 
 # ---------------------- Compiling ---------------------------------------------
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@mkdir -p "$(dir $@)"
-	@echo  "$(CYAN)\n Compiling $(RESET)"
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@echo  "$(GREEN) Done Compiling $(RESET)"
+	@echo  "$(CYAN)\n Compiling $<... $(RESET)"
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo  "$(GREEN)Done Compiling $< $(RESET)"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
