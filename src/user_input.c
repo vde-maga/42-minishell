@@ -1,14 +1,19 @@
 #include "../includes/minishell.h"
 
-char *get_str_readline(void)
+char *get_str_readline(int type)
 {
     char    *buffer;
     size_t  buffsize;
     char    cwd[BUFSIZ];
 
     buffer = NULL;
-    ft_get_cwd(cwd, sizeof(cwd));
-    ft_printf("minishell$> %s > ", cwd);
+    if (type == 1)
+    {
+        ft_get_cwd(cwd, sizeof(cwd));
+        ft_printf("minishell$> %s > ", cwd);
+    }
+    else
+        ft_printf("> ");
     if (getline(&buffer, &buffsize, stdin) == -1)
     {
         buffer = NULL;

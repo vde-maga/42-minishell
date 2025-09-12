@@ -15,6 +15,6 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 
-char    *get_str_readline(void);
+char    *get_str_readline(int type);
 
 #endif

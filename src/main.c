@@ -21,12 +21,15 @@ int main(int ac, char **av, char **envp)
     while (1)
     {
         // 1 - Get line from user
-        line = get_str_readline();
-        printf("%s", line);
-        if (!line)
-            break;
+        line = get_str_readline(1);
     
         // TODO: 2 - Tokenize the input (Lexing)
+        while (ft_lexer(line) == 0)
+        {
+            line = ft_strjoin(line, get_str_readline(2));
+            if (!line)
+                break;
+        }
         
         // TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
