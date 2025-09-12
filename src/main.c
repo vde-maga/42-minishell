@@ -33,9 +33,4 @@ int main(int ac, char **av, char **envp)
         // TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
     return EXIT_SUCCESS;
-		// TODO: 2 - Tokenize the input (Lexing)
-
-		// TODO: 3 - Parsing -> Evaluating -> Exec and repeat
-	}
-	return (EXIT_SUCCESS);
 }
