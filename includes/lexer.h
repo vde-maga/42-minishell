@@ -49,5 +49,5 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value);
 int	ft_lexer(char *input);
 
 // lexer_tokenizer.c
-// void	ft_lexer_tokenizer(t_lexer lexer);
+int	ft_lexer_tokenize(t_lexer *lexer);
 #endif

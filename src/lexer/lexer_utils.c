@@ -22,7 +22,6 @@ void ft_lexer_advance(t_lexer *lexer)
 		lexer->current_char = lexer->input[lexer->pos];
 }
 
-// TODO: Function to test lexing on main loop. Broken ATM
 void	print_tokens(t_token *tokens)
 {
 	t_token	*current;
@@ -48,6 +47,8 @@ void	print_tokens(t_token *tokens)
 			type_str = "EOF";
 		else if (current->type == TOKEN_AND_IF)
 			type_str = "AND_IF";
+		else if (current->type == TOKEN_OR)
+			type_str = "OR";
 		else
 			type_str = "ERROR";
 		ft_printf("Type: %s, Value: %s\n", type_str, 
