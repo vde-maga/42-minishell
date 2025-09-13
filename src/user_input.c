@@ -1,28 +1,24 @@
 #include "../includes/minishell.h"
 
-char *get_str_readline(int type)
+void get_str_readline(t_minishell *ms_data, int type)
 {
-    char    *buffer;
-    size_t  buffsize;
-    char    cwd[BUFSIZ];
+    char prompt[PATH_MAX + 32];
 
-    buffer = NULL;
+    if (ms_data->input_line)
+    {
+        free(ms_data->input_line);
+        ms_data->input_line = NULL;
+    }
     if (type == 1)
     {
-        ft_get_cwd(cwd, sizeof(cwd));
-        ft_printf("minishell$> %s > ", cwd);
+        ft_get_cwd(ms_data->cwd, sizeof(ms_data->cwd));
+        ft_strlcpy(prompt, "minishell$> ", sizeof(prompt));
+        ft_strlcat(prompt, ms_data->cwd, sizeof(prompt));
+        ft_strlcat(prompt, " > ", sizeof(prompt));
     }
+    else if (type == 2)
+        ft_strlcpy(prompt, "> ", sizeof(prompt));
     else
-        ft_printf("> ");
-    if (getline(&buffer, &buffsize, stdin) == -1)
-    {
-        buffer = NULL;
-        if (feof(stdin))
-            // TODO: Need to remove the use of `feof` function.
-            //       This if is triggered when you use Ctrl + D (for example)
-            ft_printf("[EOF]");
-        else
-            ft_printf("getline func failed!");
-    }
-    return (buffer);
+        ft_strlcpy(prompt, "", sizeof(prompt));
+    ms_data->input_line = readline(prompt);
 }

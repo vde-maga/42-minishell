@@ -10,16 +10,20 @@
 
 # include <stdio.h>
 # include <errno.h>
+# include <limits.h>
+# include <unistd.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 
-char	*get_str_readline(int type);
+void    get_str_readline(t_minishell *ms_data, int type);
 
 // ---------------------- Init -------------------------------------------------
 void	ft_init_vars(t_minishell *ms_data);
 
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);
+void	ft_free_shell(t_minishell *ms_data);
+int	ft_input_validation(t_minishell *ms_data);
 #endif
