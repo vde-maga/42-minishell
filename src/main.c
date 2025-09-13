@@ -12,17 +12,21 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		get_str_readline(&ms_data, 1);
+		if (ms_data.input_line == NULL)
+			break;
         while (ft_lexer(ms_data.input_line) == 0)
         {
 			old = ft_strdup(ms_data.input_line);
 			get_str_readline(&ms_data, 2);
+			if (ms_data.input_line == NULL)
+				break;
             ms_data.input_line = ft_strjoin(old, ms_data.input_line);
         }
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			add_history(ms_data.input_line);
-        
-        // TODO: 3 - Parsing -> Evaluating -> Exec and repeat
+
+		// TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
-	free(old);
+	ft_free_shell(&ms_data);
     return EXIT_SUCCESS;
 }
