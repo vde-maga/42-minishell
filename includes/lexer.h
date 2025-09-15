@@ -21,6 +21,8 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	char			quote;       // 0 = none, '\'' = single, '"' = double 
+    int				was_quoted;  // 1 if the entire token was wrapped by quotes
 	struct s_token	*next;
 }	t_token;
 

@@ -27,6 +27,8 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 		return ;
 	new_token->type = type;
 	new_token->value = value;
+	new_token->quote = 0;
+    new_token->was_quoted = 0;
 	new_token->next = NULL;
 	if (!lexer->tokens)
 	{
@@ -59,15 +61,14 @@ int	ft_lexer(char *input)
 {
 	t_lexer	*lexer;
 	int		result;
+	int		tok_res;
 
 	lexer = lexer_init(input);
 	if (!lexer)
 		return (0);
-	if (!ft_lexer_tokenize(lexer))
-	{
-		ft_lexer_free(lexer);
-		return (0);
-	}
+	tok_res = ft_lexer_tokenize(lexer); // returns 0 -> error/malloc err | 1 -> success | 2 -> unclosed quote
+	if (tok_res == 0 || tok_res == 2)
+		return (ft_lexer_free(lexer), 0);
 	result = ft_cmd_complete(lexer->tokens);
 	if (result)
 		print_tokens(lexer->tokens);
