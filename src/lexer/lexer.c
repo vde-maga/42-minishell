@@ -27,8 +27,7 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 		return ;
 	new_token->type = type;
 	new_token->value = value;
-	new_token->quote = 0;
-    new_token->was_quoted = 0;
+	ft_tok_check_quoted(new_token);
 	new_token->next = NULL;
 	if (!lexer->tokens)
 	{

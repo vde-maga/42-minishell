@@ -24,3 +24,15 @@ void    ft_lex_add_double_operator(t_lexer *lexer, char current, char next)
     ft_lexer_advance(lexer),
     ft_lexer_advance(lexer);
 }
+
+void    ft_tok_check_quoted(t_token *new_token)
+{
+	new_token->quote = 0;
+	new_token->was_quoted = 0;
+	if (new_token->value && new_token->value[0] &&
+		(new_token->value[0] == '\'' || new_token->value[0] == '"'))
+	{
+		new_token->was_quoted = 1;
+		new_token->quote = new_token->value[0];
+	}
+}

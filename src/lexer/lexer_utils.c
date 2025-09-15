@@ -51,8 +51,12 @@ void	print_tokens(t_token *tokens)
 			type_str = "OR";
 		else
 			type_str = "ERROR";
-		ft_printf("Type: %s, Value: %s\n", type_str, 
-			current->value ? current->value : "NULL");
+		if (current->type == TOKEN_WORD)
+			ft_printf("Type: %s, Value: %s, Was Quoted?: %i, Quote: %c\n", type_str, 
+				current->value ? current->value : "NULL", current->was_quoted, current->quote ? current->quote : '0');
+		else
+			ft_printf("Type: %s\n", type_str, 
+					current->value ? current->value : "NULL");
 		current = current->next;
 	}
 	ft_printf("==============\n");
