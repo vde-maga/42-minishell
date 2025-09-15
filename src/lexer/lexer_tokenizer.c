@@ -2,23 +2,17 @@
 
 static int	ft_lex_add_operator(t_lexer *lexer)
 {
-	char c = lexer->input[lexer->pos];
-	char n = lexer->input[lexer->pos + 1];
+	char	c;
+	char	n;
 
-	if (c == '|' && n == '|')
-		ft_add_token(lexer, TOKEN_OR, NULL), ft_lexer_advance(lexer), ft_lexer_advance(lexer);
-	else if (c == '|')
-		ft_add_token(lexer, TOKEN_PIPE, NULL), ft_lexer_advance(lexer);
-	else if (c == '<' && n == '<')
-		ft_add_token(lexer, TOKEN_HEREDOC, NULL), ft_lexer_advance(lexer), ft_lexer_advance(lexer);
-	else if (c == '>' && n == '>')
-		ft_add_token(lexer, TOKEN_APPEND, NULL), ft_lexer_advance(lexer), ft_lexer_advance(lexer);
-	else if (c == '&' && n == '&')
-		ft_add_token(lexer, TOKEN_AND_IF, NULL), ft_lexer_advance(lexer), ft_lexer_advance(lexer);
-	else if (c == '<')
-		ft_add_token(lexer, TOKEN_REDIRECT_IN, NULL), ft_lexer_advance(lexer);
-	else if (c == '>')
-		ft_add_token(lexer, TOKEN_REDIRECT_OUT, NULL), ft_lexer_advance(lexer);
+	c = lexer->input[lexer->pos];
+	n = lexer->input[lexer->pos + 1];
+	
+	if ((c == '|' && n == '|') || (c == '<' && n == '<') || (c == '>' && n == '>')
+            || (c == '&' && n == '&'))
+		ft_lex_add_double_operator(lexer, c, n);
+    else if (c == '|' || c == '<' || c == '>')
+		ft_lex_add_single_operator(lexer, c);
 	else
 		return (0);
 	return (1);

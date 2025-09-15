@@ -52,4 +52,8 @@ int	ft_lexer(char *input);
 
 // lexer_tokenizer.c
 int	ft_lexer_tokenize(t_lexer *lexer);
+
+// lexer_tokenizer_utils.c
+void    ft_lex_add_single_operator(t_lexer *lexer, char current);
+void    ft_lex_add_double_operator(t_lexer *lexer, char current, char next);
 #endif
