@@ -7,6 +7,7 @@
 # include "structs.h"
 # include "lexer.h"
 # include "wrappers.h"
+# include "heredoc.h"
 
 # include <stdio.h>
 # include <errno.h>
@@ -16,6 +17,9 @@
 # include <readline/readline.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 void    get_str_readline(t_minishell *ms_data, int type);
 

@@ -6,7 +6,7 @@
 #    By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/06 08:32:10 by ruiferna          #+#    #+#              #
-#    Updated: 2025/04/30 13:50:45 by ruiferna         ###   ########.fr        #
+#    Updated: 2025/09/16 12:26:58 by ruiferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRC			:=	ft_memset.c ft_bzero.c ft_memcpy.c \
 				\
 				ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c\
 				ft_itoa.c ft_strmapi.c ft_putchar_fd.c ft_putstr_fd.c\
-				ft_putendl_fd.c ft_putnbr_fd.c
+				ft_putendl_fd.c ft_putnbr_fd.c ft_strcmp.c
 OBJ			:=	$(SRC:.c=.o)
 
 BSRC		:=	ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c\

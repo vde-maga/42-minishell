@@ -74,3 +74,17 @@ int	ft_lexer(char *input)
 	ft_lexer_free(lexer);
 	return (result);
 }
+
+t_token *ft_lexer_tokens(char *input)
+{
+    t_lexer *lexer = lexer_init(input);
+    if (!lexer)
+        return (NULL);
+    int tok_res = ft_lexer_tokenize(lexer);
+    if (tok_res == 0 || tok_res == 2)
+        return (ft_lexer_free(lexer), NULL);
+    t_token *res = lexer->tokens;
+    lexer->tokens = NULL;
+    ft_lexer_free(lexer);
+    return (res);
+}
