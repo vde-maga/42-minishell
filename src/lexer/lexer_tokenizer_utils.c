@@ -29,10 +29,15 @@ void    ft_tok_check_quoted(t_token *new_token)
 {
 	new_token->quote = 0;
 	new_token->was_quoted = 0;
-	if (new_token->value && new_token->value[0] &&
-		(new_token->value[0] == '\'' || new_token->value[0] == '"'))
+	if (new_token->value && new_token->value[0])
 	{
-		new_token->was_quoted = 1;
-		new_token->quote = new_token->value[0];
+		char first = new_token->value[0];
+		int len = ft_strlen(new_token->value);
+		if ((first == '\'' || first == '"')
+			&& len > 0 && new_token->value[len - 1] == first)
+		{
+			new_token->was_quoted = 1;
+			new_token->quote = first;
+		}
 	}
 }

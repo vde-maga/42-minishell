@@ -29,7 +29,10 @@ int main(int ac, char **av, char **envp)
 	}
 		ft_expander(&ms_data, envp);
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
+		{
+			ft_test_heredoc(&ms_data);
 			add_history(ms_data.input_line);
+		}
 
 		// TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
