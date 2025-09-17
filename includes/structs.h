@@ -6,6 +6,8 @@
 #  define PATH_MAX 4096
 # endif
 
+# include "lexer.h"
+
 typedef struct s_env
 {
 	char			*var;
@@ -16,6 +18,7 @@ typedef struct s_env
 typedef struct s_minishell
 {
 	char			**env;
+	t_token			*tokens;
 	t_env			*env_list;
 	char			*input_line;
 	char			*input;

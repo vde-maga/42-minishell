@@ -58,6 +58,12 @@ int	ft_cmd_complete(t_token *tokens)
 
 int	ft_lexer(char *input)
 {
+	/*
+		TODO: Use the ms_data->tokens directly instead of returning/use the debug print function
+		By doing this, I think we can rethink the need of the t_lexer struct, so we can
+		possibly simplify the current code. Also, check the need of the ft_lexer_tokens function
+	*/ 
+
 	t_lexer	*lexer;
 	int		result;
 	int		tok_res;
