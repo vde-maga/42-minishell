@@ -7,13 +7,12 @@ int ft_heredoc(t_minishell *ms_data, char *delimiter, int quoted)
 
 int ft_heredoc(t_minishell *ms_data, char *delimiter)
 {
-    int fds[2]; // TODO: Put this fds in the main struct??
     char *line;
 
-    (void)ms_data; // expander não implementado ainda
+    (void)ms_data; // TODO: expander não implementado ainda
 
     delimiter = ft_strip_quotes_local(delimiter);
-    if (pipe(fds) < 0)
+    if (pipe(ms_data->hdc_fds) < 0)
         return (free(delimiter), -1);
     while (1)
     {
@@ -25,11 +24,11 @@ int ft_heredoc(t_minishell *ms_data, char *delimiter)
             free(line);
             break;
         }
-        ft_putendl_fd(line, fds[1]);
+        ft_putendl_fd(line, ms_data->hdc_fds[1]);
         free(line);
     }
     free(delimiter);
-    if (close(fds[1]) < 0)
-        return (close(fds[0]), -1);
-    return fds[0];
+    if (close(ms_data->hdc_fds[1]) < 0)
+        return (close(ms_data->hdc_fds[0]), -1);
+    return ms_data->hdc_fds[0];
 }

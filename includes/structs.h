@@ -19,6 +19,7 @@ typedef struct s_minishell
 	t_env			*env_list;
 	char			*input_line;
 	char			*input;
+	int				hdc_fds[2];
 	char			cwd[PATH_MAX];
 	int				exit_status;
 }					t_minishell;

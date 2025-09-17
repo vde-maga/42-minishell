@@ -6,6 +6,7 @@
 # include "42_get_next_line/get_next_line.h"
 # include "structs.h"
 # include "lexer.h"
+# include "parser.h"
 # include "wrappers.h"
 # include "heredoc.h"
 # include "expander.h"
