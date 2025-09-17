@@ -57,6 +57,8 @@ static int	ft_lex_read_word(t_lexer *lexer)
 
 int	ft_lexer_tokenize(t_lexer *lexer)
 {
+	int	r;
+
     while (lexer->pos < lexer->len && lexer->input[lexer->pos] != '\0')
     {
         ft_lexer_skip_spaces(lexer);
@@ -66,7 +68,7 @@ int	ft_lexer_tokenize(t_lexer *lexer)
             continue ;
         if (ft_isprint((int)lexer->input[lexer->pos]))
         {
-            int r = ft_lex_read_word(lexer);
+            r = ft_lex_read_word(lexer);
             if (r == -1)
                 return (ft_lexer_free(lexer), 0);
             if (r == 2)

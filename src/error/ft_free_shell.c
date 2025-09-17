@@ -48,4 +48,5 @@ void	ft_free_shell(t_minishell *ms_data)
 		free(ms_data->input);
 		ms_data->input = NULL;
 	}
+	ft_free_env_list(ms_data->env_list);
 }

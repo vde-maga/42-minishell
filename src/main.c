@@ -27,7 +27,7 @@ int main(int ac, char **av, char **envp)
 				break;
 		ms_data.input_line = ft_strjoin(old, ms_data.input_line);
 	}
-		ft_expander(&ms_data, envp);
+		// ft_expander(&ms_data, envp);
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 		{
 			ft_test_heredoc(&ms_data);

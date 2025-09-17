@@ -27,6 +27,7 @@ void    get_str_readline(t_minishell *ms_data, int type);
 // ---------------------- Init -------------------------------------------------
 void	ft_init_vars(t_minishell *ms_data);
 t_env	*ft_get_env_list(char **envp);
+void	ft_free_env_list(t_env *head);
 
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);
