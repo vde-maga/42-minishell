@@ -6,7 +6,7 @@
 #  define PATH_MAX 4096
 # endif
 
-# include "lexer.h"
+typedef struct s_token t_token;
 
 typedef struct s_env
 {

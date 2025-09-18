@@ -3,7 +3,7 @@
 int main(int ac, char **av, char **envp)
 {
 	t_minishell	ms_data;
-	char *old;
+	// char *old;
 
 	(void)ac;
 	(void)av;
@@ -19,14 +19,12 @@ int main(int ac, char **av, char **envp)
 		get_str_readline(&ms_data, 1);
 		if (ms_data.input_line == NULL)
 			break;
-	while (ft_lexer(ms_data.input_line) == 0)
-	{
-			old = ft_strdup(ms_data.input_line);
-			get_str_readline(&ms_data, 2);
-			if (ms_data.input_line == NULL)
-				break;
-		ms_data.input_line = ft_strjoin(old, ms_data.input_line);
-	}
+		while (ft_lexer(ms_data.input_line) == 0)
+		{
+				get_str_readline(&ms_data, 2);
+				if (ms_data.input_line == NULL)
+					break;
+		}
 		// ft_expander(&ms_data, envp);
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 		{
@@ -37,5 +35,5 @@ int main(int ac, char **av, char **envp)
 		// TODO: 3 - Parsing -> Evaluating -> Exec and repeat
     }
 	ft_free_shell(&ms_data);
-    return EXIT_SUCCESS;
+    return (EXIT_SUCCESS);
 }

@@ -3,12 +3,8 @@
 void get_str_readline(t_minishell *ms_data, int type)
 {
     char prompt[PATH_MAX + 32];
+    char *old_ref;
 
-    if (ms_data->input_line)
-    {
-        free(ms_data->input_line);
-        ms_data->input_line = NULL;
-    }
     if (type == 1)
     {
         ft_get_cwd(ms_data->cwd, sizeof(ms_data->cwd));
@@ -20,5 +16,12 @@ void get_str_readline(t_minishell *ms_data, int type)
         ft_strlcpy(prompt, "> ", sizeof(prompt));
     else
         ft_strlcpy(prompt, "", sizeof(prompt));
-    ms_data->input_line = readline(prompt);
+    if (type == 2)
+    {
+        old_ref = ms_data->input_line;
+        ms_data->input_line = ft_strjoin(old_ref, readline(prompt));
+        free(old_ref);
+    }
+    else
+        ms_data->input_line = readline(prompt);
 }
