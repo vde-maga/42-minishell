@@ -29,9 +29,15 @@ t_parser_node	*ft_parser_build_node_tree(t_token *tokens)
 		prev = tokens;
 		while (prev->next != op)
 			prev = prev->next;
+		// split the list temporarily, but save pointers to restore later
+		t_token *op_next = op->next;
+		t_token *op_node = op;
 		prev->next = NULL;
 		node->left = ft_parser_build_node_tree(tokens);
-		node->right = ft_parser_build_node_tree(op->next);
+		node->right = ft_parser_build_node_tree(op_next);
+		// restore original links so caller can still free the full token list
+		prev->next = op_node;
+		op_node->next = op_next;
 		return (node);
 	}
 	// At this point all operators should be populated on the tree.
