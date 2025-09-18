@@ -3,6 +3,7 @@
 int main(int ac, char **av, char **envp)
 {
 	t_minishell	ms_data;
+	t_token *tokens;
 	// char *old;
 
 	(void)ac;
@@ -30,6 +31,12 @@ int main(int ac, char **av, char **envp)
 //			ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list);
 			print_tokens(ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list));
 			ft_test_heredoc(&ms_data);
+			tokens = ft_lexer_tokens(ms_data.input_line);
+			if (tokens)
+			{
+				ft_parser_test(tokens);
+				ft_tokens_free(tokens);
+			}
 			add_history(ms_data.input_line);
 		}
 
@@ -38,3 +45,4 @@ int main(int ac, char **av, char **envp)
 	ft_free_shell(&ms_data);
     return (EXIT_SUCCESS);
 }
+

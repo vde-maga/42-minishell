@@ -41,10 +41,18 @@ t_parser_node	*ft_parser_build_node_tree(t_token *tokens);
 
 // parser_node_utils.c
 t_parser_node	*ft_parser_new_node(t_node_type type);
+int			ft_parser_count_args(t_token *tokens);
+void			ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok);
 
 // parser_utils.c
 t_token			*ft_parser_find_last_operator(t_token *tokens,
-					t_token_type type1, t_token_type type2);
+                    t_token_type type1, t_token_type type2);
 t_parser_node	*ft_parse_command(t_token *tokens);
+
+// Test / debug helpers
+void		ft_parser_test(t_token *tokens);
+
+// Free helpers: free parser AST and related structures
+void		ft_parser_free(t_parser_node *node);
 
 #endif
