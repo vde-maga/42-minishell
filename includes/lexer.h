@@ -48,7 +48,7 @@ void	print_tokens(t_token *tokens);
 
 // lexer.c
 void	ft_add_token(t_lexer *lexer, t_token_type type, char *value);
-int	ft_lexer(char *input);
+int	ft_lexer(t_minishell *ms_data, char *input);
 t_token *ft_lexer_tokens(char *input);
 
 // lexer_tokenizer.c

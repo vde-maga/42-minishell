@@ -3,7 +3,6 @@
 int main(int ac, char **av, char **envp)
 {
 	t_minishell	ms_data;
-	t_token *tokens;
 	// char *old;
 
 	(void)ac;
@@ -20,7 +19,7 @@ int main(int ac, char **av, char **envp)
 		get_str_readline(&ms_data, 1);
 		if (ms_data.input_line == NULL)
 			break;
-		while (ft_lexer(ms_data.input_line) == 0)
+		while (ft_lexer(&ms_data, ms_data.input_line) == 0)
 		{
 				get_str_readline(&ms_data, 2);
 				if (ms_data.input_line == NULL)
@@ -29,13 +28,15 @@ int main(int ac, char **av, char **envp)
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 		{
 //			ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list);
-			print_tokens(ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list));
-			ft_test_heredoc(&ms_data);
-			tokens = ft_lexer_tokens(ms_data.input_line);
-			if (tokens)
+			// print_tokens(ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list));
+			// ft_test_heredoc(&ms_data);
+			// tokens = ft_lexer_tokens(ms_data.input_line);
+			ft_expander(ms_data.tokens, ms_data.env_list);
+			if (ms_data.tokens)
 			{
-				ft_parser_test(tokens);
-				ft_tokens_free(tokens);
+				ft_parser_test(ms_data.tokens);
+				ft_tokens_free(ms_data.tokens);
+				ms_data.tokens = NULL;
 			}
 			add_history(ms_data.input_line);
 		}

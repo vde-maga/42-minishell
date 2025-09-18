@@ -19,7 +19,7 @@ char	*ft_strip_quotes_local(char *s)
 // TODO: Remove this temporary heredoc debug function
 void ft_test_heredoc(t_minishell *ms)
 {
-    t_token *tokens = ft_lexer_tokens(ms->input_line);
+    t_token *tokens = ms->tokens;
     if (!tokens)
         return;
     t_token *current = tokens;
