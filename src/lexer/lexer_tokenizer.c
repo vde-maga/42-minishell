@@ -70,7 +70,7 @@ int	ft_lexer_tokenize(t_lexer *lexer)
         {
             r = ft_lex_read_word(lexer);
             if (r == -1)
-                return (ft_lexer_free(lexer), 0);
+                return (0);
             if (r == 2)
                 return (2);
             if (r == 1)

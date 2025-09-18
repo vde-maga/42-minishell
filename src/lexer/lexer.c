@@ -56,7 +56,7 @@ int	ft_cmd_complete(t_token *tokens)
 	return (1);
 }
 
-int	ft_lexer(char *input)
+int	ft_lexer(t_minishell *ms_data, char *input)
 {
 	/*
 		TODO: Use the ms_data->tokens directly instead of returning/use the debug print function
@@ -64,33 +64,40 @@ int	ft_lexer(char *input)
 		possibly simplify the current code. Also, check the need of the ft_lexer_tokens function
 	*/ 
 
-	t_lexer	*lexer;
 	int		result;
 	int		tok_res;
 
-	lexer = lexer_init(input);
-	if (!lexer)
+	ms_data->lexer = lexer_init(input);
+	if (!ms_data->lexer)
 		return (0);
-	tok_res = ft_lexer_tokenize(lexer); // returns 0 -> error/malloc err | 1 -> success | 2 -> unclosed quote
+	tok_res = ft_lexer_tokenize(ms_data->lexer); // returns 0 -> error/malloc err | 1 -> success | 2 -> unclosed quote
 	if (tok_res == 0 || tok_res == 2)
-		return (ft_lexer_free(lexer), 0);
-	result = ft_cmd_complete(lexer->tokens);
+	{
+		ft_lexer_free(ms_data->lexer);
+		ms_data->lexer = NULL;
+		return (0);
+	}
+	result = ft_cmd_complete(ms_data->lexer->tokens);
 	if (result)
-		print_tokens(lexer->tokens);
-	ft_lexer_free(lexer);
+		print_tokens(ms_data->lexer->tokens);
+	// Transfer ownership of tokens to ms_data so main can use and free them.
+	ms_data->tokens = ms_data->lexer->tokens;
+	ms_data->lexer->tokens = NULL;
+	ft_lexer_free(ms_data->lexer);
+	ms_data->lexer = NULL;
 	return (result);
 }
 
-t_token *ft_lexer_tokens(char *input)
-{
-    t_lexer *lexer = lexer_init(input);
-    if (!lexer)
-        return (NULL);
-    int tok_res = ft_lexer_tokenize(lexer);
-    if (tok_res == 0 || tok_res == 2)
-        return (ft_lexer_free(lexer), NULL);
-    t_token *res = lexer->tokens;
-    lexer->tokens = NULL;
-    ft_lexer_free(lexer);
-    return (res);
-}
+// t_token *ft_lexer_tokens(char *input)
+// {
+//     t_lexer *lexer = lexer_init(input);
+//     if (!lexer)
+//         return (NULL);
+//     int tok_res = ft_lexer_tokenize(lexer);
+//     if (tok_res == 0 || tok_res == 2)
+//         return (ft_lexer_free(lexer), NULL);
+//     t_token *res = lexer->tokens;
+//     lexer->tokens = NULL;
+//     ft_lexer_free(lexer);
+//     return (res);
+// }

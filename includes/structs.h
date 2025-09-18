@@ -7,6 +7,8 @@
 # endif
 
 typedef struct s_token t_token;
+typedef struct s_lexer  t_lexer;
+
 
 typedef struct s_env
 {
@@ -19,6 +21,7 @@ typedef struct s_minishell
 {
 	char			**env;
 	t_token			*tokens;
+	t_lexer			*lexer;
 	t_env			*env_list;
 	char			*input_line;
 	char			*input;
