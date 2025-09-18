@@ -25,9 +25,10 @@ int main(int ac, char **av, char **envp)
 				if (ms_data.input_line == NULL)
 					break;
 		}
-		// ft_expander(&ms_data, envp);
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 		{
+//			ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list);
+			print_tokens(ft_expander(ft_lexer_tokens(ms_data.input_line), ms_data.env_list));
 			ft_test_heredoc(&ms_data);
 			add_history(ms_data.input_line);
 		}

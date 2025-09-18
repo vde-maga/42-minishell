@@ -33,5 +33,4 @@ void	ft_free_env_list(t_env *head);
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);
 void	ft_free_shell(t_minishell *ms_data);
-int	ft_input_validation(t_minishell *ms_data);
 #endif

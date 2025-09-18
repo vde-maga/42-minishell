@@ -9,7 +9,7 @@ RM            = rm -rf
 
 
 # Compiling Flags
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR)
 LDFLAGS = -lreadline -L$(LIBFT_DIR) -lft
 

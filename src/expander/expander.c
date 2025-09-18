@@ -1,55 +1,53 @@
-// #include "../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-// char	*expand_env_vars(const char *input, char **envp)
-// {
-// 	return ft_strdup(input);
-// }
+char	*ft_remove_quotes(char *str)
+{
+	char	*dest;
+	int		length;
 
-// void	ft_expander(t_minishell *ms_data, char **envp)
-// {
-// 	char	*sanitized_str;
+	if (!str)
+		return (NULL);
+	length = ft_strlen(str);
+	if (length < 2)
+	{
+		dest = ft_strdup(str);
+		if (!dest)
+			return (NULL);
+		return (dest);
+	}
+	dest = (char *)malloc(sizeof(char) * (length - 2 + 1));
+	if (!dest)
+		return (NULL);
+//	ft_strlcpy(dest, str + 1, length - 1);
+	ft_strlcpy(dest, str + 1, length - 1);
+	return (dest);
+}
 
-// 	ft_handle_qutoes(ms_data->input_line)
-// 		ft_
-// 	if (ms_data->input_line)
-// 	{
-// 		char *expanded = expand_env_vars(ms_data->input_line, envp);
-// 		free(ms_data->input_line);
-// 		ms_data->input_line = expanded;
-// 	}
-// }
 
-/**
-* # Expander
-*
-* > Sanitizar o conteudo pelo lexer, ao lidar com aspas (`"` e `'`)
-* >
-* > Substituir as variaveis `$VAR` pelo correspondente em `envp`
-* >
-* > Devolver o conteudo recebido, limpo de aspas e as $VAR substituidas
-*
-* ## Como deve Funcionar
-*
-* 1. Detetar Aspas
-* 	1. Aspas simples, limpar e armazenar o conteudo original
-*	2. Aspas duplas, limpar e verificar se e uma `$VAR` valida
-* 2. Detetar $
-* 	1. Identificar o `$` e o chars depois
-* 	2. Substituir esses chars, pelo correspondente em `envp`
-* 3. Sanitize
-* 	1. Limpar aspas
-* 	2. Substituir Vars
-*
-* ## Pseudocodigo
-*
-*```c
-* char	*ft_expander(t_minishell *ms_data, char **envp)
-* {
-* 	char	*sanitized_input;
-*
-*	sanitized_input = ft_handle_quotes(ms_data->input_line / input);
-*	sanitized_input = ft_expande_variables(ms_data->input_line / input);
-*	return (sanitized_input);
-*}
-* ```
-*/
+t_token *ft_expander(t_token *tokens, t_env *env)
+{
+	t_token	*current_token;
+	t_token *first;
+	char	*new_value;
+	char	*old_value;
+
+	(void)env;
+//	first = tokens;
+	current_token = tokens;
+	first = current_token;
+	while (current_token)
+	{
+		if (current_token->was_quoted == 1)
+		{
+			new_value = ft_remove_quotes(current_token->value);
+			if (!new_value)
+//				 return ;
+				 return (NULL);
+			old_value = current_token->value;
+			current_token->value = new_value;
+			free(old_value);
+		}
+		current_token = current_token->next;
+	}
+	return (first);
+}

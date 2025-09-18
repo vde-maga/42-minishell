@@ -1,7 +1,8 @@
 #ifndef EXPANDER_H
 # define EXPANDER_H
 
-// Function prototypes
-// void	ft_expander(t_minishell *ms_data, char **envp);
+
+//void	ft_expander(t_token *tokens, t_env *env);
+t_token	*ft_expander(t_token *tokens, t_env *env);
 
 #endif
