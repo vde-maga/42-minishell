@@ -23,13 +23,22 @@ LIBFT_DIR	:= 42_libft
 PRINTF_DIR	:= 42_ft_printf
 GNL_DIR		:= 42_get_next_line
 
-# Colors for output
-DEF_COLOR	:= \033[0;39m
-GREEN		:= \033[0;92m
-BLUE		:= \033[0;94m
-CYAN		:= \033[0;96m
-YELLOW		:= \033[0;93m
-RED			:= \033[0;91m
+TPUT := $(shell command -v tput 2>/dev/null || true)
+ifneq ($(TPUT),)
+	DEF_COLOR := $(shell tput sgr0)
+	GREEN := $(shell tput setaf 2)
+ 	BLUE := $(shell tput setaf 4)
+ 	CYAN := $(shell tput setaf 6)
+ 	YELLOW := $(shell tput setaf 3)
+ 	RED := $(shell tput setaf 1)
+else
+ 	DEF_COLOR := \033[0;39m
+ 	GREEN := \033[0;92m
+ 	BLUE := \033[0;94m
+ 	CYAN := \033[0;96m
+ 	YELLOW := \033[0;93m
+ 	RED := \033[0;91m
+endif
 
 # LIBFT sources
 LIBFT_SRC	:= ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c ft_memchr.c \
@@ -85,34 +94,34 @@ INCLUDES	:= -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I$(GNL_DIR)
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	@echo "$(BLUE)Creating merged libft.a library...$(DEF_COLOR)"
+	@printf "%b\n" "$(BLUE)Creating merged libft.a library...$(DEF_COLOR)"
 	@$(AR) $(NAME) $(OBJECTS)
-	@echo "$(GREEN)✅ libft.a created successfully with libft + ft_printf + get_next_line!$(DEF_COLOR)"
+	@printf "%b\n" "$(GREEN)✅ libft.a created successfully with libft + ft_printf + get_next_line!$(DEF_COLOR)"
 
 bonus:
-	@echo "$(YELLOW)Compiling with bonus functions...$(DEF_COLOR)"
+	@printf "%b\n" "$(YELLOW)Compiling with bonus functions...$(DEF_COLOR)"
 	@$(MAKE) WITH_BONUS=1 all
 
 # Compilation rules for each directory
 $(LIBFT_DIR)/%.o: $(LIBFT_DIR)/%.c
-	@echo "$(CYAN)Compiling libft: $<$(DEF_COLOR)"
+	@printf "%b\n" "$(CYAN)Compiling libft: $<$(DEF_COLOR)"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(PRINTF_DIR)/%.o: $(PRINTF_DIR)/%.c
-	@echo "$(CYAN)Compiling ft_printf: $<$(DEF_COLOR)"
+	@printf "%b\n" "$(CYAN)Compiling ft_printf: $<$(DEF_COLOR)"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(GNL_DIR)/%.o: $(GNL_DIR)/%.c
-	@echo "$(CYAN)Compiling get_next_line: $<$(DEF_COLOR)"
+	@printf "%b\n" "$(CYAN)Compiling get_next_line: $<$(DEF_COLOR)"
 	@$(CC) $(CFLAGS) $(INCLUDES) -DBUFFER_SIZE=42 -c $< -o $@
 
 clean:
-	@echo "$(RED)Cleaning object files...$(DEF_COLOR)"
+	@printf "%b\n" "$(RED)Cleaning object files...$(DEF_COLOR)"
 	@$(RM) $(LIBFT_OBJS) $(LIBFT_BOBJS) $(PRINTF_OBJS) $(GNL_OBJS) $(GNL_BOBJS)
 
 fclean: clean
-	@echo "$(RED)Removing libft.a...$(DEF_COLOR)"
+	@printf "%b\n" "$(RED)Removing libft.a...$(DEF_COLOR)"
 	@$(RM) $(NAME)
 
 re: fclean all
-	@echo "$(GREEN)Project rebuilt successfully!$(DEF_COLOR)"
+	@printf "%b\n" "$(GREEN)Project rebuilt successfully!$(DEF_COLOR)"

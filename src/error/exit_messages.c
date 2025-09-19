@@ -2,7 +2,6 @@
 
 void	ft_exit_failure(t_minishell *ms_data, char *error)
 {
-	//TODO: create free minishell data function
 	ft_free_shell(ms_data);
 	ft_putendl_fd(error, 2);
 	exit(1);

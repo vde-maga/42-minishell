@@ -49,9 +49,6 @@ t_token			*ft_parser_find_last_operator(t_token *tokens,
                     t_token_type type1, t_token_type type2);
 t_parser_node	*ft_parse_command(t_token *tokens);
 
-// Test / debug helpers
-void		ft_parser_test(t_token *tokens);
-
 // Free helpers: free parser AST and related structures
 void		ft_parser_free(t_parser_node *node);
 

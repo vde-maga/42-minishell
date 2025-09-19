@@ -30,6 +30,20 @@ BOBJ		:=	$(BSRC:.c=.o)
 
 CFLAGS		:=	-Wall -Wextra -Werror
 
+TPUT := $(shell command -v tput 2>/dev/null || true)
+ifneq ($(TPUT),)
+	DEF_COLOR := $(shell tput sgr0)
+	BLUE := $(shell tput setaf 4)
+	GREEN := $(shell tput setaf 2)
+	YELLOW := $(shell tput setaf 3)
+	MAGENTA := $(shell tput setaf 5)
+else
+	DEF_COLOR := \033[0m
+	BLUE := \033[1;34m
+	GREEN := \033[1;32m
+	YELLOW := \033[1;33m
+	MAGENTA := \033[1;35m
+endif
 ifdef WITH_BONUS
 	OBJECTS = $(OBJ) $(BOBJ)
 else
@@ -41,26 +55,26 @@ endif
 all:		$(NAME)
 	
 $(NAME):	$(OBJECTS)
-	@echo "\033[1;34mCompiling and archiving $@...\033[0m"
+	@printf "%b\n" "$(BLUE)Compiling and archiving $@...$(DEF_COLOR)"
 	ar -rc $@ $^
-	@echo "\033[1;32m$@ created successfully!\033[0m"
+	@printf "%b\n" "$(GREEN)$@ created successfully!$(DEF_COLOR)"
 
 bonus:
-	@echo "\033[1;33mCompiling bonus objects...\033[0m"
+	@printf "%b\n" "$(YELLOW)Compiling bonus objects...$(DEF_COLOR)"
 	@make WITH_BONUS=1 all
-	@echo "\033[1;32m$@ created successfully!\033[0m"
+	@printf "%b\n" "$(GREEN)$@ created successfully!$(DEF_COLOR)"
 
 *.o:		*.c
-	@echo "\033[1;36mCompiling $<...\033[0m"
+	@printf "%b\n" "$(MAGENTA)Compiling $<...$(DEF_COLOR)"
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo "\033[1;31mCleaning object files...\033[0m"
+	@printf "%b\n" "$(RED)Cleaning object files...$(DEF_COLOR)"
 	@rm -f $(OBJ) $(BOBJ)
 
 fclean:		clean
-	@echo "\033[1;31mRemoving $@...\033[0m"
+	@printf "%b\n" "$(RED)Removing $@...$(DEF_COLOR)"
 	@rm -f $(NAME)
 
 re:			fclean all
-	@echo "\033[1;35mRebuilding project...\033[0m"
+	@printf "%b\n" "$(MAGENTA)Rebuilding project...$(DEF_COLOR)"

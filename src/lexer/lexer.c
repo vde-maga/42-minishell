@@ -45,7 +45,7 @@ int	ft_cmd_complete(t_token *tokens)
 	t_token	*current;
 
 	if (!tokens)
-		return (0);
+		return (1);
 	current = tokens;
 	while (current->next)
 		current = current->next;
@@ -58,12 +58,6 @@ int	ft_cmd_complete(t_token *tokens)
 
 int	ft_lexer(t_minishell *ms_data, char *input)
 {
-	/*
-		TODO: Use the ms_data->tokens directly instead of returning/use the debug print function
-		By doing this, I think we can rethink the need of the t_lexer struct, so we can
-		possibly simplify the current code. Also, check the need of the ft_lexer_tokens function
-	*/ 
-
 	int		result;
 	int		tok_res;
 
@@ -79,25 +73,12 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 	}
 	result = ft_cmd_complete(ms_data->lexer->tokens);
 	if (result)
-		print_tokens(ms_data->lexer->tokens);
-	// Transfer ownership of tokens to ms_data so main can use and free them.
-	ms_data->tokens = ms_data->lexer->tokens;
-	ms_data->lexer->tokens = NULL;
+	{
+		ms_data->tokens = ms_data->lexer->tokens;
+		ms_data->lexer->tokens = NULL;
+	}
 	ft_lexer_free(ms_data->lexer);
 	ms_data->lexer = NULL;
 	return (result);
 }
 
-// t_token *ft_lexer_tokens(char *input)
-// {
-//     t_lexer *lexer = lexer_init(input);
-//     if (!lexer)
-//         return (NULL);
-//     int tok_res = ft_lexer_tokenize(lexer);
-//     if (tok_res == 0 || tok_res == 2)
-//         return (ft_lexer_free(lexer), NULL);
-//     t_token *res = lexer->tokens;
-//     lexer->tokens = NULL;
-//     ft_lexer_free(lexer);
-//     return (res);
-// }

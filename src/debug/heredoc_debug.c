@@ -1,28 +1,10 @@
 #include "minishell.h"
 
-// TODO: Remove this local temp functions
-char	*ft_strip_quotes_local(char *s)
-{
-	if (!s)
-		return NULL;
-	size_t len = ft_strlen(s);
-	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"')))
-	{
-		char *res = ft_substr(s, 1, len - 2);
-		if (!res)
-			ft_exit_failure(NULL, "ft_strip_quotes");
-		return res;
-	}
-	return ft_strdup(s);
-}
-
-// TODO: Remove this temporary heredoc debug function
 void ft_test_heredoc(t_minishell *ms)
 {
-    t_token *tokens = ms->tokens;
-    if (!tokens)
+    t_token *current = ms->tokens;
+    if (!current)
         return;
-    t_token *current = tokens;
     while (current)
     {
         if (current->type == TOKEN_HEREDOC)
@@ -47,5 +29,5 @@ void ft_test_heredoc(t_minishell *ms)
         }
         current = current->next;
     }
-    ft_tokens_free(tokens);
+    // ft_tokens_free(tokens);
 }

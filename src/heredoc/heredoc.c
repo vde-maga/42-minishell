@@ -11,7 +11,7 @@ int ft_heredoc(t_minishell *ms_data, char *delimiter)
 
     (void)ms_data; // TODO: expander não implementado ainda
 
-    delimiter = ft_strip_quotes_local(delimiter);
+    delimiter = ft_remove_quotes(delimiter);
     if (pipe(ms_data->hdc_fds) < 0)
         return (free(delimiter), -1);
     while (1)

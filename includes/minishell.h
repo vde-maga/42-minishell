@@ -10,6 +10,7 @@
 # include "wrappers.h"
 # include "heredoc.h"
 # include "expander.h"
+# include "debug_funcs.h"
 
 # include <stdio.h>
 # include <errno.h>
@@ -23,7 +24,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+// ---------------------- User Input -------------------------------------------
 void    get_str_readline(t_minishell *ms_data, int type);
+void    ft_usr_print_prompt(t_minishell *ms_data, int type, char *prompt);
 
 // ---------------------- Init -------------------------------------------------
 void	ft_init_vars(t_minishell *ms_data);
