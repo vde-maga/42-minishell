@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+const char *token_type_names[] = {
+    "TOKEN_WORD",
+    "TOKEN_PIPE",
+    "TOKEN_OR",
+    "TOKEN_AND_IF",
+    "in (<)",
+    "out (>)",
+    "append (>>)",
+    "heredoc (<<)",
+    "TOKEN_EOF",
+    "TOKEN_ERROR"
+};
+
 static void	print_prefix(char *prefix)
 {
     if (prefix && *prefix)
@@ -28,7 +41,7 @@ static void	print_cmd_details(t_cmd_node *cmd)
         t_redir *r = cmd->redirs;
         while (r)
         {
-            ft_printf(" [redir type=%d file=%s]", r->type, r->filename);
+            ft_printf(" [redir type=%s file=%s]", token_type_names[r->type], r->filename);
             r = r->next;
         }
     }
@@ -118,18 +131,18 @@ static void	print_parser_tree(t_parser_node *node, char *prefix, int is_left)
     }
 }
 
-void	ft_parser_tree_test(t_token *tokens)
+void	ft_parser_tree_test(t_parser_node *root)
 {
-    t_parser_node *root;
+    // t_parser_node *root;
 
-    if (!tokens)
-    {
-        ft_printf("No tokens provided to parser tree test.\n");
-        return;
-    }
-    root = ft_parser(tokens);
-    ft_printf("--- Parser AST (ASCII) ---\n");
+    // if (!tokens)
+    // {
+    //     ft_printf("No tokens provided to parser tree test.\n");
+    //     return;
+    // }
+    // root = ft_parser(tokens);
+    ft_printf("---------- Parser Debugger ------\n");
     print_parser_tree(root, "", 0);
-    ft_printf("--- End AST ---\n");
-    ft_parser_free(root);
+    ft_printf("------- End Parser Debugger -----\n");
+    // ft_parser_free(root);
 }

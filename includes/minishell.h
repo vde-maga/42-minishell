@@ -11,6 +11,7 @@
 # include "heredoc.h"
 # include "expander.h"
 # include "debug_funcs.h"
+# include "executor.h"
 
 # include <stdio.h>
 # include <errno.h>
@@ -36,4 +37,7 @@ void	ft_free_env_list(t_env *head);
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);
 void	ft_free_shell(t_minishell *ms_data);
+void	ft_free_str_arrays(char **str);
+
+int     ft_isprint_byte(int c);
 #endif

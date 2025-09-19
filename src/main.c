@@ -9,6 +9,7 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 	ft_init_vars(&ms_data);
 	ms_data.env_list = ft_get_env_list(envp);
+	ms_data.env = ft_get_path_dirs(ms_data.env_list);
 	if (!ms_data.env_list)
 	{
 		ft_printf("Algum Erro na Coleta da ENV");
@@ -32,7 +33,14 @@ int main(int ac, char **av, char **envp)
 			ft_expander(ms_data.tokens, ms_data.env_list);
 			if (ms_data.tokens)
 			{
-				ft_parser_tree_test(ms_data.tokens);
+				ms_data.parser = ft_parser(ms_data.tokens);
+				if (ms_data.parser)
+				{
+					ft_parser_tree_test(ms_data.parser);
+					ft_executor(&ms_data, ms_data.parser);
+					ft_parser_free(ms_data.parser);
+					ms_data.parser = NULL;
+				}
 				ft_tokens_free(ms_data.tokens);
 				ms_data.tokens = NULL;
 			}

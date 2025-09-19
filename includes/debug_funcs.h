@@ -3,7 +3,7 @@
 
 // Test / debug helpers functions
 void	ft_parser_test(t_token *tokens);
-void	ft_parser_tree_test(t_token *tokens);
+void	ft_parser_tree_test(t_parser_node *root);
 void	print_tokens(t_token *tokens);
 void	ft_test_heredoc(t_minishell *ms);
 

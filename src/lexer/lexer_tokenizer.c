@@ -23,7 +23,7 @@ static int	ft_lex_read_word(t_lexer *lexer)
     int start_pos;
 
     start_pos = lexer->pos;
-    while (lexer->pos < lexer->len && lexer->input[lexer->pos] && ft_isprint((int)lexer->input[lexer->pos]))
+    while (lexer->pos < lexer->len && lexer->input[lexer->pos] && ft_isprint_byte((int)lexer->input[lexer->pos]))
     {
         char c = lexer->input[lexer->pos];
         if (c == '\'' || c == '"')
@@ -66,7 +66,7 @@ int	ft_lexer_tokenize(t_lexer *lexer)
             break ;
         if (ft_lex_add_operator(lexer))
             continue ;
-        if (ft_isprint((int)lexer->input[lexer->pos]))
+        if (ft_isprint_byte((int)lexer->input[lexer->pos]))
         {
             r = ft_lex_read_word(lexer);
             if (r == -1)

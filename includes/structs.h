@@ -8,6 +8,7 @@
 
 typedef struct s_token t_token;
 typedef struct s_lexer  t_lexer;
+typedef struct s_parser_node t_parser_node;
 
 
 typedef struct s_env
@@ -23,6 +24,7 @@ typedef struct s_minishell
 	t_token			*tokens;
 	t_lexer			*lexer;
 	t_env			*env_list;
+	t_parser_node	*parser;
 	char			*input_line;
 	char			*input;
 	int				hdc_fds[2];
