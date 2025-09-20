@@ -5,7 +5,7 @@ void get_str_readline(t_minishell *ms_data, int type)
     char prompt[PATH_MAX + 32];
     char *old_ref;
 
-    ft_usr_print_prompt(ms_data, type, prompt);
+    ft_usr_print_prompt_color(ms_data, type, prompt);
     if (type == 2)
     {
         old_ref = ms_data->input_line;

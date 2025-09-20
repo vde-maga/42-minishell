@@ -29,14 +29,10 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 		full_path = ft_strjoin(temp_path, cmd);
 		free(temp_path);
 		if (access(full_path, F_OK | X_OK) == 0)
-		{
-			// ft_free_str_arrays(paths);
 			return (full_path);
-		}
 		free(full_path);
 		i++;
 	}
-	// ft_free_str_arrays(paths);
 	return (NULL);
 }
 

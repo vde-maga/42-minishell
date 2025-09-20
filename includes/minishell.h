@@ -28,9 +28,12 @@
 // ---------------------- User Input -------------------------------------------
 void    get_str_readline(t_minishell *ms_data, int type);
 void    ft_usr_print_prompt(t_minishell *ms_data, int type, char *prompt);
+void    ft_usr_print_prompt_color(t_minishell *ms_data, int type, char *prompt);
+void	ft_prompt_print_default(t_minishell *ms_data, char *prompt);
+void	ft_prompt_print_incomplete(char *prompt);
 
 // ---------------------- Init -------------------------------------------------
-void	ft_init_vars(t_minishell *ms_data);
+void	ft_init_vars(t_minishell *ms_data, char **envp);
 t_env	*ft_get_env_list(char **envp);
 void	ft_free_env_list(t_env *head);
 
