@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd)
+int ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd)
 {
     char *full_path;
 
@@ -25,15 +25,18 @@ void    ft_executor(t_minishell *ms_data, t_parser_node *parser)
     if (current->type == NODE_CMD)
     {
         int i = -1;
-        result = ft_exec_replace_cmd_with_path(ms_data,current->cmd_data);
-        if (result)
-        {
-            ft_printf("[");
-            while (current->cmd_data->args[++i])
-                ft_printf("\"%s\", ", current->cmd_data->args[i]);
-            ft_printf("]\n");
-        }
-        else
-            ft_printf("minishell: command \"%s\" not found\n", current->cmd_data->args[0]);
+        (void)i;
+        (void)result;
+        // result = ft_exec_replace_cmd_with_path(ms_data,current->cmd_data);
+        // if (result)
+        // {
+        //     ft_printf("[");
+        //     while (current->cmd_data->args[++i])
+        //         ft_printf("\"%s\", ", current->cmd_data->args[i]);
+        //     ft_printf("]\n");
+        // }
+        // else
+        //     ft_printf("minishell: command \"%s\" not found\n", current->cmd_data->args[0]);
+        ft_exec_cmd_node(ms_data, current->cmd_data);
     }
 }
