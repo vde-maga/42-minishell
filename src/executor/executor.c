@@ -15,28 +15,40 @@ int ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd)
     return (0);
 }
 
+int ft_exec_node(t_minishell *ms_data, t_parser_node *node)
+{
+    if (!node)
+        return (0);
+    if (node->type == NODE_CMD)
+        return (ft_exec_cmd_node(ms_data, node->cmd_data));
+    else if (node->type == NODE_AND)
+    {
+        ft_exec_node(ms_data, node->left);
+        if (ms_data->exit_status == 0)
+            ft_exec_node(ms_data, node->right);
+        return ms_data->exit_status;
+    }
+    else if (node->type == NODE_OR)
+    {
+        ft_exec_node(ms_data, node->left);
+        if (ms_data->exit_status != 0)
+            ft_exec_node(ms_data, node->right);
+        return ms_data->exit_status;
+    }
+
+    // TODO: Handle PIPE (NODE_PIPE) logic (fds, forks, dups)
+    
+
+    return (0);
+}
+
 void    ft_executor(t_minishell *ms_data, t_parser_node *parser)
 {
-    int     result;
-    t_parser_node   *current;
-
-    // Just print to testings
-    current = parser;
-    if (current->type == NODE_CMD)
+    if (!parser)
     {
-        int i = -1;
-        (void)i;
-        (void)result;
-        // result = ft_exec_replace_cmd_with_path(ms_data,current->cmd_data);
-        // if (result)
-        // {
-        //     ft_printf("[");
-        //     while (current->cmd_data->args[++i])
-        //         ft_printf("\"%s\", ", current->cmd_data->args[i]);
-        //     ft_printf("]\n");
-        // }
-        // else
-        //     ft_printf("minishell: command \"%s\" not found\n", current->cmd_data->args[0]);
-        ft_exec_cmd_node(ms_data, current->cmd_data);
+        ft_printf("executor: parser (null)");
+        return ;
     }
+
+    ft_exec_node(ms_data, parser);
 }

@@ -15,6 +15,7 @@ typedef struct s_redir
 {
     t_token_type    type;
     char            *filename;
+    int             fd;
     struct s_redir  *next;
 }   t_redir;
 
@@ -30,6 +31,8 @@ typedef struct s_parser_node
     struct s_parser_node *left;
     struct s_parser_node *right;
     t_cmd_node      *cmd_data;
+    int             in_fd;
+    int             out_fd;
 }   t_parser_node;
 
 
