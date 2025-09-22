@@ -51,15 +51,16 @@ int	ft_expand_variables(t_token *tokens, t_env *env)
 			if (is_valid_env_var_name(var_name))
 			{
 				env_value = ft_get_env_value(env, var_name);
+				/* If variable not found, expand to empty string (bash behavior). */
 				if (env_value)
-				{
 					new_value = ft_strdup(env_value);
-					if (!new_value)
-						return (-1);
-					old_value = current->value;
-					current->value = new_value;
-					free(old_value);
-				}
+				else
+					new_value = ft_strdup("");
+				if (!new_value)
+					return (-1);
+				old_value = current->value;
+				current->value = new_value;
+				free(old_value);
 			}
 		}
 		current = current->next;

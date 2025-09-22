@@ -20,8 +20,9 @@ int	ft_parser_count_args(t_token *tokens)
 	count = 0;
 	while (current)
 	{
-		if (current->type == TOKEN_WORD) // id 0
-			count++;
+		if (current->type == TOKEN_WORD 
+			&& (current->value && current->value[0] != '\0')) // id 0 / added check to not count empty strings as args
+				count++;
 		else if (current->type >= TOKEN_REDIRECT_IN
 		&& current->type <= TOKEN_HEREDOC) // ids 4 to 7
 		{

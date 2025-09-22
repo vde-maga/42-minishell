@@ -51,8 +51,8 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 		}
 		else if (current->type == TOKEN_WORD)
 		{
-			if (cmd_data->args)
-			cmd_data->args[i++] = ft_strdup(current->value);
+			if (cmd_data->args && (current->value && current->value[0] != '\0'))
+				cmd_data->args[i++] = ft_strdup(current->value);
 			current = current->next;
 		}
 		else // this else means that its a single command, so, just ignores
