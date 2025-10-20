@@ -49,7 +49,8 @@ int	ft_cmd_complete(t_token *tokens)
 	current = tokens;
 	while (current->next)
 		current = current->next;
-	if (current->type == TOKEN_PIPE || current->type == TOKEN_AND_IF || current->type == TOKEN_OR)
+	if (current->type == TOKEN_PIPE || current->type == TOKEN_AND_IF 
+		|| current->type == TOKEN_OR || current->type == TOKEN_AND)
 		return (0);
 	if (current->type == TOKEN_WORD && (!current->value || current->value[0] == '\0'))
 		return (0);
@@ -74,6 +75,15 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 	result = ft_cmd_complete(ms_data->lexer->tokens);
 	if (result)
 	{
+		if (ft_lexer_valid(ms_data->lexer->tokens) == -1)
+		{
+			ft_printf("minishell: syntax error near unexpected token\n");
+			ft_tokens_free(ms_data->lexer->tokens);
+			ms_data->lexer->tokens = NULL;
+			ft_lexer_free(ms_data->lexer);
+			ms_data->lexer = NULL;
+			return (0);
+		}
 		ms_data->tokens = ms_data->lexer->tokens;
 		ms_data->lexer->tokens = NULL;
 	}

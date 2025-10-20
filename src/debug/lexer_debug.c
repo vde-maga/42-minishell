@@ -25,6 +25,8 @@ void	print_tokens(t_token *tokens)
 			type_str = "EOF";
 		else if (current->type == TOKEN_AND_IF)
 			type_str = "AND_IF";
+		else if (current->type == TOKEN_AND)
+			type_str = "AND";
 		else if (current->type == TOKEN_OR)
 			type_str = "OR";
 		else

@@ -11,7 +11,7 @@ static int	ft_lex_add_operator(t_lexer *lexer)
 	if ((c == '|' && n == '|') || (c == '<' && n == '<') || (c == '>' && n == '>')
             || (c == '&' && n == '&'))
 		ft_lex_add_double_operator(lexer, c, n);
-    else if (c == '|' || c == '<' || c == '>')
+    else if (c == '|' || c == '<' || c == '>' || c == '&')
 		ft_lex_add_single_operator(lexer, c);
 	else
 		return (0);

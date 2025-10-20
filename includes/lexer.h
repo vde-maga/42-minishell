@@ -8,6 +8,7 @@ typedef enum e_token_type
 	TOKEN_WORD,			// Regular words/commands/arguments
 	TOKEN_PIPE,			// |
 	TOKEN_OR,			// ||
+	TOKEN_AND,			// &
 	TOKEN_AND_IF,		// &&
 	TOKEN_REDIRECT_IN,	// <
 	TOKEN_REDIRECT_OUT,	// >
@@ -35,6 +36,8 @@ typedef struct s_lexer
 	t_token		*tokens;
 }	t_lexer;
 
+// lexer_check_valid.c
+int		ft_lexer_valid(t_token *tokens);
 
 // lexer_free.c
 void	ft_lexer_free(t_lexer *lexer);
