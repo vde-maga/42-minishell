@@ -3,31 +3,39 @@
 static void	ft_exec_pipe_child_left(t_minishell *ms_data, t_parser_node *node,
 	int pipefd[2])
 {
+	int	status;
+
 	close(pipefd[0]);
 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 	{
 		perror("dup2");
 		close(pipefd[1]);
+		ft_free_shell_child(ms_data);
 		exit(1);
 	}
 	close(pipefd[1]);
-	ft_exec_node(ms_data, node->left);
-	exit(ms_data->exit_status);
+	status = ft_exec_node(ms_data, node->left);
+	ft_free_shell_child(ms_data);
+	exit(status);
 }
 
 static void	ft_exec_pipe_child_right(t_minishell *ms_data, t_parser_node *node,
 	int pipefd[2])
 {
+	int	status;
+
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		close(pipefd[0]);
+		ft_free_shell_child(ms_data);
 		exit(1);
 	}
 	close(pipefd[0]);
-	ft_exec_node(ms_data, node->right);
-	exit(ms_data->exit_status);
+	status = ft_exec_node(ms_data, node->right);
+	ft_free_shell_child(ms_data);
+	exit(status);
 }
 
 static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
@@ -66,6 +74,7 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 
 int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 {
+	// TODO: Need to check if it leaves open fds on exit and fix
 	int	pipefd[2];
 
 	if (!node || !node->left || !node->right)
