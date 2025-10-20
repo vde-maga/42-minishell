@@ -35,10 +35,8 @@ int ft_exec_node(t_minishell *ms_data, t_parser_node *node)
             ft_exec_node(ms_data, node->right);
         return ms_data->exit_status;
     }
-
-    // TODO: Handle PIPE (NODE_PIPE) logic (fds, forks, dups)
-    
-
+    else if (node->type == NODE_PIPE)
+        return (ft_exec_pipe_node(ms_data, node));
     return (0);
 }
 
