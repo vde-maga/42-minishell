@@ -18,17 +18,16 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
     (void)ms_data;
     (void)args;
 
-    // TODO: This function need to execute the builtin and to return the exit_code
     // TODO: Check correct exit code 
     if (args == NULL || args[0] == NULL)
         return (0);
 
     if (ft_strcmp(args[0], "pwd") == 0)
         exit_code = ft_builtin_pwd();
+    if (ft_strcmp(args[0], "cd") == 0)
+        exit_code = ft_builtin_cd(ms_data, args[1]);
     // if (ft_strcmp(args[0], "echo") == 0)
     //     exit_code = ft_echo(args);
-    // else if (ft_strcmp(args[0], "cd") == 0)
-    //     exit_code = ft_cd(args, ms_data); // cd pode precisar de acesso a ms_data para atualizar PWD
     // else if (ft_strcmp(args[0], "export") == 0)
     // {
     //     exit_code = ft_export(args, ms_data);

@@ -10,10 +10,8 @@ int ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
         return (0);
     if (ft_exec_is_builtin(cmd->args[0]))
     {
-        // TODO: Create logic to run the builtin
-        ft_exec_run_builtin(ms_data, cmd->args);
         ft_printf("minishell: \"%s\" is a builtin\n", cmd->args[0]);
-        return (0);
+        return (ft_exec_run_builtin(ms_data, cmd->args));
     }
     pid = fork();
     if (pid == -1)
