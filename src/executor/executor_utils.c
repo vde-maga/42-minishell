@@ -26,8 +26,8 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
         exit_code = ft_builtin_pwd();
     if (ft_strcmp(args[0], "cd") == 0)
         exit_code = ft_builtin_cd(ms_data, args[1]);
-    // if (ft_strcmp(args[0], "echo") == 0)
-    //     exit_code = ft_echo(args);
+    if (ft_strcmp(args[0], "echo") == 0)
+        exit_code = ft_builtin_echo(args);
     // else if (ft_strcmp(args[0], "export") == 0)
     // {
     //     exit_code = ft_export(args, ms_data);

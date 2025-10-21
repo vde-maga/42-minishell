@@ -12,6 +12,7 @@ int	is_valid_env_var_name(char *str)
 	while (str[i])
 	{
 		if (!( (str[i] >= 'A' && str[i] <= 'Z') || 
+			   (str[i] >= 'a' && str[i] <= 'z') || 
 			   str[i] == '_' || 
 			   (i > 0 && (str[i] >= '0' && str[i] <= '9')) ))
 			return (0);
