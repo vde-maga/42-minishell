@@ -32,7 +32,7 @@ static int	ft_fill_env_node(t_env *node, char *envp_line, char *split_pos)
 	return (0);
 }
 
-t_env	*ft_create_env_node(char *envp_line)
+t_env	*ft_env_create_node(char *envp_line)
 {
 	t_env	*new_node;
 	char	*equal_sign_pos;
@@ -83,7 +83,7 @@ t_env	*ft_get_env_list(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		new_node = ft_create_env_node(envp[i]);
+		new_node = ft_env_create_node(envp[i]);
 		if (!new_node)
 		{
 			ft_free_env_list(head);

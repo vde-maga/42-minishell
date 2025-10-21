@@ -11,21 +11,28 @@ int main(int ac, char **av, char **envp)
 	ft_init_vars(&ms_data, envp);
 	while (1)
 	{
+		int lexer_result;
+
 		get_str_readline(&ms_data, 1);
 		// TODO: Use signals to detect NULL, ^Z, ^D, etc...
 		if (ms_data.input_line == NULL)
 			break;
-		while (ft_lexer(&ms_data, ms_data.input_line) == 0)
+		lexer_result = ft_lexer(&ms_data, ms_data.input_line);
+		while (lexer_result == 0)
 		{
 				get_str_readline(&ms_data, 2);
 				if (ms_data.input_line == NULL)
 					break;
+				lexer_result = ft_lexer(&ms_data, ms_data.input_line);
 		}
+		if (lexer_result == -1)
+			continue;
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
 		// TODO: Exec and repeat
     }
 	ft_free_shell(&ms_data);
+	// TODO: Need to implement SHELLVL
     return (EXIT_SUCCESS);
 }
 
