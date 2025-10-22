@@ -13,6 +13,7 @@
 # include "debug_funcs.h"
 # include "executor.h"
 # include "builtins.h"
+# include "env.h"
 
 # include <stdio.h>
 # include <errno.h>
@@ -36,10 +37,6 @@ void	ft_prompt_print_incomplete(char *prompt);
 
 // ---------------------- Init -------------------------------------------------
 void	ft_init_vars(t_minishell *ms_data, char **envp);
-t_env	*ft_get_env_list(char **envp);
-void	ft_free_env_list(t_env *head);
-t_env	*ft_get_env_var(t_env *env_list, char *var_name);
-int		ft_update_env_var(t_env *env_list, char *var_name, char *new_value);
 
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);

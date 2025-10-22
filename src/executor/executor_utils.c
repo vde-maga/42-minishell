@@ -24,21 +24,19 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
 
     if (ft_strcmp(args[0], "pwd") == 0)
         exit_code = ft_builtin_pwd();
-    if (ft_strcmp(args[0], "cd") == 0)
+    else if (ft_strcmp(args[0], "cd") == 0)
         exit_code = ft_builtin_cd(ms_data, args[1]);
-    if (ft_strcmp(args[0], "echo") == 0)
+    else if (ft_strcmp(args[0], "echo") == 0)
         exit_code = ft_builtin_echo(args);
+    else if (ft_strcmp(args[0], "unset") == 0)
+        exit_code = ft_builtin_unset(ms_data, args[1]);
+    else if (ft_strcmp(args[0], "env") == 0)
+        exit_code = ft_builtin_env(ms_data);
+    else
+        exit_code = -1;
     // else if (ft_strcmp(args[0], "export") == 0)
     // {
     //     exit_code = ft_export(args, ms_data);
-    // }
-    // else if (ft_strcmp(args[0], "unset") == 0)
-    // {
-    //     exit_code = ft_unset(args, ms_data);
-    // }
-    // else if (ft_strcmp(args[0], "env") == 0)
-    // {
-    //     exit_code = ft_env(ms_data);
     // }
     // else if (ft_strcmp(args[0], "exit") == 0)
     // {
