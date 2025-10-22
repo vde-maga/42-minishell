@@ -13,9 +13,16 @@ static void	ft_init_shlvl(t_env *env_list)
 		return ;
 	}
 	shlvl = ft_atoi(shlvl_node->value);
-	if (shlvl < 0)
-		shlvl = 0;
 	shlvl++;
+	if (shlvl >= 1000)
+	{
+		ft_putstr_fd("minishell: warning: shell level (", 2);
+		ft_putnbr_fd(shlvl, 2);
+		ft_putstr_fd(") too high, resetting to 1\n", 2);
+		shlvl = 1;
+	}
+	else if (shlvl < 1)
+		shlvl = 1;
 	new_shlvl = ft_itoa(shlvl);
 	if (!new_shlvl)
 		return ;

@@ -39,7 +39,7 @@ void ft_line_ready(t_minishell *ms_data)
 {
 	ft_test_heredoc(ms_data);
 	// print_tokens(ms_data->tokens);
-	ft_expander(ms_data->tokens, ms_data->env_list);
+	ft_expander(ms_data, ms_data->env_list);
 	if (ms_data->tokens)
 	{
 		ms_data->parser = ft_parser(ms_data->tokens);

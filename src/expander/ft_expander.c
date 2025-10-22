@@ -1,16 +1,16 @@
 #include "minishell.h"
 
-t_token	*ft_expander(t_token *tokens, t_env *env)
+t_token	*ft_expander(t_minishell *msdata, t_env *env)
 {
-	if (!tokens)
+	if (!msdata->tokens)
 		return (NULL);
 
-	if (ft_expand_quotes(tokens) == -1)
+	if (ft_expand_quotes(msdata->tokens) == -1)
 		return (NULL);
 
-	if (ft_expand_variables(tokens, env) == -1)
+	if (ft_expand_variables(msdata, env) == -1)
 		return (NULL);
 
-	return (tokens);
+	return (msdata->tokens);
 }
 
