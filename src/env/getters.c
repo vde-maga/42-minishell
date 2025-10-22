@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+static t_env	*ft_init_minimal_env(void)
+{
+	t_env	*head;
+	char	cwd[PATH_MAX];
+
+	head = NULL;
+	if (getcwd(cwd, PATH_MAX) == NULL)
+		ft_strlcpy(cwd, "/", PATH_MAX);
+	ft_set_env_var(&head, "PWD", cwd);
+	ft_set_env_var(&head, "SHLVL", "1");
+	ft_set_env_var(&head, "_", "/usr/bin/env");
+	ft_set_env_var(&head, "PATH", "/usr/local/bin:/usr/bin:/bin");
+	return (head);
+}
+
 t_env	*ft_get_env_list(char **envp)
 {
 	t_env	*head;
@@ -7,7 +22,7 @@ t_env	*ft_get_env_list(char **envp)
 	int		i;
 
 	if (!envp || !*envp)
-		return (NULL);
+		return (ft_init_minimal_env());
 	head = NULL;
 	i = 0;
 	while (envp[i])

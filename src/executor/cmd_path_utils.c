@@ -2,16 +2,18 @@
 
 char	**ft_get_path_dirs(t_env *env)
 {
-    t_env   *cur_env;
+	t_env	*cur_env;
+	char	**default_path;
 
-    cur_env = env;
-    while (cur_env)
-    {
-        if (ft_strcmp(cur_env->var,"PATH") == 0)
-            return (ft_split(cur_env->value, ':'));
-        cur_env = cur_env->next;
-    }
-    return (NULL);
+	cur_env = env;
+	while (cur_env)
+	{
+		if (ft_strcmp(cur_env->var, "PATH") == 0)
+			return (ft_split(cur_env->value, ':'));
+		cur_env = cur_env->next;
+	}
+	default_path = ft_split("/usr/local/bin:/usr/bin:/bin", ':');
+	return (default_path);
 }
     
 static char	*ft_find_cmd_in_path(char *cmd, char **paths)

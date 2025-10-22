@@ -29,7 +29,6 @@ int main(int ac, char **av, char **envp)
 			continue;
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
-		// TODO: Exec and repeat
     }
 	ft_free_shell(&ms_data);
 	// TODO: Need to implement SHELLVL
