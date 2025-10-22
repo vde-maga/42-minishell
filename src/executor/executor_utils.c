@@ -21,7 +21,6 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
     // TODO: Check correct exit code 
     if (args == NULL || args[0] == NULL)
         return (0);
-
     if (ft_strcmp(args[0], "pwd") == 0)
         exit_code = ft_builtin_pwd();
     else if (ft_strcmp(args[0], "cd") == 0)
@@ -34,19 +33,9 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
         exit_code = ft_builtin_env(ms_data);
     else if (ft_strcmp(args[0], "export") == 0)
         exit_code = ft_builtin_export(ms_data, args[1]);
+    else if (ft_strcmp(args[0], "exit") == 0)
+        exit_code = ft_builtin_exit(ms_data, args);
     else
         exit_code = -1;
-    // else if (ft_strcmp(args[0], "exit") == 0)
-    // {
-    //     // A função exit geralmente não retorna, mas pode ser projetada para tal
-    //     ft_exit(args, ms_data);
-    //     exit_code = 0; // Este código pode não ser alcançado
-    // }
-    // else
-    // {
-    //     // Se não for um builtin, pode retornar um código específico
-    //     // para indicar que um comando externo deve ser tentado.
-    //     return (-1); // Exemplo de valor para "não é um builtin"
-    // }
     return (exit_code);
 }

@@ -16,7 +16,7 @@ int main(int ac, char **av, char **envp)
 		get_str_readline(&ms_data, 1);
 		// TODO: Use signals to detect NULL, ^Z, ^D, etc...
 		if (ms_data.input_line == NULL)
-			break;
+			ft_builtin_exit(&ms_data, NULL);
 		lexer_result = ft_lexer(&ms_data, ms_data.input_line);
 		while (lexer_result == 0)
 		{
@@ -51,7 +51,7 @@ void ft_line_ready(t_minishell *ms_data)
 			ms_data->parser = NULL;
 		}
 		ft_tokens_free(ms_data->tokens);
-		// ms_data->tokens = NULL;
+		ms_data->tokens = NULL;
 	}
 	add_history(ms_data->input_line);
 }
