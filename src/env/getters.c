@@ -55,3 +55,18 @@ t_env	*ft_get_env_var(t_env *env_list, char *var_name)
 	}
 	return (NULL);
 }
+
+int	ft_env_count_vars(t_env *env_list)
+{
+	int		count;
+	t_env	*current;
+
+	count = 0;
+	current = env_list;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}

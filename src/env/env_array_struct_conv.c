@@ -39,3 +39,25 @@ t_env	*ft_env_create_node(char *envp_line)
 	new_node->next = NULL;
 	return (new_node);
 }
+
+t_env	**ft_env_to_array(t_env *env_list, int count)
+{
+	t_env	**env_array;
+	t_env	*current;
+	int		i;
+
+	env_array = malloc(sizeof(t_env *) * (count + 1));
+	if (!env_array)
+		return (NULL);
+	current = env_list;
+	i = 0;
+	while (current)
+	{
+		env_array[i] = current;
+		current = current->next;
+		i++;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
+

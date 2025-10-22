@@ -32,12 +32,10 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
         exit_code = ft_builtin_unset(ms_data, args[1]);
     else if (ft_strcmp(args[0], "env") == 0)
         exit_code = ft_builtin_env(ms_data);
+    else if (ft_strcmp(args[0], "export") == 0)
+        exit_code = ft_builtin_export(ms_data, args[1]);
     else
         exit_code = -1;
-    // else if (ft_strcmp(args[0], "export") == 0)
-    // {
-    //     exit_code = ft_export(args, ms_data);
-    // }
     // else if (ft_strcmp(args[0], "exit") == 0)
     // {
     //     // A função exit geralmente não retorna, mas pode ser projetada para tal

@@ -4,12 +4,13 @@ int	ft_builtin_env(t_minishell *msdata)
 {
 	t_env	*current;
 
-	// TODO: Check the need to make it in a alphabetical order
+	if (!msdata || !msdata->env_list)
+		return (0);
 	current = msdata->env_list;
-	while(current)
+	while (current)
 	{
 		ft_printf("%s=%s\n", current->var, current->value);
-		current=current->next;
+		current = current->next;
 	}
 	return (0);
 }
