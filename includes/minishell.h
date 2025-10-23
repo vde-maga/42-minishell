@@ -14,6 +14,7 @@
 # include "executor.h"
 # include "builtins.h"
 # include "env.h"
+# include "signals.h"
 
 # include <stdio.h>
 # include <errno.h>
