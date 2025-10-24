@@ -69,6 +69,7 @@ int	ft_builtin_export(t_minishell *msdata, char *arg)
 {
 	char	*equal_sign;
 	char	*var_name;
+	char	*value;
 	int		result;
 
 	if (!msdata)
@@ -88,7 +89,7 @@ int	ft_builtin_export(t_minishell *msdata, char *arg)
 	if (!ft_is_valid_identifier(var_name))
 		return (ft_putstr_fd("minishell: export: not a valid identifier\n",2),
 		free(var_name), 1);
-	result = ft_set_env_var(&msdata->env_list, var_name, equal_sign + 1);
-	free(var_name);
-	return (result);
+	value = ft_remove_quotes(equal_sign + 1);
+	result = ft_set_env_var(&msdata->env_list, var_name, value);
+	return (free(var_name), result);
 }

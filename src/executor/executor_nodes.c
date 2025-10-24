@@ -1,17 +1,68 @@
 #include "minishell.h"
 
+static int	ft_apply_redirects(t_cmd_node *cmd)
+{
+	t_redir	*redir;
+	int		fd;
+
+	if (!cmd)
+		return (0);
+	redir = cmd->redirs;
+	while (redir)
+	{
+		if (redir->type == TOKEN_REDIRECT_IN)
+		{
+			fd = open(redir->filename, O_RDONLY);
+			if (fd < 0)
+				return (perror(redir->filename), -1);
+			if (dup2(fd, STDIN_FILENO) < 0)
+				return (close(fd), perror("dup2"), -1);
+			close(fd);
+		}
+		else if (redir->type == TOKEN_REDIRECT_OUT)
+		{
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd < 0)
+				return (perror(redir->filename), -1);
+			if (dup2(fd, STDOUT_FILENO) < 0)
+				return (close(fd), perror("dup2"), -1);
+			close(fd);
+		}
+		else if (redir->type == TOKEN_APPEND)
+		{
+			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd < 0)
+				return (perror(redir->filename), -1);
+			if (dup2(fd, STDOUT_FILENO) < 0)
+				return (close(fd), perror("dup2"), -1);
+			close(fd);
+		}
+		else if (redir->type == TOKEN_HEREDOC && redir->fd >= 0)
+		{
+			if (dup2(redir->fd, STDIN_FILENO) < 0)
+				return (close(redir->fd), perror("dup2"), -1);
+			close(redir->fd);
+		}
+		redir = redir->next;
+	}
+	return (0);
+}
+
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;
 	int		status;
 		struct sigaction sa;
 
-	// TODO: Refactor this code and also need to implement redirections (<,>,>>,<<)
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
+	if (ft_process_heredocs(ms_data, cmd) < 0)
+		return (ms_data->exit_status = 1, 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
 	{
 		ft_printf("minishell: \"%s\" is a builtin\n", cmd->args[0]);
+		if (ft_apply_redirects(cmd) < 0)
+			return (ms_data->exit_status = 1, 1);
 		return (ft_exec_run_builtin(ms_data, cmd->args));
 	}
 	ft_set_signals_executing();
@@ -29,6 +80,11 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		sa.sa_handler = SIG_DFL;
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGQUIT, &sa, NULL);
+		if (ft_apply_redirects(cmd) < 0)
+		{
+			ft_free_shell_child(ms_data);
+			_exit(1);
+		}
 		if (ft_exec_replace_cmd_with_path(ms_data, cmd))
 			execve(cmd->args[0], cmd->args, ms_data->env);
 		ft_printf("execve failed: %s\n", strerror(errno));
