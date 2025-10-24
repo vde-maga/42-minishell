@@ -1,37 +1,45 @@
 #include "minishell.h"
 
-int ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
+int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
-    // TODO: Refactor this code and also need to implement redirections (<,>,>>,<<)
-    pid_t   pid;
-    int     status;
+	pid_t	pid;
+	int		status;
+		struct sigaction sa;
 
-    if (!cmd || !cmd->args || !cmd->args[0])
-        return (0);
-    if (ft_exec_is_builtin(cmd->args[0]))
-    {
-        ft_printf("minishell: \"%s\" is a builtin\n", cmd->args[0]);
-        return (ft_exec_run_builtin(ms_data, cmd->args));
-    }
-    pid = fork();
-    if (pid == -1)
-    {
-        ft_printf("fork failed: %s\n", strerror(errno));
-        ms_data->exit_status = 1;
-        return (1);
-    }
-    if (pid == 0)
-    {
-        if (ft_exec_replace_cmd_with_path(ms_data, cmd))
-            execve(cmd->args[0], cmd->args, ms_data->env);
-        ft_printf("execve failed: %s\n", strerror(errno));
-        ft_free_shell_child(ms_data);
-        _exit(127);
-    }
-     waitpid(pid, &status, 0);
-    if (WIFEXITED(status))
-        ms_data->exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-        ms_data->exit_status = 128 + WTERMSIG(status);
-    return ms_data->exit_status;
+	// TODO: Refactor this code and also need to implement redirections (<,>,>>,<<)
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	if (ft_exec_is_builtin(cmd->args[0]))
+	{
+		ft_printf("minishell: \"%s\" is a builtin\n", cmd->args[0]);
+		return (ft_exec_run_builtin(ms_data, cmd->args));
+	}
+	ft_set_signals_executing();
+	pid = fork();
+	if (pid == -1)
+	{
+		ft_printf("fork failed: %s\n", strerror(errno));
+		ms_data->exit_status = 1;
+		return (1);
+	}
+	if (pid == 0)
+	{
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_DFL;
+		sigaction(SIGINT, &sa, NULL);
+		sigaction(SIGQUIT, &sa, NULL);
+		if (ft_exec_replace_cmd_with_path(ms_data, cmd))
+			execve(cmd->args[0], cmd->args, ms_data->env);
+		ft_printf("execve failed: %s\n", strerror(errno));
+		ft_free_shell_child(ms_data);
+		_exit(127);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		ms_data->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		ms_data->exit_status = 128 + WTERMSIG(status);
+	ft_handle_signals();
+	return (ms_data->exit_status);
 }

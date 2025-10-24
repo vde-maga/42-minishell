@@ -5,6 +5,8 @@ static void	ft_exec_pipe_child_left(t_minishell *ms_data, t_parser_node *node,
 {
 	int	status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(pipefd[0]);
 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 	{
@@ -24,6 +26,8 @@ static void	ft_exec_pipe_child_right(t_minishell *ms_data, t_parser_node *node,
 {
 	int	status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 	{
@@ -47,7 +51,14 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 	if (WIFEXITED(status))
 		ms_data->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(2, "Quit (core dumped)\n", 19);
+		else if (WTERMSIG(status) == SIGINT)
+			write(2, "\n", 1);
 		ms_data->exit_status = 128 + WTERMSIG(status);
+	}
+	ft_handle_signals();
 }
 
 static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
@@ -56,6 +67,8 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	pid_t	pid1;
 	pid_t	pid2;
 
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid1 = fork();
 	if (pid1 == -1)
 		return (perror("fork"), close(pipefd[0]), close(pipefd[1]), -1);
