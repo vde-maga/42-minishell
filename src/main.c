@@ -15,7 +15,6 @@ int main(int ac, char **av, char **envp)
 		int lexer_result;
 
 		get_str_readline(&ms_data, 1);
-		// TODO: Use signals to detect NULL, ^Z, ^D, etc...
 		if (ms_data.input_line == NULL)
 			ft_builtin_exit(&ms_data, NULL);
 		lexer_result = ft_lexer(&ms_data, ms_data.input_line);
@@ -32,13 +31,12 @@ int main(int ac, char **av, char **envp)
 			ft_line_ready(&ms_data);
     }
 	ft_free_shell(&ms_data);
-	// TODO: Need to implement SHELLVL
     return (EXIT_SUCCESS);
 }
 
 void ft_line_ready(t_minishell *ms_data)
 {
-	ft_test_heredoc(ms_data);
+	// ft_test_heredoc(ms_data);
 	// print_tokens(ms_data->tokens);
 	ft_expander(ms_data, ms_data->env_list);
 	if (ms_data->tokens)

@@ -13,12 +13,12 @@
 - [X] Implementar prompt básico com readline()
 - [X] Adicionar histórico com add_history()
 - [X] Tratar EOF (Ctrl+D) graciosamente
-- [ ] Implementar comando 'exit' básico
+- [X] Implementar comando 'exit' básico
 - [X] Free da linha de input após uso
 
 ## Sinais
 - [ ] Handler para SIGINT (Ctrl+C) - nova linha + prompt
-- [ ] Ignorar SIGQUIT (Ctrl+\) no shell principal
+- [ ] Ignorar SIGQUIT (Ctrl\\) no shell principal
 - [ ] Usar apenas 1 variável global para sinais
 - [ ] Restaurar prompt após sinal
 - [ ] Testar comportamento em diferentes contextos
@@ -42,17 +42,17 @@
 - [ ] Testar aspas aninhadas: "hello 'world'"
 
 ## Parser
-- [ ] Definir estrutura de comando
-- [ ] Implementar parsing recursivo ou state machine
-- [ ] Construir lista/árvore de comandos
-- [ ] Validar sintaxe: detectar |, ||, > >, etc.
-- [ ] Integrar redirecionamentos na estrutura
+- [X] Definir estrutura de comando
+- [X] Implementar parsing recursivo ou state machine
+- [X] Construir lista/árvore de comandos
+- [X] Validar sintaxe: detectar |, ||, > >, etc.
+- [X] Integrar redirecionamentos na estrutura
 
 ## Testes Críticos
 - [ ] echo "hello world"
 - [ ] echo 'hello $USER' (não expandir)
-- [ ] ls | wc -l
-- [ ] echo hello > file.txt
+- [X] ls | wc -l
+- [X] echo hello > file.txt
 - [ ] Syntax errors: |, >, ||
 
 ---
@@ -60,23 +60,23 @@
 # Fase 3 - Variáveis
 
 ## Gerenciamento Básico
-- [ ] Copiar environ inicial do sistema
-- [ ] Implementar lista ligada própria de variáveis
-- [ ] Função get_env_value(key)
-- [ ] Função set_env_value(key, value)
-- [ ] Função unset_env_value(key)
+- [X] Copiar environ inicial do sistema
+- [X] Implementar lista ligada própria de variáveis
+- [X] Função get_env_value(key)
+- [X] Função set_env_value(key, value)
+- [X] Função unset_env_value(key)
 
 ## Expansão
-- [ ] Expandir $VARIABLE em contexto normal
-- [ ] Expandir $? (exit status anterior)
+- [X] Expandir $VARIABLE em contexto normal
+- [X] Expandir $? (exit status anterior)
 - [ ] NÃO expandir dentro de aspas simples
 - [ ] Expandir dentro de aspas duplas
-- [ ] Casos especiais: $, $$, ${} se implementar
+- [X] Casos especiais: $, $$, ${} se implementar
 
 ## Integração
-- [ ] Converter env list para array para execve()
-- [ ] Atualizar $? após cada comando
-- [ ] Sincronização com built-ins
+- [X] Converter env list para array para execve()
+- [X] Atualizar $? após cada comando
+- [X] Sincronização com built-ins
 - [ ] Testes com variáveis vazias e inexistentes
 
 ---
@@ -84,76 +84,76 @@
 # Fase 4 - Built-ins
 
 ## echo
-- [ ] echo sem argumentos
-- [ ] echo com argumentos múltiplos
-- [ ] echo -n (sem newline)
-- [ ] echo -n -n -n (múltiplas flags)
-- [ ] echo -n hello world
+- [X] echo sem argumentos
+- [X] echo com argumentos múltiplos
+- [X] echo -n (sem newline)
+- [X] echo -n -n -n (múltiplas flags)
+- [X] echo -n hello world
 
 ## cd
-- [ ] cd sem argumentos (vai para $HOME)
+- [X] cd sem argumentos (vai para $HOME)
 - [ ] cd - (vai para $OLDPWD)
-- [ ] cd path (absoluto e relativo)
-- [ ] Atualizar PWD após mudança
+- [X] cd path (absoluto e relativo)
+- [X] Atualizar PWD após mudança
 - [ ] Atualizar OLDPWD antes da mudança
 
 ## export/unset/env
 - [ ] export sem args (lista declare -x)
-- [ ] export VAR=value
+- [X] export VAR=value
 - [ ] export VAR (criar vazia)
-- [ ] unset VAR
-- [ ] env (listar todas variáveis)
+- [X] unset VAR
+- [X] env (listar todas variáveis)
 - [ ] Validar nomes de variáveis
 
 ## pwd/exit
-- [ ] pwd sem argumentos
-- [ ] exit sem argumentos
-- [ ] exit com número
-- [ ] exit com argumento inválido
+- [X] pwd sem argumentos
+- [X] exit sem argumentos
+- [X] exit com número
+- [X] exit com argumento inválido
 
 ---
 
 # Fase 5 - Execução
 
 ## Resolução PATH
-- [ ] Buscar executável em $PATH
-- [ ] Tratar caminhos absolutos (/bin/ls)
-- [ ] Tratar caminhos relativos (./programa)
-- [ ] Retornar erro se comando não encontrado
+- [X] Buscar executável em $PATH
+- [X] Tratar caminhos absolutos (/bin/ls)
+- [X] Tratar caminhos relativos (./programa)
+- [X] Retornar erro se comando não encontrado
 
 ## Fork e Execve
-- [ ] fork() para criar processo filho
-- [ ] execve() no filho com argumentos corretos
-- [ ] Converter environ para execve
-- [ ] Tratar erros de fork e execve
+- [X] fork() para criar processo filho
+- [X] execve() no filho com argumentos corretos
+- [X] Converter environ para execve
+- [X] Tratar erros de fork e execve
 
 ## Gerenciamento Processos
-- [ ] waitpid() para esperar filho
-- [ ] Capturar exit status com WEXITSTATUS
-- [ ] Atualizar $? com exit status
-- [ ] Evitar processos zumbi
+- [X] waitpid() para esperar filho
+- [X] Capturar exit status com WEXITSTATUS
+- [X] Atualizar $? com exit status
+- [X] Evitar processos zumbi
 
 ---
 
 # Fase 6 - Redirecionamentos
 
 ## Saída (>, >>)
-- [ ] Redirecionar > (truncar arquivo)
-- [ ] Redirecionar >> (append arquivo)
-- [ ] Usar dup2() para redirecionar STDOUT
-- [ ] Criar arquivo com permissões 644
-- [ ] Tratar erros de permissão
+- [X] Redirecionar > (truncar arquivo)
+- [X] Redirecionar >> (append arquivo)
+- [X] Usar dup2() para redirecionar STDOUT
+- [X] Criar arquivo com permissões 644
+- [X] Tratar erros de permissão
 
 ## Entrada (<)
-- [ ] Redirecionar < (ler de arquivo)
-- [ ] Usar dup2() para redirecionar STDIN
-- [ ] Verificar se arquivo existe
-- [ ] Tratar erros de leitura
+- [X] Redirecionar < (ler de arquivo)
+- [X] Usar dup2() para redirecionar STDIN
+- [X] Verificar se arquivo existe
+- [X] Tratar erros de leitura
 
 ## Heredoc (<<)
-- [ ] Ler linhas até delimiter
-- [ ] Criar pipe ou arquivo temporário
-- [ ] Redirecionar entrada do heredoc
+- [X] Ler linhas até delimiter
+- [X] Criar pipe ou arquivo temporário
+- [X] Redirecionar entrada do heredoc
 - [ ] Tratar Ctrl+C durante heredoc
 - [ ] Cleanup automático
 
@@ -162,11 +162,11 @@
 # Fase 7 - Pipes
 
 ## Pipe Simples
-- [ ] Criar pipe com pipe()
-- [ ] Fork para cada comando
-- [ ] Conectar stdout do cmd1 com stdin do cmd2
-- [ ] Fechar FDs desnecessários em cada processo
-- [ ] Exit status = status do último comando
+- [X] Criar pipe com pipe()
+- [X] Fork para cada comando
+- [X] Conectar stdout do cmd1 com stdin do cmd2
+- [X] Fechar FDs desnecessários em cada processo
+- [X] Exit status = status do último comando
 
 ## Múltiplos Pipes
 - [ ] Implementar pipeline de N comandos

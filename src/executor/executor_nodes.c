@@ -48,23 +48,50 @@ static int	ft_apply_redirects(t_cmd_node *cmd)
 	return (0);
 }
 
+static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	int	ret;
+
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (saved_stdin < 0 || saved_stdout < 0)
+	{
+		if (saved_stdin >= 0)
+			close(saved_stdin);
+		if (saved_stdout >= 0)
+			close(saved_stdout);
+		return (ms_data->exit_status = 1, 1);
+	}
+	if (ft_apply_redirects(cmd) < 0)
+	{
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
+		return (ms_data->exit_status = 1, 1);
+	}
+	ret = ft_exec_run_builtin(ms_data, cmd->args);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+	return (ret);
+}
+
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	pid_t	pid;
-	int		status;
-		struct sigaction sa;
+	pid_t				pid;
+	int					status;
+	struct sigaction	sa;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	if (ft_process_heredocs(ms_data, cmd) < 0)
 		return (ms_data->exit_status = 1, 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
-	{
-		ft_printf("minishell: \"%s\" is a builtin\n", cmd->args[0]);
-		if (ft_apply_redirects(cmd) < 0)
-			return (ms_data->exit_status = 1, 1);
-		return (ft_exec_run_builtin(ms_data, cmd->args));
-	}
+		return (ft_exec_builtin_with_redirects(ms_data, cmd));
 	ft_set_signals_executing();
 	pid = fork();
 	if (pid == -1)

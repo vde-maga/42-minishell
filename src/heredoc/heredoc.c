@@ -2,20 +2,44 @@
 
 static char	*ft_expand_heredoc_line(t_minishell *ms_data, char *line)
 {
-	char	*expanded;
-	t_token	temp_token;
+	char	*result;
+	int		i;
 
-	if (!line || !ms_data)
-		return (line);
-	temp_token.value = line;
-	temp_token.type = TOKEN_WORD;
-	temp_token.quote = '"';
-	temp_token.was_quoted = 0;
-	temp_token.next = NULL;
-	if (ft_expand_variables(ms_data, ms_data->env_list) == -1)
-		return (line);
-	expanded = ft_strdup(temp_token.value);
-	return (expanded);
+	result = ft_strdup("");
+	i = 0;
+	while (line[i])
+	{
+		if (ft_is_var_char(line[i], line[i + 1]))
+			result = ft_append_var(ms_data, result, line, &i);
+		else
+		{
+			result = ft_append_char(result, line[i]);
+			i++;
+		}
+	}
+	return (result);
+}
+
+static int	ft_heredoc_error(char *clean_delim)
+{
+	ft_printf("minishell: warning: heredoc delimited by EOF ");
+	ft_printf("(wanted `%s')\n", clean_delim);
+	free(clean_delim);
+	return (-1);
+}
+
+static char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
+	int was_quoted)
+{
+	char	*expanded;
+
+	if (!was_quoted)
+	{
+		expanded = ft_expand_heredoc_line(ms_data, line);
+		free(line);
+		return (expanded);
+	}
+	return (line);
 }
 
 int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
@@ -24,26 +48,22 @@ int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
 	char	*clean_delim;
 	int		pipefd[2];
 
+	// TODO: implement signal handling to heredocs
 	clean_delim = ft_remove_quotes(delimiter);
-	if (!clean_delim)
-		return (-1);
-	if (pipe(pipefd) < 0)
+	if (!clean_delim || pipe(pipefd) < 0)
 		return (free(clean_delim), -1);
 	while (1)
 	{
-		line = readline("> ");
+		line = readline("heredoc> ");
 		if (!line)
-		{
-			ft_printf("minishell: warning: heredoc delimited by EOF (wanted `%s')\n", clean_delim);
-			break ;
-		}
+			return (ft_heredoc_error(clean_delim), close(pipefd[0]),
+				close(pipefd[1]), -1);
 		if (ft_strcmp(line, clean_delim) == 0)
 		{
 			free(line);
 			break ;
 		}
-		if (!was_quoted)
-			line = ft_expand_heredoc_line(ms_data, line);
+		line = ft_process_heredoc_line(ms_data, line, was_quoted);
 		ft_putendl_fd(line, pipefd[1]);
 		free(line);
 	}
@@ -63,7 +83,8 @@ int	ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd)
 	{
 		if (redir->type == TOKEN_HEREDOC)
 		{
-			redir->fd = ft_heredoc(ms_data, redir->filename, 0);
+			redir->fd = ft_heredoc(ms_data, redir->filename,
+					redir->was_quoted);
 			if (redir->fd < 0)
 				return (-1);
 		}

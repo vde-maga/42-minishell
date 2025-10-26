@@ -4,22 +4,23 @@ char	*ft_remove_quotes(char *str)
 {
 	char	*dest;
 	int		length;
+	char	quote;
 
 	if (!str)
 		return (NULL);
 	length = ft_strlen(str);
 	if (length < 2)
+		return (ft_strdup(str));
+	quote = str[0];
+	if ((quote == '\'' || quote == '"') && str[length - 1] == quote)
 	{
-		dest = ft_strdup(str);
+		dest = (char *)malloc(sizeof(char) * (length - 2 + 1));
 		if (!dest)
 			return (NULL);
+		ft_strlcpy(dest, str + 1, length - 1);
 		return (dest);
 	}
-	dest = (char *)malloc(sizeof(char) * (length - 2 + 1));
-	if (!dest)
-		return (NULL);
-	ft_strlcpy(dest, str + 1, length - 1);
-	return (dest);
+	return (ft_strdup(str));
 }
 
 int	ft_expand_quotes(t_token *tokens)

@@ -13,11 +13,12 @@ typedef enum e_node_type
 
 typedef struct s_redir
 {
-    t_token_type    type;
-    char            *filename;
-    int             fd;
-    struct s_redir  *next;
-}   t_redir;
+	t_token_type	type;
+	char			*filename;
+	int				fd;
+	int				was_quoted;
+	struct s_redir	*next;
+}	t_redir;
 
 typedef struct s_cmd_node
 {

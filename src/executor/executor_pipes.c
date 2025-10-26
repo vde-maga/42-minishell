@@ -87,7 +87,6 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 
 int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 {
-	// TODO: Need to check if it leaves open fds on exit and fix
 	int	pipefd[2];
 
 	if (!node || !node->left || !node->right)

@@ -42,14 +42,13 @@ void	ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok)
 	t_redir	*last;
 
 	if (!redirect_tok->next || redirect_tok->next->type != TOKEN_WORD)
-	{
 		return ;
-	}
 	new_redirect = ft_calloc(1, sizeof(t_redir));
 	if (!new_redirect)
-		return ; // TODO: Create error handling (memory) | return -1????
+		return ;
 	new_redirect->type = redirect_tok->type;
 	new_redirect->filename = ft_strdup(redirect_tok->next->value);
+	new_redirect->was_quoted = redirect_tok->next->was_quoted;
 	if (!cmd_data->redirs)
 		cmd_data->redirs = new_redirect;
 	else

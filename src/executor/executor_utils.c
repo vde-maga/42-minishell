@@ -18,7 +18,6 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
     (void)ms_data;
     (void)args;
 
-    // TODO: Check correct exit code 
     if (args == NULL || args[0] == NULL)
         return (0);
     if (ft_strcmp(args[0], "pwd") == 0)
