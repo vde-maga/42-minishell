@@ -70,11 +70,12 @@ int	ft_exp_special_param(t_minishell *msdata, t_token *current, char *var_name)
 	char	*new_value;
 	char	*old_value;
 	(void) var_name;
+	(void) msdata;
 
-	if (ft_strcmp(current->value, "$$") == 0)
-		new_value = ft_itoa(get_shell_pid_from_proc());
-	else if (ft_strcmp(current->value, "$?") == 0)
-		new_value = ft_itoa(msdata->exit_status);
+		if (ft_strcmp(current->value, "$$") == 0)
+			new_value = ft_itoa(get_shell_pid_from_proc());
+		else if (ft_strcmp(current->value, "$?") == 0)
+			new_value = ft_itoa(ft_exit_code(-1));
 	else
 		new_value = ft_itoa(42);
 	old_value = current->value;

@@ -46,19 +46,21 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 {
 	int	status;
 
+	(void)ms_data;
+
 	waitpid(pid1, &status, 0);
 	waitpid(pid2, &status, 0);
 	if (WIFEXITED(status))
-		ms_data->exit_status = WEXITSTATUS(status);
+		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGQUIT)
 			write(2, "Quit (core dumped)\n", 19);
 		else if (WTERMSIG(status) == SIGINT)
 			write(2, "\n", 1);
-		ms_data->exit_status = 128 + WTERMSIG(status);
+		ft_exit_code(128 + WTERMSIG(status));
 	}
-	ft_handle_signals();
+	ft_signal_handle_signals();
 }
 
 static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
@@ -94,13 +96,13 @@ int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
-		ms_data->exit_status = 1;
+		ft_exit_code(1);
 		return (1);
 	}
 	if (ft_exec_pipe_fork_children(ms_data, node, pipefd) == -1)
 	{
-		ms_data->exit_status = 1;
+		ft_exit_code(1);
 		return (1);
 	}
-	return (ms_data->exit_status);
+	return (ft_exit_code(-1));
 }

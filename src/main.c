@@ -9,7 +9,7 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	ft_init_vars(&ms_data, envp);
-	ft_handle_signals();
+	ft_signal_handle_signals();
 	while (1)
 	{
 		int lexer_result;

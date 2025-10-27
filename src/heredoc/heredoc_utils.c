@@ -7,7 +7,7 @@ char	*ft_get_var_value(t_minishell *ms_data, char *var_name, int len)
 	char	*result;
 
 	if (len == 1 && var_name[0] == '?')
-		return (ft_itoa(ms_data->exit_status));
+		return (ft_itoa(ft_exit_code(-1)));
 	if (len == 1 && var_name[0] == '$')
 		return (ft_itoa(get_shell_pid_from_proc()));
 	var_name_copy = ft_substr(var_name, 0, len);

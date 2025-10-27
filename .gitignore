@@ -60,3 +60,4 @@ dkms.conf
 # minishell related entries
 minishell
 obj/
+*.txt

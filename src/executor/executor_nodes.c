@@ -62,7 +62,7 @@ static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 			close(saved_stdin);
 		if (saved_stdout >= 0)
 			close(saved_stdout);
-		return (ms_data->exit_status = 1, 1);
+		return (ft_exit_code(1), 1);
 	}
 	if (ft_apply_redirects(cmd) < 0)
 	{
@@ -70,7 +70,7 @@ static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdin);
 		close(saved_stdout);
-		return (ms_data->exit_status = 1, 1);
+		return (ft_exit_code(1), 1);
 	}
 	ret = ft_exec_run_builtin(ms_data, cmd->args);
 	dup2(saved_stdin, STDIN_FILENO);
@@ -80,33 +80,35 @@ static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 	return (ret);
 }
 
+// TODO: Resolver o problema dos childs e parents signals
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t				pid;
 	int					status;
-	struct sigaction	sa;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	if (ft_process_heredocs(ms_data, cmd) < 0)
-		return (ms_data->exit_status = 1, 1);
+		return (ft_exit_code(1), 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
 		return (ft_exec_builtin_with_redirects(ms_data, cmd));
-	ft_set_signals_executing();
+	/* ensure shell does not handle SIGINT/SIGQUIT while child runs in fg */
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 	{
+		/* restore shell handlers */
+		ft_signal_handle_signals();
 		ft_printf("fork failed: %s\n", strerror(errno));
-		ms_data->exit_status = 1;
+		ft_exit_code(1);
 		return (1);
 	}
 	if (pid == 0)
 	{
-		sigemptyset(&sa.sa_mask);
-		sa.sa_flags = 0;
-		sa.sa_handler = SIG_DFL;
-		sigaction(SIGINT, &sa, NULL);
-		sigaction(SIGQUIT, &sa, NULL);
+		/* child: restore default signal behaviour */
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (ft_apply_redirects(cmd) < 0)
 		{
 			ft_free_shell_child(ms_data);
@@ -119,10 +121,11 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		_exit(127);
 	}
 	waitpid(pid, &status, 0);
+	/* restore shell signal handlers after child finished */
+	ft_signal_handle_signals();
 	if (WIFEXITED(status))
-		ms_data->exit_status = WEXITSTATUS(status);
+		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
-		ms_data->exit_status = 128 + WTERMSIG(status);
-	ft_handle_signals();
-	return (ms_data->exit_status);
+		ft_exit_code(128 + WTERMSIG(status));
+	return (ft_exit_code(-1));
 }

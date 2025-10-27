@@ -38,7 +38,7 @@ int	ft_builtin_exit(t_minishell *msdata, char **args)
 	ft_putstr_fd("exit\n", 2);
 	if (!args || !args[0] || !args[1])
 	{
-		exit_code = msdata->exit_status;
+		exit_code = ft_exit_code(-1);
 		ft_exit_free_and_exit(msdata, exit_code);
 		return (0);
 	}

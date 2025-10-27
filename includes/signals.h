@@ -1,8 +1,15 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
-void	ft_handle_signals(void);
-void	ft_set_signals_interactive(void);
-void	ft_set_signals_executing(void);
+# include <signal.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
+void	ft_signal_handle_signals(void);
+
+// Exit_code
+int	ft_exit_code(int value);
 
 #endif

@@ -1,7 +1,6 @@
-#include "minishell.h"
-#include <signal.h>
+#include "signals.h"
 
-static void	ft_sig_interactive(int signal)
+void	ft_signal_sig_main(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -9,36 +8,32 @@ static void	ft_sig_interactive(int signal)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		ft_exit_code(130);
 	}
 }
 
-static void	ft_sig_executing(int signal)
+void	ft_signal_sig_pipe(int signal)
 {
-	if (signal == SIGINT)
-		write(2, "\n", 1);
-	else if (signal == SIGQUIT)
-		write(2, "Quit (core dumped)\n", 19);
+	if (signal == SIGPIPE)
+	{
+	}
 }
 
-void	ft_set_signals_executing(void)
+void	ft_signal_set_main_signals(void)
 {
-	struct sigaction	sa;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = ft_sig_executing;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGPIPE, ft_signal_sig_pipe);
 }
 
-void	ft_handle_signals(void)
+void	ft_signal_handle_signals(void)
 {
-	struct sigaction	sa;
+	signal(SIGINT, ft_signal_sig_main);
+	signal(SIGQUIT, SIG_IGN);
+}
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sa.sa_handler = ft_sig_interactive;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
+void	ft_signal_set_fork1_signal(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

@@ -24,16 +24,16 @@ int ft_exec_node(t_minishell *ms_data, t_parser_node *node)
     else if (node->type == NODE_AND)
     {
         ft_exec_node(ms_data, node->left);
-        if (ms_data->exit_status == 0)
+        if (ft_exit_code(-1) == 0)
             ft_exec_node(ms_data, node->right);
-        return ms_data->exit_status;
+        return ft_exit_code(-1);
     }
     else if (node->type == NODE_OR)
     {
         ft_exec_node(ms_data, node->left);
-        if (ms_data->exit_status != 0)
+        if (ft_exit_code(-1) != 0)
             ft_exec_node(ms_data, node->right);
-        return ms_data->exit_status;
+        return ft_exit_code(-1);
     }
     else if (node->type == NODE_PIPE)
         return (ft_exec_pipe_node(ms_data, node));

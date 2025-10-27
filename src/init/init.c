@@ -39,6 +39,6 @@ void ft_init_vars(t_minishell *ms_data, char **envp)
 	ms_data->input = NULL;
 	ms_data->tokens = NULL;
 	ms_data->parser = NULL;
-	ms_data->exit_status = 0;
+	ft_exit_code(0);
 }
 
