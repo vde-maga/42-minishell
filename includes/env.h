@@ -6,6 +6,7 @@
 // envp_to_env_struct.c
 t_env	*ft_env_create_node(char *envp_line);
 t_env	**ft_env_to_array(t_env *env_list, int count);
+char	**ft_env_list_to_array(t_env *env_list);
 
 // free.c
 void	ft_free_env_list(t_env *head);

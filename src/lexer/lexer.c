@@ -49,8 +49,7 @@ int	ft_cmd_complete(t_token *tokens)
 	current = tokens;
 	while (current->next)
 		current = current->next;
-	if (current->type == TOKEN_PIPE || current->type == TOKEN_AND_IF 
-		|| current->type == TOKEN_OR || current->type == TOKEN_AND)
+	if (current->type == TOKEN_PIPE || current->type == TOKEN_AND_IF)
 		return (0);
 	if (current->type == TOKEN_WORD && (!current->value || current->value[0] == '\0'))
 		return (0);
@@ -82,6 +81,7 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 			ms_data->lexer->tokens = NULL;
 			ft_lexer_free(ms_data->lexer);
 			ms_data->lexer = NULL;
+			ms_data->exit_status = 2;
 			return (-1);
 		}
 		ms_data->tokens = ms_data->lexer->tokens;
