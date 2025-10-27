@@ -16,4 +16,9 @@ int     ft_process_redir(t_redir *redir);
 int     ft_apply_redirects(t_cmd_node *cmd);
 int     ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd);
 
+void	ft_handle_execve_error(char *cmd_name, char **env_array,
+			t_minishell *ms_data);
+void	ft_handle_path_not_found(char *cmd_name, char **env_array,
+			t_minishell *ms_data);
+
 #endif
