@@ -85,6 +85,8 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t				pid;
 	int					status;
+	char				**env_array;
+	struct sigaction	sa;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
@@ -114,9 +116,11 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 			ft_free_shell_child(ms_data);
 			_exit(1);
 		}
+		env_array = ft_env_list_to_array(ms_data->env_list);
 		if (ft_exec_replace_cmd_with_path(ms_data, cmd))
-			execve(cmd->args[0], cmd->args, ms_data->env);
+			execve(cmd->args[0], cmd->args, env_array);
 		ft_printf("execve failed: %s\n", strerror(errno));
+		ft_free_str_arrays(env_array);
 		ft_free_shell_child(ms_data);
 		_exit(127);
 	}
