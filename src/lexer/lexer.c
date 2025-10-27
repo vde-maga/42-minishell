@@ -81,7 +81,7 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 			ms_data->lexer->tokens = NULL;
 			ft_lexer_free(ms_data->lexer);
 			ms_data->lexer = NULL;
-			ms_data->exit_status = 2;
+			ft_exit_code(2);
 			return (-1);
 		}
 		ms_data->tokens = ms_data->lexer->tokens;

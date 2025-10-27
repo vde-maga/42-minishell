@@ -1,92 +1,40 @@
 #include "minishell.h"
 
-static int	ft_apply_redirects(t_cmd_node *cmd)
+static void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	t_redir	*redir;
-	int		fd;
+	char	**env_array;
 
-	if (!cmd)
-		return (0);
-	redir = cmd->redirs;
-	while (redir)
-	{
-		if (redir->type == TOKEN_REDIRECT_IN)
-		{
-			fd = open(redir->filename, O_RDONLY);
-			if (fd < 0)
-				return (perror(redir->filename), -1);
-			if (dup2(fd, STDIN_FILENO) < 0)
-				return (close(fd), perror("dup2"), -1);
-			close(fd);
-		}
-		else if (redir->type == TOKEN_REDIRECT_OUT)
-		{
-			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd < 0)
-				return (perror(redir->filename), -1);
-			if (dup2(fd, STDOUT_FILENO) < 0)
-				return (close(fd), perror("dup2"), -1);
-			close(fd);
-		}
-		else if (redir->type == TOKEN_APPEND)
-		{
-			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (fd < 0)
-				return (perror(redir->filename), -1);
-			if (dup2(fd, STDOUT_FILENO) < 0)
-				return (close(fd), perror("dup2"), -1);
-			close(fd);
-		}
-		else if (redir->type == TOKEN_HEREDOC && redir->fd >= 0)
-		{
-			if (dup2(redir->fd, STDIN_FILENO) < 0)
-				return (close(redir->fd), perror("dup2"), -1);
-			close(redir->fd);
-		}
-		redir = redir->next;
-	}
-	return (0);
-}
-
-static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
-{
-	int	saved_stdin;
-	int	saved_stdout;
-	int	ret;
-
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	if (saved_stdin < 0 || saved_stdout < 0)
-	{
-		if (saved_stdin >= 0)
-			close(saved_stdin);
-		if (saved_stdout >= 0)
-			close(saved_stdout);
-		return (ft_exit_code(1), 1);
-	}
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (ft_apply_redirects(cmd) < 0)
 	{
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-		close(saved_stdin);
-		close(saved_stdout);
-		return (ft_exit_code(1), 1);
+		ft_free_shell_child(ms_data);
+		_exit(1);
 	}
-	ret = ft_exec_run_builtin(ms_data, cmd->args);
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdin);
-	close(saved_stdout);
-	return (ret);
+	env_array = ft_env_list_to_array(ms_data->env_list);
+	if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
+		ft_handle_path_not_found(cmd->args[0], env_array, ms_data);
+	execve(cmd->args[0], cmd->args, env_array);
+	ft_handle_execve_error(cmd->args[0], env_array, ms_data);
+}
+
+static int	ft_wait_and_get_status(pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	ft_signal_handle_signals();
+	if (WIFEXITED(status))
+		ft_exit_code(WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		ft_exit_code(128 + WTERMSIG(status));
+	return (ft_exit_code(-1));
 }
 
 // TODO: Resolver o problema dos childs e parents signals
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	pid_t				pid;
-	int					status;
-	char				**env_array;
-	struct sigaction	sa;
+	pid_t	pid;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
@@ -94,42 +42,16 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		return (ft_exit_code(1), 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
 		return (ft_exec_builtin_with_redirects(ms_data, cmd));
-	/* ensure shell does not handle SIGINT/SIGQUIT while child runs in fg */
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 	{
-		/* restore shell handlers */
 		ft_signal_handle_signals();
 		ft_printf("fork failed: %s\n", strerror(errno));
-		ft_exit_code(1);
-		return (1);
+		return (ft_exit_code(1));
 	}
 	if (pid == 0)
-	{
-		/* child: restore default signal behaviour */
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (ft_apply_redirects(cmd) < 0)
-		{
-			ft_free_shell_child(ms_data);
-			_exit(1);
-		}
-		env_array = ft_env_list_to_array(ms_data->env_list);
-		if (ft_exec_replace_cmd_with_path(ms_data, cmd))
-			execve(cmd->args[0], cmd->args, env_array);
-		ft_printf("execve failed: %s\n", strerror(errno));
-		ft_free_str_arrays(env_array);
-		ft_free_shell_child(ms_data);
-		_exit(127);
-	}
-	waitpid(pid, &status, 0);
-	/* restore shell signal handlers after child finished */
-	ft_signal_handle_signals();
-	if (WIFEXITED(status))
-		ft_exit_code(WEXITSTATUS(status));
-	else if (WIFSIGNALED(status))
-		ft_exit_code(128 + WTERMSIG(status));
-	return (ft_exit_code(-1));
+		ft_exec_child_process(ms_data, cmd);
+	return (ft_wait_and_get_status(pid));
 }

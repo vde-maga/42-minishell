@@ -40,13 +40,19 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 
 char	*ft_get_cmd_path(char *cmd, char **envp)
 {
-	char	*path;
+	char			*path;
+	struct stat		st;
 
 	if (!cmd || !*cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0)
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+		{
+			errno = EISDIR;
+			return (NULL);
+		}
+		if (access(cmd, F_OK) == 0)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
