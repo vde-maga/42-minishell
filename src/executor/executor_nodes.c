@@ -80,7 +80,6 @@ static int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 	return (ret);
 }
 
-// TODO: Resolver o problema dos childs e parents signals
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t				pid;
@@ -92,23 +91,18 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		return (ft_exit_code(1), 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
 		return (ft_exec_builtin_with_redirects(ms_data, cmd));
-	/* ensure shell does not handle SIGINT/SIGQUIT while child runs in fg */
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	ft_signal_set_main_signals();
 	pid = fork();
 	if (pid == -1)
 	{
-		/* restore shell handlers */
 		ft_signal_handle_signals();
-		ft_printf("fork failed: %s\n", strerror(errno));
-		ft_exit_code(1);
-		return (1);
+		perror("fork");
+		return (ft_exit_code(1), 1);
 	}
 	if (pid == 0)
 	{
-		/* child: restore default signal behaviour */
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		
+		ft_signal_set_fork1_signal();
 		if (ft_apply_redirects(cmd) < 0)
 		{
 			ft_free_shell_child(ms_data);
@@ -116,16 +110,21 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		}
 		if (ft_exec_replace_cmd_with_path(ms_data, cmd))
 			execve(cmd->args[0], cmd->args, ms_data->env);
-		ft_printf("execve failed: %s\n", strerror(errno));
+		perror("execve");
 		ft_free_shell_child(ms_data);
 		_exit(127);
 	}
 	waitpid(pid, &status, 0);
-	/* restore shell signal handlers after child finished */
 	ft_signal_handle_signals();
 	if (WIFEXITED(status))
 		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(2, "Quit (core dumped)\n", 19);
+		else if (WTERMSIG(status) == SIGINT)
+			write(2, "\n", 1);
 		ft_exit_code(128 + WTERMSIG(status));
+	}
 	return (ft_exit_code(-1));
 }
