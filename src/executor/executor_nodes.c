@@ -27,11 +27,16 @@ static int	ft_wait_and_get_status(pid_t pid)
 	if (WIFEXITED(status))
 		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(2, "Quit (core dumped)\n", 19);
+		else if (WTERMSIG(status) == SIGINT)
+			write(2, "\n", 1);
 		ft_exit_code(128 + WTERMSIG(status));
+	}
 	return (ft_exit_code(-1));
 }
 
-// TODO: Resolver o problema dos childs e parents signals
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;
@@ -42,13 +47,12 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 		return (ft_exit_code(1), 1);
 	if (ft_exec_is_builtin(cmd->args[0]))
 		return (ft_exec_builtin_with_redirects(ms_data, cmd));
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	ft_signal_set_main_signals();
 	pid = fork();
 	if (pid == -1)
 	{
 		ft_signal_handle_signals();
-		ft_printf("fork failed: %s\n", strerror(errno));
+		perror("fork");
 		return (ft_exit_code(1));
 	}
 	if (pid == 0)
