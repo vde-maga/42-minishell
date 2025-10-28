@@ -15,6 +15,7 @@ typedef struct s_env
 {
 	char			*var;
 	char			*value;
+	int				has_value;
 	struct s_env	*next;
 }					t_env;
 

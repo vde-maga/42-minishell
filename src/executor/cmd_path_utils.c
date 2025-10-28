@@ -3,7 +3,6 @@
 char	**ft_get_path_dirs(t_env *env)
 {
 	t_env	*cur_env;
-	char	**default_path;
 
 	cur_env = env;
 	while (cur_env)
@@ -12,8 +11,7 @@ char	**ft_get_path_dirs(t_env *env)
 			return (ft_split(cur_env->value, ':'));
 		cur_env = cur_env->next;
 	}
-	default_path = ft_split("/usr/local/bin:/usr/bin:/bin", ':');
-	return (default_path);
+	return (NULL);
 }
     
 static char	*ft_find_cmd_in_path(char *cmd, char **paths)
@@ -38,9 +36,10 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 	return (NULL);
 }
 
-char	*ft_get_cmd_path(char *cmd, char **envp)
+char	*ft_get_cmd_path(char *cmd, t_env *env_list)
 {
 	char			*path;
+	char			**path_dirs;
 	struct stat		st;
 
 	if (!cmd || !*cmd)
@@ -56,6 +55,8 @@ char	*ft_get_cmd_path(char *cmd, char **envp)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
-	path = ft_find_cmd_in_path(cmd, envp);
+	path_dirs = ft_get_path_dirs(env_list);
+	path = ft_find_cmd_in_path(cmd, path_dirs);
+	ft_free_str_arrays(path_dirs);
 	return (path);
 }

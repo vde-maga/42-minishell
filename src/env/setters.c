@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static t_env	*ft_create_env_var(char *var_name, char *value)
+static t_env	*ft_create_env_var(char *var_name, char *value, int has_value)
 {
 	t_env	*new_node;
 
@@ -13,13 +13,18 @@ static t_env	*ft_create_env_var(char *var_name, char *value)
 		free(new_node);
 		return (NULL);
 	}
-	new_node->value = ft_strdup(value);
-	if (!new_node->value)
+	new_node->value = NULL;
+	if (value)
 	{
-		free(new_node->var);
-		free(new_node);
-		return (NULL);
+		new_node->value = ft_strdup(value);
+		if (!new_node->value)
+		{
+			free(new_node->var);
+			free(new_node);
+			return (NULL);
+		}
 	}
+	new_node->has_value = has_value;
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -28,13 +33,15 @@ int	ft_set_env_var(t_env **env_list, char *var_name, char *value)
 {
 	t_env	*var_node;
 	t_env	*new_node;
+	int		has_value;
 
-	if (!env_list || !var_name || !value)
+	if (!env_list || !var_name)
 		return (1);
+	has_value = (value != NULL);
 	var_node = ft_get_env_var(*env_list, var_name);
 	if (var_node)
 		return (ft_update_env_var(*env_list, var_name, value));
-	new_node = ft_create_env_var(var_name, value);
+	new_node = ft_create_env_var(var_name, value, has_value);
 	if (!new_node)
 		return (1);
 	ft_env_add_back(env_list, new_node);
@@ -63,16 +70,26 @@ int	ft_update_env_var(t_env *env_list, char *var_name, char *new_value)
 	t_env	*var_node;
 	char	*temp;
 
-	if (!env_list || !var_name || !new_value)
+	if (!env_list || !var_name)
 		return (1);
 	var_node = ft_get_env_var(env_list, var_name);
 	if (!var_node)
 		return (1);
-	temp = ft_strdup(new_value);
-	if (!temp)
-		return (1);
-	free(var_node->value);
-	var_node->value = temp;
+	if (new_value)
+	{
+		temp = ft_strdup(new_value);
+		if (!temp)
+			return (1);
+		free(var_node->value);
+		var_node->value = temp;
+		var_node->has_value = 1;
+	}
+	else
+	{
+		free(var_node->value);
+		var_node->value = NULL;
+		var_node->has_value = 0;
+	}
 	return (0);
 }
 

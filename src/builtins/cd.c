@@ -3,6 +3,7 @@
 static char	*ft_get_target_dir(t_minishell *data, char *path)
 {
 	t_env	*home;
+	t_env	*old_pwd;
 
 	if (!path || path[0] == '\0' || ft_strcmp(path, "~") == 0)
 	{
@@ -13,6 +14,16 @@ static char	*ft_get_target_dir(t_minishell *data, char *path)
 			return (NULL);
 		}
 		return (home->value);
+	}
+	else if (ft_strcmp(path, "-") == 0)
+	{
+		old_pwd = ft_get_env_var(data->env_list, "OLDPWD");
+		if (!old_pwd)
+		{
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+			return (NULL);
+		}
+		return (old_pwd->value);
 	}
 	return (path);
 }

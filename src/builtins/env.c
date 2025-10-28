@@ -9,7 +9,8 @@ int	ft_builtin_env(t_minishell *msdata)
 	current = msdata->env_list;
 	while (current)
 	{
-		ft_printf("%s=%s\n", current->var, current->value);
+		if (current->has_value)
+			ft_printf("%s=%s\n", current->var, current->value);
 		current = current->next;
 	}
 	return (0);

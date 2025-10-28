@@ -58,7 +58,10 @@ static int	ft_print_env_list(t_minishell *msdata)
 	i = 0;
 	while (i < count)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", env_array[i]->var, env_array[i]->value);
+		if (env_array[i]->has_value)
+			ft_printf("declare -x %s=\"%s\"\n", env_array[i]->var, env_array[i]->value);
+		else
+			ft_printf("declare -x %s\n", env_array[i]->var);
 		i++;
 	}
 	free(env_array);
@@ -79,9 +82,12 @@ int	ft_builtin_export(t_minishell *msdata, char *arg)
 	equal_sign = ft_strchr(arg, '=');
 	if (!equal_sign)
 	{
-		if (ft_is_valid_identifier(arg))
-			return (0);
-		return (1);
+		if (!ft_is_valid_identifier(arg))
+		{
+			ft_putstr_fd("minishell: export: not a valid identifier\n", 2);
+			return (1);
+		}
+		return (ft_set_env_var(&msdata->env_list, arg, NULL));
 	}
 	var_name = ft_substr(arg, 0, equal_sign - arg);
 	if (!var_name)

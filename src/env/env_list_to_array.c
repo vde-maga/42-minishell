@@ -30,17 +30,20 @@ char	**ft_env_list_to_array(t_env *env_list)
 		return (NULL);
 	current = env_list;
 	i = 0;
-	while (i < count)
+	while (current)
 	{
-		env_array[i] = ft_create_env_string(current);
-		if (!env_array[i])
+		if (current->has_value)
 		{
-			while (--i >= 0)
-				free(env_array[i]);
-			return (free(env_array), NULL);
+			env_array[i] = ft_create_env_string(current);
+			if (!env_array[i])
+			{
+				while (--i >= 0)
+					free(env_array[i]);
+				return (free(env_array), NULL);
+			}
+			i++;
 		}
 		current = current->next;
-		i++;
 	}
 	env_array[i] = NULL;
 	return (env_array);

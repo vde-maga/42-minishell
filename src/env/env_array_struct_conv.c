@@ -36,6 +36,7 @@ t_env	*ft_env_create_node(char *envp_line)
 		free(new_node);
 		return (NULL);
 	}
+	new_node->has_value = 1;
 	new_node->next = NULL;
 	return (new_node);
 }

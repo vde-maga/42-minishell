@@ -4,7 +4,7 @@ int ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd)
 {
     char *full_path;
 
-    full_path = ft_get_cmd_path(cmd->args[0], ms_data->env);
+    full_path = ft_get_cmd_path(cmd->args[0], ms_data->env_list);
     if (full_path)
     {
         free(cmd->args[0]);
