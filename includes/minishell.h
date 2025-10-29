@@ -17,11 +17,13 @@
 # include "signals.h"
 
 # include <stdio.h>
+# include <signal.h>
 # include <errno.h>
 # include <limits.h>
 # include <unistd.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdlib.h>
 // # include <linux/limits.h>
 # include <stdbool.h>
 # include <sys/wait.h>

@@ -47,4 +47,28 @@ Aqui está a versão atualizada da tabela com uma coluna adicional para o status
 | **`EOF` (Ctrl+D)** | No prompt com texto | Digitar `echo hi` (sem Enter) | **Nada acontece.** `Ctrl+D` é ignorado se o buffer não estiver vazio. | Mantém valor anterior | ✅ |
 | **`EOF` (Ctrl+D)** | Para um processo bloqueado em `stdin` | `cat` | `EOF` é enviado ao `cat`. `cat` termina normalmente. Shell exibe novo prompt. | `0` | ✅ |
 
+---
+
+# Teste Signals Heredocs
+
+## Teste 1 - `cat << EOF`
+
+```bash
+
+cat << EOF
+
+linha 1
+linha 2
+
+EOF
+
+```
+
+## Teste 2 - CTRL+C
+
+```bash
+cat << END + CTRL + C
+```
+
+
 
