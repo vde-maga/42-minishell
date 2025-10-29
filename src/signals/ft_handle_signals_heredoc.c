@@ -40,5 +40,4 @@ void	ft_signals_heredoc_signal(void)
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
-
 }

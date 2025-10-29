@@ -44,18 +44,22 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 {
 	int	status;
 
-	(void)ms_data;
 	waitpid(pid1, &status, 0);
 	waitpid(pid2, &status, 0);
 	if (WIFEXITED(status))
 		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGQUIT)
-			write(2, "Quit (core dumped)\n", 19);
-		else if (WTERMSIG(status) == SIGINT)
-			write(2, "\n", 1);
-		ft_exit_code(128 + WTERMSIG(status));
+		if (ms_data->print_flag == 0)
+		{
+			printf("FILHA DE UMA GRANDE PUTAAAAAA\n\n\n\n");
+			if (WTERMSIG(status) == SIGQUIT)
+				write(2, "Quit (core dumped)\n", 19);
+			else if (WTERMSIG(status) == SIGINT)
+				write(2, "\n", 1);
+			ft_exit_code(128 + WTERMSIG(status));
+			ms_data->print_flag = 1;
+		}
 	}
 	ft_signal_handle_signals();
 }
@@ -81,9 +85,9 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	}
 	if (pid2 == 0)
 		ft_exec_pipe_child_right(ms_data, node, pipefd);
+	ft_exec_pipe_wait(pid1, pid2, ms_data);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	ft_exec_pipe_wait(pid1, pid2, ms_data);
 	return (0);
 }
 

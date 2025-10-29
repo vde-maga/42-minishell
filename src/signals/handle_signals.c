@@ -1,7 +1,5 @@
 #include "signals.h"
 
-//TODO: Implementar Signals para os HEREDOCS
-
 void	ft_signal_sig_main(int signal)
 {
 	if (signal == SIGINT)

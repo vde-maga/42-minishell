@@ -56,6 +56,7 @@ static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_qu
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 		{
+			write(STDERR_FILENO, "\n", 1);
 			ft_heredoc_error(clean_delim);
 			break;
 		}
@@ -87,7 +88,8 @@ static int	ft_heredoc_parent(pid_t pid, int *pipefd)
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
-	ft_signals_heredoc_signal();
+	ft_signal_handle_signals();
+	//ft_signals_heredoc_signal();
 	if (WIFEXITED(status))
 	{
 		exit_code = WEXITSTATUS(status);
