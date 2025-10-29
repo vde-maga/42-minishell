@@ -3,47 +3,46 @@
 char	*ft_remove_quotes(char *str)
 {
 	char	*dest;
+	int		i, j;
 	int		length;
-	char	quote;
+	int		in_single_quote;
+	int		in_double_quote;
 
 	if (!str)
 		return (NULL);
 	length = ft_strlen(str);
 	if (length < 2)
 		return (ft_strdup(str));
-	quote = str[0];
-	if ((quote == '\'' || quote == '"') && str[length - 1] == quote)
+	
+	// Always use the complex case to handle all quote scenarios properly
+	dest = (char *)malloc(sizeof(char) * (length + 1));
+	if (!dest)
+		return (NULL);
+	
+	i = 0;
+	j = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	while (str[i])
 	{
-		dest = (char *)malloc(sizeof(char) * (length - 2 + 1));
-		if (!dest)
-			return (NULL);
-		ft_strlcpy(dest, str + 1, length - 1);
-		return (dest);
-	}
-	return (ft_strdup(str));
-}
-
-int	ft_expand_quotes(t_token *tokens)
-{
-	t_token	*current;
-	char	*new_value;
-	char	*old_value;
-
-	current = tokens;
-	while (current)
-	{
-		if (current->was_quoted == 1)
+		if (str[i] == '\'' && !in_double_quote)
 		{
-			new_value = ft_remove_quotes(current->value);
-			if (!new_value)
-				return (-1);
-			old_value = current->value;
-			current->value = new_value;
-			free(old_value);
+			in_single_quote = !in_single_quote;
+			i++;
 		}
-		current = current->next;
+		else if (str[i] == '"' && !in_single_quote)
+		{
+			in_double_quote = !in_double_quote;
+			i++;
+		}
+		else
+		{
+			dest[j++] = str[i];
+			i++;
+		}
 	}
-	return (0);
+	dest[j] = '\0';
+	return (dest);
 }
 
 int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)

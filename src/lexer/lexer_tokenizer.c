@@ -21,26 +21,39 @@ static int	ft_lex_add_operator(t_lexer *lexer)
 static int	ft_lex_read_word(t_lexer *lexer)
 {
     int start_pos;
+    int in_single_quote = 0;
+    int in_double_quote = 0;
 
     start_pos = lexer->pos;
     while (lexer->pos < lexer->len && lexer->input[lexer->pos] && ft_isprint_byte((int)lexer->input[lexer->pos]))
     {
         char c = lexer->input[lexer->pos];
-        if (c == '\'' || c == '"')
+        
+        // Handle quotes separately for proper mixed quote handling
+        if (c == '\'' && !in_double_quote)
         {
-            char q = c;
-            ft_lexer_advance(lexer);
-            while (lexer->pos < lexer->len && lexer->input[lexer->pos] && lexer->input[lexer->pos] != q)
-                ft_lexer_advance(lexer);
-            if (lexer->pos >= lexer->len || lexer->input[lexer->pos] == '\0')
-                return (2);
+            in_single_quote = !in_single_quote;
             ft_lexer_advance(lexer);
             continue;
         }
-        if (c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>' || c == '&')
+        else if (c == '"' && !in_single_quote)
+        {
+            in_double_quote = !in_double_quote;
+            ft_lexer_advance(lexer);
+            continue;
+        }
+        
+        // Break on unquoted spaces or operators
+        if (!in_single_quote && !in_double_quote &&
+            (c == ' ' || c == '\t' || c == '|' || c == '<' || c == '>' || c == '&'))
             break;
+            
         ft_lexer_advance(lexer);
     }
+
+    // Check for unclosed quotes
+    if (in_single_quote || in_double_quote)
+        return (2);
 
     if (lexer->pos == start_pos)
         return (0);
@@ -80,4 +93,3 @@ int	ft_lexer_tokenize(t_lexer *lexer)
     }
     return (1);
 }
-

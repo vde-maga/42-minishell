@@ -34,7 +34,6 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 	args_counter = ft_parser_count_args(tokens);
 	if (args_counter > 0)
 	{
-
 		cmd_data->args = ft_calloc(args_counter + 1, sizeof(char *));
 		current = tokens;
 		i = 0;
@@ -44,19 +43,22 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 			If the current token is <, >, <<, >> the code adds the redirect (because the next token is surely a filename)
 			Because of that, just skips the next token.
 			*/
-		if (current->type >= TOKEN_REDIRECT_IN && current->type <= TOKEN_HEREDOC)
-		{
-			ft_parser_add_redirect(cmd_data, current);
-			current = current->next->next;
-		}
-		else if (current->type == TOKEN_WORD)
-		{
-			if (cmd_data->args && (current->value && current->value[0] != '\0'))
-				cmd_data->args[i++] = ft_strdup(current->value);
-			current = current->next;
-		}
-		else // this else means that its a single command, so, just ignores
-		current = current->next;
+			if (current->type >= TOKEN_REDIRECT_IN && current->type <= TOKEN_HEREDOC)
+			{
+				ft_parser_add_redirect(cmd_data, current);
+				if (current->next)
+					current = current->next->next;
+				else
+					break;
+			}
+			else if (current->type == TOKEN_WORD)
+			{
+				if (cmd_data->args && (current->value && current->value[0] != '\0'))
+					cmd_data->args[i++] = ft_strdup(current->value);
+				current = current->next;
+			}
+			else // this else means that its a single command, so, just ignores
+				current = current->next;
 		}
 	}
 	return (node);

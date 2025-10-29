@@ -47,3 +47,147 @@ int get_shell_pid_from_proc(void)
     pid = ft_atoi(buffer);
     return (pid);
 }
+
+char	*ft_expand_variables_in_string(t_env *env, char *str)
+{
+	char	*result;
+	char	*temp;
+	int		i, j;
+	int		in_single_quote;
+	int		in_double_quote;
+	char	var_name[256];
+	int		var_len;
+
+	if (!str)
+		return (NULL);
+	
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+	
+	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	
+	while (str[i])
+	{
+		if (str[i] == '\'' && !in_double_quote)
+		{
+			in_single_quote = !in_single_quote;
+			// Skip the quote - don't add to result
+			i++;
+		}
+		else if (str[i] == '"' && !in_single_quote)
+		{
+			in_double_quote = !in_double_quote;
+			// Skip the quote - don't add to result
+			i++;
+		}
+		else if (str[i] == '$' && !in_single_quote)
+		{
+			// Extract variable name
+			var_len = 0;
+			j = i + 1;
+			
+			// Handle case like $"HOME" - skip the quote after $ and continue with variable name
+			if (str[j] == '"' && !in_double_quote)
+			{
+				in_double_quote = 1; // Enter double quote mode
+				j++; // Skip the quote
+			}
+			
+			if (str[j] == '?' || str[j] == '$')
+			{
+				var_name[var_len++] = str[j++];
+			}
+			else
+			{
+				while (str[j] && (ft_isalnum(str[j]) || str[j] == '_'))
+				{
+					if (var_len < 255)
+						var_name[var_len++] = str[j];
+					j++;
+				}
+			}
+			var_name[var_len] = '\0';
+			
+			// Get variable value
+			if (var_len > 0)
+			{
+				char *var_value = ft_get_variable_value(env, var_name);
+				if (var_value)
+				{
+					temp = ft_strjoin(result, var_value);
+					free(result);
+					result = temp;
+					free(var_value);
+				}
+				i = j;
+			}
+			else
+			{
+				// If no valid variable name after $, treat $ as literal
+				temp = ft_strjoin_char(result, str[i]);
+				free(result);
+				result = temp;
+				i++;
+			}
+		}
+		else
+		{
+			temp = ft_strjoin_char(result, str[i]);
+			free(result);
+			result = temp;
+			i++;
+		}
+	}
+	
+	return (result);
+}
+
+char	*ft_strjoin_char(char *s1, char c)
+{
+	char	*result;
+	int		len;
+	
+	if (!s1)
+	{
+		result = malloc(2);
+		if (result)
+		{
+			result[0] = c;
+			result[1] = '\0';
+		}
+		return (result);
+	}
+	
+	len = ft_strlen(s1);
+	result = malloc(len + 2);
+	if (!result)
+		return (NULL);
+	
+	ft_strlcpy(result, s1, len + 1);
+	result[len] = c;
+	result[len + 1] = '\0';
+	
+	return (result);
+}
+
+char	*ft_get_variable_value(t_env *env, char *var_name)
+{
+	char	*value;
+	t_env	*env_node;
+	
+	if (!var_name || !*var_name)
+		return (ft_strdup(""));
+	if (ft_strcmp(var_name, "?") == 0)
+		return (ft_itoa(ft_exit_code(-1)));
+	else if (ft_strcmp(var_name, "$") == 0)
+		return (ft_itoa(get_shell_pid_from_proc()));
+	env_node = ft_get_env_var(env, var_name);
+	if (env_node && env_node->value)
+		value = ft_strdup(env_node->value);
+	else
+		value = ft_strdup("");
+	return (value);
+}
