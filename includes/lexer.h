@@ -47,6 +47,7 @@ void	ft_tokens_free(t_token *tokens);
 // lexer_utils.c
 void	ft_lexer_skip_spaces(t_lexer *lexer);
 void	ft_lexer_advance(t_lexer *lexer);
+t_token	*ft_lexer_invalid_token(t_token *tokens);
 
 // lexer.c
 void	ft_add_token(t_lexer *lexer, t_token_type type, char *value);

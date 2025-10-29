@@ -35,7 +35,9 @@ int	ft_builtin_exit(t_minishell *msdata, char **args)
 {
 	int	exit_code;
 
-	ft_putstr_fd("exit\n", 2);
+	if (msdata && msdata->shell_pid == get_shell_pid_from_proc() 
+		&& isatty(STDERR_FILENO))
+		ft_putstr_fd("exit\n", 2);
 	if (!args || !args[0] || !args[1])
 	{
 		exit_code = ft_exit_code(-1);

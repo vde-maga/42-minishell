@@ -31,6 +31,7 @@ typedef struct s_minishell
 	int				hdc_fds[2];
 	char			cwd[PATH_MAX];
 	int				exit_status;
+	int				shell_pid;
 }					t_minishell;
 
 #endif

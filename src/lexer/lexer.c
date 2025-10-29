@@ -74,15 +74,47 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 	result = ft_cmd_complete(ms_data->lexer->tokens);
 	if (result)
 	{
-		if (ft_lexer_valid(ms_data->lexer->tokens) == -1)
 		{
-			ft_printf("minishell: syntax error near unexpected token\n");
-			ft_tokens_free(ms_data->lexer->tokens);
-			ms_data->lexer->tokens = NULL;
-			ft_lexer_free(ms_data->lexer);
-			ms_data->lexer = NULL;
-			ft_exit_code(2);
-			return (-1);
+			t_token *bad_token;
+
+			bad_token = ft_lexer_invalid_token(ms_data->lexer->tokens);
+			if (bad_token)
+			{
+				if (bad_token->type == TOKEN_EOF)
+					ft_printf("minishell: syntax error near unexpected token `newline'\n");
+				else
+				{
+					if (bad_token->value && bad_token->value[0])
+						ft_printf("minishell: syntax error near unexpected token `%s'\n", bad_token->value);
+					else
+					{
+						if (bad_token->type == TOKEN_PIPE)
+							ft_printf("minishell: syntax error near unexpected token `|'\n");
+						else if (bad_token->type == TOKEN_OR)
+							ft_printf("minishell: syntax error near unexpected token `||'\n");
+						else if (bad_token->type == TOKEN_REDIRECT_IN)
+							ft_printf("minishell: syntax error near unexpected token `<'\n");
+						else if (bad_token->type == TOKEN_REDIRECT_OUT)
+							ft_printf("minishell: syntax error near unexpected token `>'\n");
+						else if (bad_token->type == TOKEN_APPEND)
+							ft_printf("minishell: syntax error near unexpected token `>>'\n");
+						else if (bad_token->type == TOKEN_HEREDOC)
+							ft_printf("minishell: syntax error near unexpected token `<<'\n");
+						else if (bad_token->type == TOKEN_AND)
+							ft_printf("minishell: syntax error near unexpected token `&'\n");
+						else if (bad_token->type == TOKEN_AND_IF)
+							ft_printf("minishell: syntax error near unexpected token `&&'\n");
+						else
+							ft_printf("minishell: syntax error near unexpected token `%s'\n", bad_token->value ? bad_token->value : "");
+					}
+				}
+				ft_tokens_free(ms_data->lexer->tokens);
+				ms_data->lexer->tokens = NULL;
+				ft_lexer_free(ms_data->lexer);
+				ms_data->lexer = NULL;
+				ft_exit_code(2);
+				return (-1);
+			}
 		}
 		ms_data->tokens = ms_data->lexer->tokens;
 		ms_data->lexer->tokens = NULL;
