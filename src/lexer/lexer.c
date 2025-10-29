@@ -24,7 +24,11 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
+	{
+		if (value)
+			free(value);
 		return ;
+	}
 	new_token->type = type;
 	new_token->value = value;
 	ft_tok_check_quoted(new_token);

@@ -3,6 +3,7 @@
 char	*ft_remove_quotes(char *str)
 {
 	char	*dest;
+	char	*result;
 	int		i, j;
 	int		length;
 	int		in_single_quote;
@@ -42,7 +43,20 @@ char	*ft_remove_quotes(char *str)
 		}
 	}
 	dest[j] = '\0';
-	return (dest);
+	
+	// If no quotes were removed, free dest and return a duplicate
+	if (j == length)
+	{
+		free(dest);
+		result = ft_strdup(str);
+		return (result);
+	}
+	
+	// If quotes were removed, we might have allocated more memory than needed
+	// Reallocate to the exact size to avoid wasting memory
+	result = ft_strdup(dest);
+	free(dest);
+	return (result);
 }
 
 int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)

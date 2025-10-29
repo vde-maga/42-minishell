@@ -25,6 +25,14 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 					free(old_value);
 				}
 			}
+			// Remove quotes after variable expansion
+			char *unquoted_value = ft_remove_quotes(current->value);
+			if (unquoted_value)
+			{
+				old_value = current->value;
+				current->value = unquoted_value;
+				free(old_value);
+			}
 		}
 		current = current->next;
 	}

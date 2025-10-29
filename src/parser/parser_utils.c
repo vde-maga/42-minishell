@@ -35,6 +35,12 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 	if (args_counter > 0)
 	{
 		cmd_data->args = ft_calloc(args_counter + 1, sizeof(char *));
+		if (!cmd_data->args)
+		{
+			free(cmd_data);
+			free(node);
+			return (NULL);
+		}
 		current = tokens;
 		i = 0;
 		while (current)
@@ -54,7 +60,24 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 			else if (current->type == TOKEN_WORD)
 			{
 				if (cmd_data->args && (current->value && current->value[0] != '\0'))
-					cmd_data->args[i++] = ft_strdup(current->value);
+				{
+					cmd_data->args[i] = ft_strdup(current->value);
+					if (!cmd_data->args[i])
+					{
+						// Free all previously allocated args
+						int j = 0;
+						while (j < i)
+						{
+							free(cmd_data->args[j]);
+							j++;
+						}
+						free(cmd_data->args);
+						free(cmd_data);
+						free(node);
+						return (NULL);
+					}
+					i++;
+				}
 				current = current->next;
 			}
 			else // this else means that its a single command, so, just ignores
