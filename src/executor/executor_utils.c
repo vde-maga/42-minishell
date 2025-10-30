@@ -27,7 +27,7 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
     else if (ft_strcmp(args[0], "echo") == 0)
         exit_code = ft_builtin_echo(args);
     else if (ft_strcmp(args[0], "unset") == 0)
-        exit_code = ft_builtin_unset(ms_data, args[1]);
+        exit_code = ft_builtin_unset(ms_data, args);
     else if (ft_strcmp(args[0], "env") == 0)
         exit_code = ft_builtin_env(ms_data);
     else if (ft_strcmp(args[0], "export") == 0)

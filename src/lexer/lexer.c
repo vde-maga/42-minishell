@@ -22,6 +22,13 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 	t_token	*new_token;
 	t_token	*current;
 
+	if (!lexer)
+	{
+		if (value)
+			free(value);
+		return ;
+	}
+	
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 	{
@@ -29,19 +36,30 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 			free(value);
 		return ;
 	}
+	
+	// Initialize token structure
 	new_token->type = type;
 	new_token->value = value;
-	ft_tok_check_quoted(new_token);
+	new_token->quote = 0;
+	new_token->was_quoted = 0;
 	new_token->next = NULL;
+	
+	// Check quote status
+	ft_tok_check_quoted(new_token);
+	
+	// Add to token list
 	if (!lexer->tokens)
 	{
 		lexer->tokens = new_token;
 		return ;
 	}
+	
 	current = lexer->tokens;
-	while (current->next)
+	while (current && current->next)
 		current = current->next;
-	current->next = new_token;
+	
+	if (current)
+		current->next = new_token;
 }
 
 int	ft_cmd_complete(t_token *tokens)

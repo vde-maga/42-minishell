@@ -15,7 +15,6 @@ static int	ft_is_redirect(t_token_type type)
 t_token	*ft_lexer_invalid_token(t_token *tokens)
 {
     t_token *current;
-    static t_token newline_sentinel = { .type = TOKEN_EOF, .value = NULL, .quote = 0, .was_quoted = 0, .next = NULL };
 
     if (!tokens)
         return (NULL);
@@ -27,16 +26,16 @@ t_token	*ft_lexer_invalid_token(t_token *tokens)
         if (ft_is_operator(current->type))
         {
             if (!current->next)
-                return (&newline_sentinel);
+                return (current); // Return the operator itself instead of sentinel
             if (ft_is_operator(current->next->type))
                 return (current->next);
             if (current->next->type == TOKEN_EOF)
-                return (&newline_sentinel);
+                return (current); // Return the operator itself
         }
         if (ft_is_redirect(current->type))
         {
             if (!current->next)
-                return (&newline_sentinel);
+                return (current); // Return the redirect itself
             if (current->next->type != TOKEN_WORD)
                 return (current->next);
         }

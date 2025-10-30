@@ -41,11 +41,19 @@ void	ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok)
 	t_redir	*new_redirect;
 	t_redir	*last;
 
+	if (!cmd_data || !redirect_tok)
+		return ;
+		
 	if (!redirect_tok->next || redirect_tok->next->type != TOKEN_WORD)
 		return ;
+		
+	if (!redirect_tok->next->value)
+		return ;
+		
 	new_redirect = ft_calloc(1, sizeof(t_redir));
 	if (!new_redirect)
 		return ;
+	
 	new_redirect->type = redirect_tok->type;
 	new_redirect->filename = ft_strdup(redirect_tok->next->value);
 	if (!new_redirect->filename)
@@ -54,14 +62,17 @@ void	ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok)
 		return ;
 	}
 	new_redirect->was_quoted = redirect_tok->next->was_quoted;
+	new_redirect->next = NULL;
+	
 	if (!cmd_data->redirs)
 		cmd_data->redirs = new_redirect;
 	else
 	{
 		last = cmd_data->redirs;
-		while (last->next)
+		while (last && last->next)
 			last = last->next;
-		last->next=new_redirect;
+		if (last)
+			last->next = new_redirect;
 	}
 }
 
@@ -69,6 +80,7 @@ void	ft_parser_free(t_parser_node *node)
 {
 	if (!node)
 		return;
+		
 	if (node->left)
 		ft_parser_free(node->left);
 	if (node->right)
@@ -80,7 +92,8 @@ void	ft_parser_free(t_parser_node *node)
 			int i = 0;
 			while (node->cmd_data->args[i])
 			{
-				free(node->cmd_data->args[i]);
+				if (node->cmd_data->args[i])
+					free(node->cmd_data->args[i]);
 				i++;
 			}
 			free(node->cmd_data->args);

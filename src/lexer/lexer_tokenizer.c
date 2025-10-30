@@ -23,11 +23,12 @@ static int	ft_lex_read_word(t_lexer *lexer)
     int start_pos;
     int in_single_quote = 0;
     int in_double_quote = 0;
+    char c;
 
     start_pos = lexer->pos;
     while (lexer->pos < lexer->len && lexer->input[lexer->pos] && ft_isprint_byte((int)lexer->input[lexer->pos]))
     {
-        char c = lexer->input[lexer->pos];
+        c = lexer->input[lexer->pos];
         
         // Handle quotes separately for proper mixed quote handling
         if (c == '\'' && !in_double_quote)
@@ -57,14 +58,18 @@ static int	ft_lex_read_word(t_lexer *lexer)
 
     if (lexer->pos == start_pos)
         return (0);
-    {
-        int length = lexer->pos - start_pos;
-        char *word = malloc(length + 1);
-        if (!word)
-            return (-1);
-        ft_strlcpy(word, &lexer->input[start_pos], length + 1);
-        ft_add_token(lexer, TOKEN_WORD, word);
-    }
+    
+    // Extract the word with proper bounds checking
+    int length = lexer->pos - start_pos;
+    if (length <= 0)
+        return (0);
+        
+    char *word = malloc(length + 1);
+    if (!word)
+        return (-1);
+    
+    ft_strlcpy(word, &lexer->input[start_pos], length + 1);
+    ft_add_token(lexer, TOKEN_WORD, word);
     return (1);
 }
 

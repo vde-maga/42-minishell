@@ -74,13 +74,19 @@ char	*ft_expand_variables_in_string(t_env *env, char *str)
 		if (str[i] == '\'' && !in_double_quote)
 		{
 			in_single_quote = !in_single_quote;
-			// Skip the quote - don't add to result
+			// Add the quote to result for proper quote handling
+			temp = ft_strjoin_char(result, str[i]);
+			free(result);
+			result = temp;
 			i++;
 		}
 		else if (str[i] == '"' && !in_single_quote)
 		{
 			in_double_quote = !in_double_quote;
-			// Skip the quote - don't add to result
+			// Add the quote to result for proper quote handling
+			temp = ft_strjoin_char(result, str[i]);
+			free(result);
+			result = temp;
 			i++;
 		}
 		else if (str[i] == '$' && !in_single_quote)
@@ -89,14 +95,25 @@ char	*ft_expand_variables_in_string(t_env *env, char *str)
 			var_len = 0;
 			j = i + 1;
 			
-			// Handle case like $"HOME" - skip the quote after $ and continue with variable name
+			// Handle $"VAR" pattern - treat as literal $ followed by quoted string
 			if (str[j] == '"' && !in_double_quote)
 			{
-				in_double_quote = 1; // Enter double quote mode
-				j++; // Skip the quote
+				temp = ft_strjoin_char(result, str[i]);
+				free(result);
+				result = temp;
+				i++;
+				continue;
 			}
-			
-			if (str[j] == '?' || str[j] == '$')
+			// Handle $'VAR' pattern - treat as literal $ followed by quoted string
+			else if (str[j] == '\'' && !in_double_quote)
+			{
+				temp = ft_strjoin_char(result, str[i]);
+				free(result);
+				result = temp;
+				i++;
+				continue;
+			}
+			else if (str[j] == '?' || str[j] == '$')
 			{
 				var_name[var_len++] = str[j++];
 			}

@@ -9,6 +9,9 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 	char	*old_value;
 	char	*expanded_value;
 
+	if (!msdata || !env)
+		return (-1);
+		
 	current = msdata->tokens;
 	ret_val = 0;
 	while (current)
@@ -24,6 +27,11 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 					current->value = expanded_value;
 					free(old_value);
 				}
+				else
+				{
+					// Expansion failed, return error
+					return (-1);
+				}
 			}
 			// Remove quotes after variable expansion
 			char *unquoted_value = ft_remove_quotes(current->value);
@@ -32,6 +40,11 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 				old_value = current->value;
 				current->value = unquoted_value;
 				free(old_value);
+			}
+			else
+			{
+				// Quote removal failed, return error
+				return (-1);
 			}
 		}
 		current = current->next;

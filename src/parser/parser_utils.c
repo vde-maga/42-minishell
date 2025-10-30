@@ -26,11 +26,21 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 	int				i;
 	int				args_counter;
 	
+	if (!tokens)
+		return (NULL);
+	
 	node = ft_parser_new_node(NODE_CMD);
+	if (!node)
+		return (NULL);
+		
 	cmd_data = ft_calloc(1, sizeof(t_cmd_node));
 	if (!cmd_data)
-		return (free(node), NULL);
+	{
+		free(node);
+		return (NULL);
+	}
 	node->cmd_data = cmd_data;
+	
 	args_counter = ft_parser_count_args(tokens);
 	if (args_counter > 0)
 	{
@@ -59,7 +69,7 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 			}
 			else if (current->type == TOKEN_WORD)
 			{
-				if (cmd_data->args && (current->value && current->value[0] != '\0'))
+				if (cmd_data->args && current->value && current->value[0] != '\0')
 				{
 					cmd_data->args[i] = ft_strdup(current->value);
 					if (!cmd_data->args[i])
@@ -68,7 +78,8 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 						int j = 0;
 						while (j < i)
 						{
-							free(cmd_data->args[j]);
+							if (cmd_data->args[j])
+								free(cmd_data->args[j]);
 							j++;
 						}
 						free(cmd_data->args);

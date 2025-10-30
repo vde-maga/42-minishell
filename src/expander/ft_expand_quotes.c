@@ -8,12 +8,14 @@ char	*ft_remove_quotes(char *str)
 	int		length;
 	int		in_single_quote;
 	int		in_double_quote;
+	int		quotes_removed;
 
 	if (!str)
 		return (NULL);
+		
 	length = ft_strlen(str);
-	if (length < 2)
-		return (ft_strdup(str));
+	if (length == 0)
+		return (ft_strdup(""));
 	
 	// Always use the complex case to handle all quote scenarios properly
 	dest = (char *)malloc(sizeof(char) * (length + 1));
@@ -24,28 +26,40 @@ char	*ft_remove_quotes(char *str)
 	j = 0;
 	in_single_quote = 0;
 	in_double_quote = 0;
+	quotes_removed = 0;
+	
 	while (str[i])
 	{
 		if (str[i] == '\'' && !in_double_quote)
 		{
 			in_single_quote = !in_single_quote;
+			quotes_removed = 1;
 			i++;
 		}
 		else if (str[i] == '"' && !in_single_quote)
 		{
 			in_double_quote = !in_double_quote;
+			quotes_removed = 1;
 			i++;
 		}
 		else
 		{
-			dest[j++] = str[i];
+			if (j < length) // Prevent buffer overflow
+				dest[j++] = str[i];
 			i++;
 		}
 	}
 	dest[j] = '\0';
 	
+	// Check for unclosed quotes - if found, return original string
+	if (in_single_quote || in_double_quote)
+	{
+		free(dest);
+		return (ft_strdup(str));
+	}
+	
 	// If no quotes were removed, free dest and return a duplicate
-	if (j == length)
+	if (!quotes_removed || j == length)
 	{
 		free(dest);
 		result = ft_strdup(str);

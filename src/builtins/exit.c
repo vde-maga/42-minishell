@@ -31,6 +31,45 @@ static void	ft_exit_free_and_exit(t_minishell *msdata, int exit_code)
 	exit(exit_code);
 }
 
+static int	ft_handle_mixed_quotes_exit(char *arg)
+{
+	char	*processed;
+	int		i;
+	int		j;
+	int		is_valid_numeric;
+	int		exit_code;
+
+	processed = malloc(ft_strlen(arg) + 1);
+	if (!processed)
+		return (-1);
+	i = 0;
+	j = 0;
+	while (arg[i])
+	{
+		if (arg[i] != '"' && arg[i] != '\'')
+		{
+			processed[j++] = arg[i];
+		}
+		i++;
+	}
+	processed[j] = '\0';
+	if (j == 0)
+		return (free(processed), -1);
+	is_valid_numeric = 1;
+	i = 0;
+	while (processed[i])
+	{
+		if (!ft_isdigit(processed[i]))
+			is_valid_numeric = 0;
+		i++;
+	}
+	exit_code = -1;
+	if (is_valid_numeric)
+		exit_code = ft_atoi(processed) % 256;
+	free(processed);
+	return (exit_code);
+}
+
 static int	ft_handle_quoted_exit(char *arg)
 {
 	char	*unquoted;
@@ -40,8 +79,9 @@ static int	ft_handle_quoted_exit(char *arg)
 	int		exit_code;
 
 	len = ft_strlen(arg);
-	if (len <= 2 || arg[0] != '"' || arg[len - 1] != '"')
-		return (-1);
+	if (len <= 2 || (arg[0] != '"' && arg[0] != '\'') ||
+		(arg[len - 1] != '"' && arg[len - 1] != '\''))
+		return (ft_handle_mixed_quotes_exit(arg));
 	unquoted = malloc(len - 1);
 	if (!unquoted)
 		return (-1);
