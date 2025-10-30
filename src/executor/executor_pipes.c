@@ -6,6 +6,7 @@ static void	ft_exec_pipe_child_left(t_minishell *ms_data, t_parser_node *node,
 	int	status;
 
 	ft_signal_set_fork1_signal();
+	//printf("DEBUG - ft_exec_pipe_child_left\n");
 	close(pipefd[0]);
 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 	{
@@ -26,6 +27,7 @@ static void	ft_exec_pipe_child_right(t_minishell *ms_data, t_parser_node *node,
 	int	status;
 
 	ft_signal_set_fork1_signal();
+	//printf("DEBUG - ft_exec_pipe_child_right\n");
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 	{
@@ -52,7 +54,6 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 	{
 		if (ms_data->print_flag == 0)
 		{
-			printf("FILHA DE UMA GRANDE PUTAAAAAA\n\n\n\n");
 			if (WTERMSIG(status) == SIGQUIT)
 				write(2, "Quit (core dumped)\n", 19);
 			else if (WTERMSIG(status) == SIGINT)
@@ -62,6 +63,7 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 		}
 	}
 	ft_signal_handle_signals();
+	//printf("DEBUG - ft_exec_pipe_wait\n");
 }
 
 static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
@@ -71,6 +73,7 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	pid_t	pid2;
 
 	ft_signal_set_main_signals();
+	//printf("DEBUG - ft_exec_pipe_fork_children\n");
 	pid1 = fork();
 	if (pid1 == -1)
 		return (perror("fork"), close(pipefd[0]), close(pipefd[1]), -1);
@@ -94,6 +97,8 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 {
 	int	pipefd[2];
+
+	ms_data->print_flag = 0;
 
 	if (!node || !node->left || !node->right)
 		return (0);

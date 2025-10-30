@@ -4,8 +4,7 @@ static void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	char	**env_array;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	ft_signal_set_fork1_signal();
 	if (ft_apply_redirects(cmd) < 0)
 	{
 		ft_free_shell_child(ms_data);
@@ -45,6 +44,7 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;
 
+	ms_data->print_flag = 0;
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
 	if (ft_process_heredocs(ms_data, cmd) < 0)
