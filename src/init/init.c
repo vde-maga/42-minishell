@@ -39,6 +39,7 @@ void ft_init_vars(t_minishell *ms_data, char **envp)
 	ms_data->input = NULL;
 	ms_data->tokens = NULL;
 	ms_data->parser = NULL;
+	ms_data->print_flag = 0;
 	ms_data->shell_pid = get_shell_pid_from_proc();
 	ft_exit_code(0);
 }
