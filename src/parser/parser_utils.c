@@ -69,7 +69,7 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 			}
 			else if (current->type == TOKEN_WORD)
 			{
-				if (cmd_data->args && current->value && current->value[0] != '\0')
+				if (cmd_data->args && current->value) // Include empty strings as valid arguments
 				{
 					cmd_data->args[i] = ft_strdup(current->value);
 					if (!cmd_data->args[i])

@@ -97,5 +97,5 @@ int	ft_builtin_export(t_minishell *msdata, char *arg)
 		free(var_name), 1);
 	value = ft_remove_quotes(equal_sign + 1);
 	result = ft_set_env_var(&msdata->env_list, var_name, value);
-	return (free(var_name), result);
+	return (free(value), free(var_name), result);
 }

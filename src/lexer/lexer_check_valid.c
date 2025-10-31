@@ -35,24 +35,34 @@ static int	ft_check_redirect(t_token *token)
 int	ft_lexer_valid(t_token *tokens)
 {
 	t_token	*current;
+	int		has_command;
 
 	if (!tokens)
 		return (1);
 	current = tokens;
 	if (ft_is_operator(current->type))
 		return (-1);
+	if (ft_is_redirect(current->type))
+		return (-1);
+
+	has_command = 0;
 	while (current)
 	{
 		if (ft_is_operator(current->type))
 		{
 			if (ft_check_operator(current) == -1)
 				return (-1);
+			has_command = 0; // Reset after operator
 		}
-		if (ft_is_redirect(current->type))
+		else if (ft_is_redirect(current->type))
 		{
 			if (ft_check_redirect(current) == -1)
 				return (-1);
+			if (!has_command)
+				return (-1); // Redirect without command
 		}
+		else if (current->type == TOKEN_WORD)
+			has_command = 1;
 		current = current->next;
 	}
 	return (1);

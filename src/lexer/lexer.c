@@ -103,31 +103,39 @@ int	ft_lexer(t_minishell *ms_data, char *input)
 			if (bad_token)
 			{
 				if (bad_token->type == TOKEN_EOF)
-					ft_printf("minishell: syntax error near unexpected token `newline'\n");
+					ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 				else
 				{
 					if (bad_token->value && bad_token->value[0])
-						ft_printf("minishell: syntax error near unexpected token `%s'\n", bad_token->value);
+					{
+						ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+						ft_putstr_fd(bad_token->value, 2);
+						ft_putstr_fd("'\n", 2);
+					}
 					else
 					{
 						if (bad_token->type == TOKEN_PIPE)
-							ft_printf("minishell: syntax error near unexpected token `|'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 						else if (bad_token->type == TOKEN_OR)
-							ft_printf("minishell: syntax error near unexpected token `||'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `||'\n", 2);
 						else if (bad_token->type == TOKEN_REDIRECT_IN)
-							ft_printf("minishell: syntax error near unexpected token `<'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
 						else if (bad_token->type == TOKEN_REDIRECT_OUT)
-							ft_printf("minishell: syntax error near unexpected token `>'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
 						else if (bad_token->type == TOKEN_APPEND)
-							ft_printf("minishell: syntax error near unexpected token `>>'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `>>'\n", 2);
 						else if (bad_token->type == TOKEN_HEREDOC)
-							ft_printf("minishell: syntax error near unexpected token `<<'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `<<'\n", 2);
 						else if (bad_token->type == TOKEN_AND)
-							ft_printf("minishell: syntax error near unexpected token `&'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `&'\n", 2);
 						else if (bad_token->type == TOKEN_AND_IF)
-							ft_printf("minishell: syntax error near unexpected token `&&'\n");
+							ft_putstr_fd("minishell: syntax error near unexpected token `&&'\n", 2);
 						else
-							ft_printf("minishell: syntax error near unexpected token `%s'\n", bad_token->value ? bad_token->value : "");
+						{
+							ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+							ft_putstr_fd(bad_token->value ? bad_token->value : "", 2);
+							ft_putstr_fd("'\n", 2);
+						}
 					}
 				}
 				ft_tokens_free(ms_data->lexer->tokens);

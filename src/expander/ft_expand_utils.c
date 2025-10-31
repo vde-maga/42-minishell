@@ -89,19 +89,47 @@ char	*ft_expand_variables_in_string(t_env *env, char *str)
 			result = temp;
 			i++;
 		}
+				else if (str[i] == '\\' && !in_single_quote)
+		{
+			// Handle escape sequences properly
+			i++;
+			if (str[i])
+			{
+				// For any escaped character, preserve it literally
+				temp = ft_strjoin_char(result, str[i]);
+				free(result);
+				result = temp;
+				i++;
+			}
+			else
+			{
+				// If backslash at end of string, preserve it
+				temp = ft_strjoin_char(result, '\\');
+				free(result);
+				result = temp;
+			}
+		}
 		else if (str[i] == '$' && !in_single_quote)
 		{
 			// Extract variable name
 			var_len = 0;
 			j = i + 1;
 			
-			// Handle $"VAR" pattern - treat as literal $ followed by quoted string
+			// Handle $"VAR" pattern - treat as literal string VAR (no expansion)
 			if (str[j] == '"' && !in_double_quote)
 			{
-				temp = ft_strjoin_char(result, str[i]);
-				free(result);
-				result = temp;
-				i++;
+				// Skip the opening quote and $, treat content as literal
+				i += 2; // Skip $ and "
+				while (str[i] && str[i] != '"')
+				{
+					temp = ft_strjoin_char(result, str[i]);
+					free(result);
+					result = temp;
+					i++;
+				}
+				// Skip the closing quote if present
+				if (str[i] == '"')
+					i++;
 				continue;
 			}
 			// Handle $'VAR' pattern - treat as literal $ followed by quoted string
