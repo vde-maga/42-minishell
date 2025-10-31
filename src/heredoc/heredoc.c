@@ -22,8 +22,10 @@ static char	*ft_expand_heredoc_line(t_minishell *ms_data, char *line)
 
 static int	ft_heredoc_error(char *clean_delim)
 {
-	ft_printf("minishell: warning: heredoc delimited by EOF ");
-	ft_printf("(wanted `%s')\n", clean_delim);
+	ft_putstr_fd("minishell: warning: heredoc delimited by EOF ", 2);
+	ft_putstr_fd("(wanted `", 2);
+	ft_putstr_fd(clean_delim, 2);
+	ft_putstr_fd("')\n", 2);
 	//free(clean_delim);
 	clean_delim = NULL;
 	return (-1);
