@@ -61,4 +61,3 @@ t_env	**ft_env_to_array(t_env *env_list, int count)
 	env_array[i] = NULL;
 	return (env_array);
 }
-

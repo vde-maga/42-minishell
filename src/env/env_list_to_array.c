@@ -17,17 +17,11 @@ static char	*ft_create_env_string(t_env *env_node)
 	return (env_string);
 }
 
-char	**ft_env_list_to_array(t_env *env_list)
+static int	ft_env_populate_array(char **env_array, t_env *env_list)
 {
-	char	**env_array;
 	t_env	*current;
-	int		count;
 	int		i;
 
-	count = ft_env_count_vars(env_list);
-	env_array = malloc(sizeof(char *) * (count + 1));
-	if (!env_array)
-		return (NULL);
 	current = env_list;
 	i = 0;
 	while (current)
@@ -39,12 +33,26 @@ char	**ft_env_list_to_array(t_env *env_list)
 			{
 				while (--i >= 0)
 					free(env_array[i]);
-				return (free(env_array), NULL);
+				return (-1);
 			}
 			i++;
 		}
 		current = current->next;
 	}
 	env_array[i] = NULL;
+	return (i);
+}
+
+char	**ft_env_list_to_array(t_env *env_list)
+{
+	char	**env_array;
+	int		count;
+
+	count = ft_env_count_vars(env_list);
+	env_array = malloc(sizeof(char *) * (count + 1));
+	if (!env_array)
+		return (NULL);
+	if (ft_env_populate_array(env_array, env_list) == -1)
+		return (free(env_array), NULL);
 	return (env_array);
 }

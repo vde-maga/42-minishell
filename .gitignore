@@ -61,7 +61,9 @@ dkms.conf
 minishell
 obj/
 *.txt
+.r*/
 
 #custom norminette
 norminette/
 run_local.py
+*.md
