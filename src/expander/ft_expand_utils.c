@@ -29,24 +29,7 @@ int	is_valid_special_param(char *str)
 	return (0);
 }
 
-int get_shell_pid_from_proc(void)
-{
-	ssize_t bytes_read;
-	char buffer[256];
-    int fd;
-	int pid;
 
-	fd = open("/proc/self/stat", O_RDONLY);
-    if (fd == -1)
-        return -1;
-    bytes_read = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
-    if (bytes_read <= 0)
-        return -1;
-    buffer[bytes_read] = '\0';
-    pid = ft_atoi(buffer);
-    return (pid);
-}
 
 char	*ft_expand_variables_in_string(t_env *env, char *str)
 {
@@ -216,23 +199,4 @@ char	*ft_strjoin_char(char *s1, char c)
 	result[len + 1] = '\0';
 	
 	return (result);
-}
-
-char	*ft_get_variable_value(t_env *env, char *var_name)
-{
-	char	*value;
-	t_env	*env_node;
-	
-	if (!var_name || !*var_name)
-		return (ft_strdup(""));
-	if (ft_strcmp(var_name, "?") == 0)
-		return (ft_itoa(ft_exit_code(-1)));
-	else if (ft_strcmp(var_name, "$") == 0)
-		return (ft_itoa(get_shell_pid_from_proc()));
-	env_node = ft_get_env_var(env, var_name);
-	if (env_node && env_node->value)
-		value = ft_strdup(env_node->value);
-	else
-		value = ft_strdup("");
-	return (value);
 }

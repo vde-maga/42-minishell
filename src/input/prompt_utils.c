@@ -13,13 +13,17 @@ static void ft_prompt_append(char *p, const char *s)
 
 void	ft_prompt_print_default(t_minishell *ms_data, char *prompt)
 {
+	char *short_cwd;
+
 	ft_prompt_clear(prompt);
 	ft_prompt_append(prompt, RL_BOLD_RED);
 	ft_prompt_append(prompt, "minishell$>");
 	ft_prompt_append(prompt, RL_RESET);
 	ft_prompt_append(prompt, " ");
 	ft_prompt_append(prompt, RL_BLUE);
-	ft_prompt_append(prompt, ms_data->cwd);
+	short_cwd = ft_path_tilde_shorten(ms_data->env_list, ms_data->cwd);
+	ft_prompt_append(prompt, short_cwd);
+	free(short_cwd);
 	ft_prompt_append(prompt, RL_RESET);
 	ft_prompt_append(prompt, " ");
 	ft_prompt_append(prompt, RL_GREEN);

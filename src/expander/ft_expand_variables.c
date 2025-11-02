@@ -22,20 +22,13 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 		if (current->value && current->type == TOKEN_WORD)
 		{
 			// Tilde expansion
-			if (current->value[0] == '~' && (current->value[1] == '/' || current->value[1] == '\0') && !current->was_quoted)
+			if (current->value[0] == '~' && !current->was_quoted)
 			{
-				char *home_dir = ft_get_variable_value(env, "HOME");
-				if (home_dir && *home_dir)
+				char *expanded_path = ft_path_tilde_expand(env, current->value);
+				if (expanded_path)
 				{
-					char *rest_of_path = current->value + 1;
-					char *new_value = ft_strjoin(home_dir, rest_of_path);
-					free(home_dir);
 					free(current->value);
-					current->value = new_value;
-				}
-				else if (home_dir)
-				{
-					free(home_dir);
+					current->value = expanded_path;
 				}
 			}
 

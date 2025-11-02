@@ -7,6 +7,7 @@
 # include "structs.h"
 # include "lexer.h"
 # include "parser.h"
+# include "path_utils.h"
 # include "wrappers.h"
 # include "heredoc.h"
 # include "expander.h"
