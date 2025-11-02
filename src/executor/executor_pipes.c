@@ -88,9 +88,9 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	}
 	if (pid2 == 0)
 		ft_exec_pipe_child_right(ms_data, node, pipefd);
-	ft_exec_pipe_wait(pid1, pid2, ms_data);
 	close(pipefd[0]);
 	close(pipefd[1]);
+	ft_exec_pipe_wait(pid1, pid2, ms_data);
 	return (0);
 }
 

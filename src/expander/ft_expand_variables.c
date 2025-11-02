@@ -21,6 +21,24 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 	{
 		if (current->value && current->type == TOKEN_WORD)
 		{
+			// Tilde expansion
+			if (current->value[0] == '~' && (current->value[1] == '/' || current->value[1] == '\0') && !current->was_quoted)
+			{
+				char *home_dir = ft_get_variable_value(env, "HOME");
+				if (home_dir && *home_dir)
+				{
+					char *rest_of_path = current->value + 1;
+					char *new_value = ft_strjoin(home_dir, rest_of_path);
+					free(home_dir);
+					free(current->value);
+					current->value = new_value;
+				}
+				else if (home_dir)
+				{
+					free(home_dir);
+				}
+			}
+
 			// Check if this is a quoted heredoc delimiter
 			// A token is a heredoc delimiter if it follows a << operator
 			int is_heredoc_delim = 0;

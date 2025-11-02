@@ -7,7 +7,7 @@ int ft_exec_is_builtin(char *cmd)
     if (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo")
         || !ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export")
             || !ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env")
-                || !ft_strcmp(cmd, "exit")) 
+                || !ft_strcmp(cmd, "exit") || !ft_strcmp(cmd, ".")) 
         return 1;
     return 0;
 }
@@ -34,6 +34,17 @@ int ft_exec_run_builtin(t_minishell *ms_data, char **args)
         exit_code = ft_builtin_export(ms_data, args[1]);
     else if (ft_strcmp(args[0], "exit") == 0)
         exit_code = ft_builtin_exit(ms_data, args);
+	else if (ft_strcmp(args[0], ".") == 0)
+	{
+		if (!args[1])
+		{
+			ft_putstr_fd("minishell: .: filename argument required\n", 2);
+			ft_putstr_fd("minishell: usage: . filename [arguments]\n", 2);
+			exit_code = 2;
+		}
+		else
+			exit_code = 0;
+	}
     else
         exit_code = -1;
     return (exit_code);

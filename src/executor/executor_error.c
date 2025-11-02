@@ -41,7 +41,9 @@ void	ft_handle_path_not_found(char *cmd_name, char **env_array,
 {
 	if (errno == EISDIR)
 	{
-		ft_printf("%s: Is a directory\n", cmd_name);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_name, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
 		ft_free_str_arrays(env_array);
 		ft_free_shell_child(ms_data);
 		_exit(126);
