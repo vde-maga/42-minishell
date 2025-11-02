@@ -5,20 +5,20 @@ void	ft_free_str_arrays(char **str)
 	int	i;
 
 	if (!str)
-		return;
+		return ;
 	i = 0;
 	while (str[i])
 	{
 		free(str[i]);
 		i++;
 	}
-	free (str);
+	free(str);
 }
 
 void	ft_free_shell(t_minishell *ms_data)
 {
 	if (!ms_data)
-		return;
+		return ;
 	if (ms_data->env)
 	{
 		ft_free_str_arrays(ms_data->env);
