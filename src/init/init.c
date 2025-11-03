@@ -48,8 +48,10 @@ static void	ft_init_shlvl(t_env *env_list)
 	ft_init_shlvl_update(env_list, new_shlvl);
 }
 
-void	ft_init_vars(t_minishell *ms_data, char **envp)
+void	ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av)
 {
+	(void) ac;
+	(void) av;
 	ms_data->env_list = ft_get_env_list(envp);
 	ft_init_shlvl(ms_data->env_list);
 	ms_data->env = NULL;

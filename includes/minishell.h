@@ -43,7 +43,7 @@ void	ft_prompt_print_default(t_minishell *ms_data, char *prompt);
 void	ft_prompt_print_incomplete(char *prompt);
 
 // ---------------------- Init -------------------------------------------------
-void	ft_init_vars(t_minishell *ms_data, char **envp);
+void	ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av);
 
 // ---------------------- Error ------------------------------------------------
 void	ft_exit_failure(t_minishell *ms_data, char *error);

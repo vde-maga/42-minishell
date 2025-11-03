@@ -1,50 +1,40 @@
 #include "../includes/minishell.h"
 
-static int	ft_is_operator(t_token_type type)
+static t_token	*ft_validate_token(t_token *current)
 {
-    return (type == TOKEN_PIPE || type == TOKEN_OR || type == TOKEN_AND
-        || type == TOKEN_AND_IF);
-}
+	t_token	*result;
 
-static int	ft_is_redirect(t_token_type type)
-{
-    return (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT
-        || type == TOKEN_APPEND || type == TOKEN_HEREDOC);
+	if (ft_is_operator(current->type))
+	{
+		result = ft_check_operator_validity(current);
+		if (result)
+			return (result);
+	}
+	else if (ft_is_redirect(current->type))
+	{
+		result = ft_check_redirect_validity(current);
+		if (result)
+			return (result);
+	}
+	return (NULL);
 }
 
 t_token	*ft_lexer_invalid_token(t_token *tokens)
 {
-    t_token *current;
+	t_token	*current;
+	t_token	*result;
 
-    if (!tokens)
-        return (NULL);
-    current = tokens;
-    if (ft_is_operator(current->type))
-        return (current);
-    if (ft_is_redirect(current->type))
-        return (current);
-
-    while (current)
-    {
-        if (ft_is_operator(current->type))
-        {
-            if (!current->next)
-                return (current); // Return the operator itself instead of sentinel
-            if (ft_is_operator(current->next->type))
-                return (current->next);
-            if (current->next->type == TOKEN_EOF)
-                return (current); // Return the operator itself
-        }
-        else if (ft_is_redirect(current->type))
-        {
-            if (!current->next)
-                return (current); // Return the redirect itself
-            if (current->next->type != TOKEN_WORD)
-                return (current->next);
-            // Allow redirections without explicit commands (bash compatibility)
-            // The executor will handle the runtime error if the redirection fails
-        }
-        current = current->next;
-    }
-    return (NULL);
+	if (!tokens)
+		return (NULL);
+	current = tokens;
+	if (ft_is_operator(current->type))
+		return (current);
+	while (current)
+	{
+		result = ft_validate_token(current);
+		if (result)
+			return (result);
+		current = current->next;
+	}
+	return (NULL);
 }

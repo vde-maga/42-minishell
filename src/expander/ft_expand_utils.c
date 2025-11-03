@@ -115,13 +115,18 @@ char	*ft_expand_variables_in_string(t_env *env, char *str)
 					i++;
 				continue;
 			}
-			// Handle $'VAR' pattern - treat as literal $ followed by quoted string
 			else if (str[j] == '\'' && !in_double_quote)
 			{
-				temp = ft_strjoin_char(result, str[i]);
-				free(result);
-				result = temp;
-				i++;
+				i += 2;
+				while (str[i] && str[i] != '\'')
+				{
+					temp = ft_strjoin_char(result, str[i]);
+					free(result);
+					result = temp;
+					i++;
+				}
+				if (str[i] == '\'')
+					i++;
 				continue;
 			}
 			else if (str[j] == '?' || str[j] == '$')

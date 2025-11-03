@@ -38,6 +38,10 @@ typedef struct s_lexer
 
 // lexer_check_valid.c
 int		ft_lexer_valid(t_token *tokens);
+int		ft_is_operator(t_token_type type);
+int		ft_is_redirect(t_token_type type);
+t_token	*ft_check_operator_validity(t_token *current);
+t_token	*ft_check_redirect_validity(t_token *current);
 
 // lexer_free.c
 void	ft_lexer_free(t_lexer *lexer);

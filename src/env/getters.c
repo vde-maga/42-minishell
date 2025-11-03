@@ -9,9 +9,10 @@ static t_env	*ft_init_minimal_env(void)
 	if (getcwd(cwd, PATH_MAX) == NULL)
 		ft_strlcpy(cwd, "/", PATH_MAX);
 	ft_set_env_var(&head, "PWD", cwd);
-	ft_set_env_var(&head, "SHLVL", "1");
+	ft_set_env_var(&head, "SHLVL", "0");
 	ft_set_env_var(&head, "_", "/usr/bin/env");
-	ft_set_env_var(&head, "PATH", "/usr/local/bin:/usr/bin:/bin");
+	ft_set_env_var(&head, "OLDPWD", NULL);
+	ft_set_env_var(&head, "PATH", "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.");
 	return (head);
 }
 

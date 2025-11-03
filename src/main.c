@@ -6,10 +6,10 @@ int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms_data;
 	int			lexer_result;
-	
-	(void)ac;
-	(void)av;
-	ft_init_vars(&ms_data, envp);
+
+	if (ac == 3 && ft_strcmp(av[1], "-c") == 0 && av[2])
+		return (ft_debug_main_with_c_flag(ac, av, envp));
+	ft_init_vars(&ms_data, envp, ac, av);
 	ft_signal_handle_signals();
 	while (1)
 	{
@@ -29,8 +29,7 @@ int	main(int ac, char **av, char **envp)
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
 	}
-	ft_free_shell(&ms_data);
-	return (EXIT_SUCCESS);
+	return (ft_free_shell(&ms_data), EXIT_SUCCESS);
 }
 
 void	ft_line_ready(t_minishell *ms_data)
