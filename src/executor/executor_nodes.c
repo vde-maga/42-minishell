@@ -45,10 +45,19 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 	pid_t	pid;
 
 	ms_data->print_flag = 0;
-	if (!cmd || !cmd->args || !cmd->args[0])
-		return (0);
 	if (ft_process_heredocs(ms_data, cmd) < 0)
 		return (ft_exit_code(1), 1);
+	if (!cmd || !cmd->args || !cmd->args[0])
+	{
+		if (cmd && cmd->redirs)
+			return (ft_apply_redirects(cmd));
+		return (0);
+	}
+	if (cmd->args[0][0] == '\0')
+	{
+		ft_putstr_fd("minishell: '': command not found\n", 2);
+		return (ft_exit_code(127));
+	}
 	if (ft_strcmp(cmd->args[0], "..") == 0)
 	{
 		ft_putstr_fd("minishell: ..: command not found\n", 2);

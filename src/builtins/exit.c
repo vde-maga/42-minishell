@@ -33,19 +33,51 @@ void	ft_exit_free_and_exit(t_minishell *msdata, int exit_code)
 	exit(exit_code);
 }
 
+static int	ft_is_llong(const char *str)
+{
+	long long	res;
+	int			i;
+
+	res = 0;
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (!ft_isdigit(str[i]))
+		return (0);
+	while (ft_isdigit(str[i]))
+	{
+		if (res > (LLONG_MAX - (str[i] - '0')) / 10)
+			return (0);
+		res = res * 10 + (str[i] - '0');
+		i++;
+	}
+	return (str[i] == '\0');
+}
+
 int	ft_builtin_exit(t_minishell *msdata, char **args)
 {
 	int	arg_count;
 
 	if (msdata && msdata->shell_pid == get_shell_pid_from_proc()
-		&& isatty(STDERR_FILENO))
+		&& isatty(STDIN_FILENO))
 		ft_putstr_fd("exit\n", 2);
 	arg_count = ft_count_args(args);
 	if (arg_count == 0)
 		return (ft_handle_no_args(msdata));
-	if (arg_count > 2)
-		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);
-	if (arg_count == 1)
-		return (ft_process_single_arg(msdata, args[0]));
-	return (ft_handle_two_args(msdata, args));
+	if (!ft_is_numeric(args[0]) || !ft_is_llong(args[0]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		ft_exit_free_and_exit(msdata, 2);
+	}
+	if (arg_count > 1)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		ft_exit_code(1);
+		return (1);
+	}
+	return (ft_process_single_arg(msdata, args[0]));
 }

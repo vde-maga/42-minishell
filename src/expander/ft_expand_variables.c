@@ -2,90 +2,72 @@
 #include "structs.h"
 #include "lexer.h"
 
-// TODO: Implement word splitting functions for future use
-// Word splitting requires rebuilding the entire token list to avoid iterator invalidation
+static int	ft_should_apply_word_split(t_token *current, int var_expanded)
+{
+	int	i;
+
+	if (!var_expanded)
+		return (0);
+	if (current->was_quoted)
+		return (0);
+	if (!current->value)
+		return (0);
+	i = 0;
+	while (current->value[i])
+	{
+		if (current->value[i] == ' ' || current->value[i] == '\t'
+			|| current->value[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static int	ft_expand_and_split_token(t_minishell *msdata, t_env *env,
+				t_token **prev_ptr, t_token **curr_ptr)
+{
+	t_token	*current;
+	t_token	*prev;
+	char	**words;
+	int		var_expanded;
+
+	current = *curr_ptr;
+	prev = *prev_ptr;
+	var_expanded = ft_process_token_expansion(msdata, env, current);
+	if (var_expanded < 0)
+		return (-1);
+	if (ft_should_apply_word_split(current, var_expanded))
+	{
+		words = ft_word_split(current->value);
+		if (ft_apply_word_splitting(&msdata->tokens, prev, current, words) < 0)
+			return (-1);
+		if (words && words[0])
+			*curr_ptr = (prev) ? prev->next : msdata->tokens;
+		else
+			*curr_ptr = (prev) ? prev->next : msdata->tokens;
+		return (1);
+	}
+	*prev_ptr = current;
+	*curr_ptr = current->next;
+	return (0);
+}
 
 int	ft_expand_variables(t_minishell *msdata, t_env *env)
 {
 	t_token	*current;
-	int		ret_val;
-	char	*old_value;
-	char	*expanded_value;
+	t_token	*prev;
+	int		result;
 
 	if (!msdata || !env)
 		return (-1);
-
 	current = msdata->tokens;
-	ret_val = 0;
+	prev = NULL;
 	while (current)
 	{
-		if (current->value && current->type == TOKEN_WORD)
-		{
-			// Tilde expansion
-			if (current->value[0] == '~' && !current->was_quoted)
-			{
-				char *expanded_path = ft_path_tilde_expand(env, current->value);
-				if (expanded_path)
-				{
-					free(current->value);
-					current->value = expanded_path;
-				}
-			}
-
-			// Check if this is a quoted heredoc delimiter
-			// A token is a heredoc delimiter if it follows a << operator
-			int is_heredoc_delim = 0;
-			t_token *temp = msdata->tokens;
-			while (temp && temp->next)
-			{
-				if (temp->type == TOKEN_HEREDOC && temp->next == current)
-				{
-					is_heredoc_delim = 1;
-					break;
-				}
-				temp = temp->next;
-			}
-
-			if (ft_strchr(current->value, '$'))
-			{
-				// Skip variable expansion for quoted heredoc delimiters
-				if (!is_heredoc_delim || !current->was_quoted)
-				{
-					// Variable expansion - word splitting to be implemented later
-
-					expanded_value = ft_expand_variables_in_string(env, current->value);
-					if (expanded_value)
-					{
-						old_value = current->value;
-						current->value = expanded_value;
-						free(old_value);
-					}
-					else
-					{
-						// Expansion failed, return error
-						return (-1);
-					}
-
-					// TODO: Implement word splitting for unquoted variables
-					// This requires rebuilding the token list to avoid iterator invalidation
-					// For now, we'll keep the current behavior
-				}
-			}
-			// Remove quotes after variable expansion
-			char *unquoted_value = ft_remove_quotes(current->value);
-			if (unquoted_value)
-			{
-				old_value = current->value;
-				current->value = unquoted_value;
-				free(old_value);
-			}
-			else
-			{
-				// Quote removal failed, return error
-				return (-1);
-			}
-		}
-		current = current->next;
+		result = ft_expand_and_split_token(msdata, env, &prev, &current);
+		if (result < 0)
+			return (-1);
 	}
-	return (ret_val);
+	return (0);
 }
+

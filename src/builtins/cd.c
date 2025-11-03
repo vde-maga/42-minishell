@@ -44,11 +44,20 @@ static int	ft_update_pwd_vars(t_minishell *data, char *old_pwd)
 	return (0);
 }
 
-int	ft_builtin_cd(t_minishell *data, char *path)
+int	ft_builtin_cd(t_minishell *data, char **args)
 {
 	char	*target_dir;
 	char	*old_pwd;
+	char	*path;
 
+	path = args[1];
+	if (args[1] && args[2])
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		return (1);
+	}
+	if (ft_strcmp(path, "--") == 0)
+		path = NULL;
 	target_dir = ft_get_target_dir(data, path);
 	if (!target_dir)
 		return (1);

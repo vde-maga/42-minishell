@@ -32,6 +32,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+// ---------------------- Utils ------------------------------------------------
+long long	ft_atoll(const char *str);
+
 // ---------------------- User Input -------------------------------------------
 void    get_str_readline(t_minishell *ms_data, int type);
 void    ft_usr_print_prompt(t_minishell *ms_data, int type, char *prompt);

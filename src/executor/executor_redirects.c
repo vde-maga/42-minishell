@@ -41,6 +41,15 @@ int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 		return (ft_exit_code(1), 1);
 	}
 	ret = ft_exec_run_builtin(ms_data, cmd->args);
+	if (ft_strcmp(cmd->args[0], "exit") == 0 && ret == 1)
+	{
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
+		ft_exit_code(1);
+		return (1);
+	}
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);

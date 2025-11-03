@@ -43,20 +43,11 @@ int	ft_handle_quoted_exit(char *arg)
 
 int	ft_process_single_arg(t_minishell *msdata, char *arg)
 {
-	int	exit_code;
+	long long	exit_code;
 
-	exit_code = ft_handle_quoted_exit(arg);
-	if (exit_code != -1)
-		return (ft_exit_free_and_exit(msdata, exit_code), 0);
-	if (ft_is_numeric(arg))
-	{
-		exit_code = ft_atoi(arg) % 256;
-		return (ft_exit_free_and_exit(msdata, exit_code), 0);
-	}
-	ft_putstr_fd("minishell: exit: ", 2);
-	ft_putstr_fd(arg, 2);
-	ft_putstr_fd(": numeric argument required\n", 2);
-	return (ft_exit_free_and_exit(msdata, 2), 0);
+	exit_code = ft_atoll(arg);
+	ft_exit_free_and_exit(msdata, exit_code % 256);
+	return (0);
 }
 
 int	ft_handle_no_args(t_minishell *msdata)
@@ -64,15 +55,6 @@ int	ft_handle_no_args(t_minishell *msdata)
 	int	exit_code;
 
 	exit_code = ft_exit_code(-1);
-	return (ft_exit_free_and_exit(msdata, exit_code), 0);
-}
-
-int	ft_handle_two_args(t_minishell *msdata, char **args)
-{
-	int	exit_code;
-
-	if (!ft_is_numeric(args[0]))
-		return (ft_process_single_arg(msdata, args[0]));
-	exit_code = ft_atoi(args[0]) % 256;
-	return (ft_exit_free_and_exit(msdata, exit_code), 0);
+	ft_exit_free_and_exit(msdata, exit_code);
+	return (0);
 }
