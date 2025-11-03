@@ -4,23 +4,11 @@ void	ft_handle_execve_error(char *cmd_name, char **env_array,
 				t_minishell *ms_data)
 {
 	if (errno == EACCES)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-	}
+		ft_executor_error_eacces(cmd_name);
 	else if (errno == EISDIR)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
+		ft_executor_error_eisdir(cmd_name);
 	else if (errno == ENOENT)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-	}
+		ft_executor_error_eoent(cmd_name);
 	else
 	{
 		ft_putstr_fd("minishell: ", 2);

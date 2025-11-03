@@ -69,7 +69,6 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 	ft_signal_handle_signals();
 }
 
-
 static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	t_parser_node *node, int pipefd[2])
 {
@@ -96,7 +95,6 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	ft_exec_pipe_wait(pid1, pid2, ms_data);
 	return (0);
 }
-
 
 int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 {

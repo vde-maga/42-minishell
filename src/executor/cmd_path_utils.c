@@ -13,7 +13,7 @@ char	**ft_get_path_dirs(t_env *env)
 	}
 	return (NULL);
 }
-    
+
 static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 {
 	char	*full_path;

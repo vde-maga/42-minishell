@@ -29,12 +29,12 @@ static int	ft_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 	{
 		if (ms_data->print_flag == 0)
 		{
-		if (WTERMSIG(status) == SIGQUIT)
-			write(2, "Quit (core dumped)\n", 19);
-		else if (WTERMSIG(status) == SIGINT)
-			write(2, "\n", 1);
-		ft_exit_code(128 + WTERMSIG(status));
-		ms_data->print_flag = 1;
+			if (WTERMSIG(status) == SIGQUIT)
+				write(2, "Quit (core dumped)\n", 19);
+			else if (WTERMSIG(status) == SIGINT)
+				write(2, "\n", 1);
+			ft_exit_code(128 + WTERMSIG(status));
+			ms_data->print_flag = 1;
 		}
 	}
 	return (ft_exit_code(-1));
