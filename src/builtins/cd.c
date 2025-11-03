@@ -56,8 +56,6 @@ int	ft_builtin_cd(t_minishell *data, char **args)
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		return (1);
 	}
-	if (ft_strcmp(path, "--") == 0)
-		path = NULL;
 	target_dir = ft_get_target_dir(data, path);
 	if (!target_dir)
 		return (1);
