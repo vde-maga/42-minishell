@@ -61,7 +61,7 @@ int	ft_debug_main_with_c_flag(int argc, char **argv, char **envp)
 
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0 && argv[2])
 	{
-		ft_init_vars(&ms_data, envp);
+		ft_init_vars(&ms_data, envp, argc, argv);
 		status = ft_debug_c_flag(&ms_data, argv[2]);
 		ft_free_shell(&ms_data);
 		return (status);

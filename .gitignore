@@ -67,3 +67,5 @@ obj/
 norminette/
 run_local.py
 *.md
+
+*.swp
