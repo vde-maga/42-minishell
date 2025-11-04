@@ -24,7 +24,7 @@ static int	ft_should_apply_word_split(t_token *current, int var_expanded)
 }
 
 static int	ft_expand_and_split_token(t_minishell *msdata, t_env *env,
-				t_token **prev_ptr, t_token **curr_ptr)
+			t_token **prev_ptr, t_token **curr_ptr)
 {
 	t_token	*current;
 	t_token	*prev;
@@ -41,10 +41,10 @@ static int	ft_expand_and_split_token(t_minishell *msdata, t_env *env,
 		words = ft_word_split(current->value);
 		if (ft_apply_word_splitting(&msdata->tokens, prev, current, words) < 0)
 			return (-1);
-		if (words && words[0])
-			*curr_ptr = (prev) ? prev->next : msdata->tokens;
+		if (prev)
+			*curr_ptr = prev->next;
 		else
-			*curr_ptr = (prev) ? prev->next : msdata->tokens;
+			*curr_ptr = msdata->tokens;
 		return (1);
 	}
 	*prev_ptr = current;
@@ -70,4 +70,3 @@ int	ft_expand_variables(t_minishell *msdata, t_env *env)
 	}
 	return (0);
 }
-

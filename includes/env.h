@@ -18,8 +18,8 @@ int		ft_env_count_vars(t_env *env_list);
 
 // setters.c
 void	ft_env_add_back(t_env **lst, t_env *new_node);
-int	ft_update_env_var(t_env *env_list, char *var_name, char *new_value);
-int	ft_set_env_var(t_env **env_list, char *var_name, char *value);
-int	ft_unset_env_var(t_env **env_list, char *var_name);
+int		ft_update_env_var(t_env *env_list, char *var_name, char *new_value);
+int		ft_set_env_var(t_env **env_list, char *var_name, char *value);
+int		ft_unset_env_var(t_env **env_list, char *var_name);
 
 #endif

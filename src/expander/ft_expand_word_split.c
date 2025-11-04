@@ -1,24 +1,5 @@
 #include "minishell.h"
 
-static t_token	*ft_create_word_token(char *word)
-{
-	t_token	*new_token;
-
-	new_token = ft_calloc(1, sizeof(t_token));
-	if (!new_token)
-		return (NULL);
-	new_token->type = TOKEN_WORD;
-	new_token->value = ft_strdup(word);
-	if (!new_token->value)
-	{
-		free(new_token);
-		return (NULL);
-	}
-	new_token->was_quoted = 0;
-	new_token->next = NULL;
-	return (new_token);
-}
-
 static void	ft_free_word_array(char **words)
 {
 	int	i;
@@ -38,35 +19,15 @@ static t_token	*ft_replace_token_with_split(t_token **head,
 		t_token *prev, t_token *current, char **words)
 {
 	t_token	*first_new;
-	t_token	*temp;
 	t_token	*last;
-	int		i;
 
-	i = 0;
 	first_new = NULL;
 	last = NULL;
-	while (words[i])
-	{
-		temp = ft_create_word_token(words[i]);
-		if (!temp)
-			return (NULL);
-		if (i == 0)
-		{
-			first_new = temp;
-			if (prev)
-				prev->next = first_new;
-			else
-				*head = first_new;
-		}
-		else
-			last->next = temp;
-		last = temp;
-		i++;
-	}
-	if (last)
-		last->next = current->next;
-	free(current->value);
-	free(current);
+	first_new = ft_build_token_chain(words, &last);
+	if (!first_new || !last)
+		return (NULL);
+	ft_link_chain_head(head, prev, first_new);
+	ft_attach_tail_and_free(last, current);
 	return (last);
 }
 

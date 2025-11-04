@@ -8,4 +8,3 @@ t_token	*ft_expander(t_minishell *msdata, t_env *env)
 		return (NULL);
 	return (msdata->tokens);
 }
-

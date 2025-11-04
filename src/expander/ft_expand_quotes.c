@@ -1,83 +1,68 @@
 #include "minishell.h"
 
+static void	handle_char(t_qctx *c)
+{
+	if (c->s[c->i] == '\'' && c->mode != 2)
+	{
+		if (c->mode == 1)
+			c->mode = 0;
+		else
+			c->mode = 1;
+		c->i++;
+	}
+	else if (c->s[c->i] == '"' && c->mode != 1)
+	{
+		if (c->mode == 2)
+			c->mode = 0;
+		else
+			c->mode = 2;
+		c->i++;
+	}
+	else
+		c->d[c->j++] = c->s[c->i++];
+}
+
+static int	fill_without_quotes(const char *str, char *dest, int *mode)
+{
+	t_qctx			c;
+
+	c.s = str;
+	c.d = dest;
+	c.i = 0;
+	c.j = 0;
+	c.mode = 0;
+	while (c.s[c.i])
+		handle_char(&c);
+	dest[c.j] = '\0';
+	*mode = c.mode;
+	return (c.j);
+}
+
 char	*ft_remove_quotes(char *str)
 {
-	char	*dest;
-	char	*result;
-	int		i, j;
-	int		length;
-	int		in_single_quote;
-	int		in_double_quote;
-	int		quotes_removed;
+	char			*dest;
+	int				mode;
+	int				j;
 
 	if (!str)
 		return (NULL);
-		
-	length = ft_strlen(str);
-	if (length == 0)
-		return (ft_strdup(""));
-	
-	// Always use the complex case to handle all quote scenarios properly
-	dest = (char *)malloc(sizeof(char) * (length + 1));
+	dest = (char *)malloc(ft_strlen(str) + 1);
 	if (!dest)
 		return (NULL);
-	
-	i = 0;
-	j = 0;
-	in_single_quote = 0;
-	in_double_quote = 0;
-	quotes_removed = 0;
-	
-	while (str[i])
-	{
-		if (str[i] == '\'' && !in_double_quote)
-		{
-			in_single_quote = !in_single_quote;
-			quotes_removed = 1;
-			i++;
-		}
-		else if (str[i] == '"' && !in_single_quote)
-		{
-			in_double_quote = !in_double_quote;
-			quotes_removed = 1;
-			i++;
-		}
-		else
-		{
-			if (j < length) // Prevent buffer overflow
-				dest[j++] = str[i];
-			i++;
-		}
-	}
-	dest[j] = '\0';
-	
-	// Check for unclosed quotes - if found, return original string
-	if (in_single_quote || in_double_quote)
+	j = fill_without_quotes(str, dest, &mode);
+	if (mode != 0 || j == (int)ft_strlen(str))
 	{
 		free(dest);
 		return (ft_strdup(str));
 	}
-	
-	// If no quotes were removed, free dest and return a duplicate
-	if (!quotes_removed || j == length)
-	{
-		free(dest);
-		result = ft_strdup(str);
-		return (result);
-	}
-	
-	// If quotes were removed, we might have allocated more memory than needed
-	// Reallocate to the exact size to avoid wasting memory
-	result = ft_strdup(dest);
-	free(dest);
-	return (result);
+	return (dest);
 }
 
 int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)
 {
-	char	*new_value;
-	char	*old_value;
-	t_env	*env_node;
+	char		*new_value;
+	char		*old_value;
+	t_env		*env_node;
 
 	env_node = ft_get_env_var(env, var_name);
 	if (env_node && env_node->value)
@@ -94,15 +79,15 @@ int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)
 
 int	ft_exp_special_param(t_minishell *msdata, t_token *current, char *var_name)
 {
-	char	*new_value;
-	char	*old_value;
-	(void) var_name;
-	(void) msdata;
+	char		*new_value;
+	char		*old_value;
 
-		if (ft_strcmp(current->value, "$$") == 0)
-			new_value = ft_itoa(get_shell_pid_from_proc());
-		else if (ft_strcmp(current->value, "$?") == 0)
-			new_value = ft_itoa(ft_exit_code(-1));
+	(void)var_name;
+	(void)msdata;
+	if (ft_strcmp(current->value, "$$") == 0)
+		new_value = ft_itoa(get_shell_pid_from_proc());
+	else if (ft_strcmp(current->value, "$?") == 0)
+		new_value = ft_itoa(ft_exit_code(-1));
 	else
 		new_value = ft_itoa(42);
 	old_value = current->value;

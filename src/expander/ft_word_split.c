@@ -44,21 +44,11 @@ static char	*ft_extract_word(char *str, int *pos)
 	return (word);
 }
 
-char	**ft_word_split(char *str)
+static int	fill_words(char **words, char *str, int count)
 {
-	char	**words;
-	int		count;
-	int		i;
-	int		pos;
+	int	i;
+	int	pos;
 
-	if (!str || !*str)
-		return (NULL);
-	count = ft_count_words(str);
-	if (count == 0)
-		return (NULL);
-	words = ft_calloc(count + 1, sizeof(char *));
-	if (!words)
-		return (NULL);
 	i = 0;
 	pos = 0;
 	while (i < count)
@@ -68,9 +58,27 @@ char	**ft_word_split(char *str)
 		{
 			while (--i >= 0)
 				free(words[i]);
-			return (free(words), NULL);
+			return (-1);
 		}
 		i++;
 	}
+	return (0);
+}
+
+char	**ft_word_split(char *str)
+{
+	char	**words;
+	int		count;
+
+	if (!str || !*str)
+		return (NULL);
+	count = ft_count_words(str);
+	if (count == 0)
+		return (NULL);
+	words = ft_calloc(count + 1, sizeof(char *));
+	if (!words)
+		return (NULL);
+	if (fill_words(words, str, count) < 0)
+		return (free(words), NULL);
 	return (words);
 }
