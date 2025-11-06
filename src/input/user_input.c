@@ -1,52 +1,54 @@
 #include "../includes/minishell.h"
 
-void get_str_readline(t_minishell *ms_data, int type)
+static void	get_str_non_interactive(t_minishell *ms_data, int type)
 {
-    char prompt[PATH_MAX + 32];
-    char *old_ref;
-    char *line;
-    char *trimmed;
+	char	*line;
+	char	*trimmed;
+	char	*old_ref;
 
-    ft_usr_print_prompt_color(ms_data, type, prompt);
+	line = get_next_line(fileno(stdin));
+	if (!line)
+	{
+		free(ms_data->input_line);
+		ms_data->input_line = NULL;
+		return ;
+	}
+	trimmed = ft_strtrim(line, "\n");
+	free(line);
+	if (type == 2)
+	{
+		old_ref = ms_data->input_line;
+		ms_data->input_line = ft_strjoin(old_ref, trimmed);
+		free(old_ref);
+		free(trimmed);
+	}
+	else
+	{
+		free(ms_data->input_line);
+		ms_data->input_line = trimmed;
+	}
+}
 
-    /*      CODE JUST FOR MSTEST        */
-    if (!isatty(fileno(stdin)))
-    {
-        line = get_next_line(fileno(stdin));
-        if (!line)
-        {
-            /* EOF */
-            free(ms_data->input_line);
-            ms_data->input_line = NULL;
-            return;
-        }
-        trimmed = ft_strtrim(line, "\n");
-        free(line);
-        if (type == 2)
-        {
-            old_ref = ms_data->input_line;
-            ms_data->input_line = ft_strjoin(old_ref, trimmed);
-            free(old_ref);
-            free(trimmed);
-        }
-        else
-        {
-            free(ms_data->input_line);
-            ms_data->input_line = trimmed;
-        }
-        return;
-    }
-    /*      END CODE JUST FOR MSTEST        */
+void	get_str_readline(t_minishell *ms_data, int type)
+{
+	char	prompt[PATH_MAX + 32];
+	char	*old_ref;
 
-    if (type == 2)
-    {
-        old_ref = ms_data->input_line;
-        ms_data->input_line = ft_strjoin(old_ref, readline(prompt));
-        free(old_ref);
-    }
-    else
-    {
-        free(ms_data->input_line);
-        ms_data->input_line = readline(prompt);
-    }
+	ft_usr_print_prompt_color(ms_data, type, prompt);
+	if (!isatty(fileno(stdin)))
+	{
+		get_str_non_interactive(ms_data, type);
+		return ;
+	}
+	if (type == 2)
+	{
+		old_ref = ms_data->input_line;
+		ms_data->input_line = ft_strjoin(old_ref, readline(prompt));
+		free(old_ref);
+	}
+	else
+	{
+		free(ms_data->input_line);
+		ms_data->input_line = readline(prompt);
+	}
 }

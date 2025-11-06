@@ -58,8 +58,6 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 	append_token(&lexer->tokens, new_token);
 }
 
-static int	process_lexer_result(t_minishell *ms, int tok_res);
-
 int	ft_lexer(t_minishell *ms_data, char *input)
 {
 	int		tok_res;

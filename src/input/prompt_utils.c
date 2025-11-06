@@ -1,19 +1,19 @@
-#include "minishell.h"
 #include "../includes/colors.h"
+#include "minishell.h"
 
-static void ft_prompt_clear(char *p)
+static void	ft_prompt_clear(char *p)
 {
-    ft_strlcpy(p, "", PATH_MAX + 32);
+	ft_strlcpy(p, "", PATH_MAX + 32);
 }
 
-static void ft_prompt_append(char *p, const char *s)
+static void	ft_prompt_append(char *p, const char *s)
 {
-    ft_strlcat(p, s, PATH_MAX + 32);
+	ft_strlcat(p, s, PATH_MAX + 32);
 }
 
 void	ft_prompt_print_default(t_minishell *ms_data, char *prompt)
 {
-	char *short_cwd;
+	char	*short_cwd;
 
 	ft_prompt_clear(prompt);
 	ft_prompt_append(prompt, RL_BOLD_RED);

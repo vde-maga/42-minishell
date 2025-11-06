@@ -67,4 +67,9 @@ void				ft_lex_add_single_operator(t_lexer *lexer, char current);
 void				ft_lex_add_double_operator(t_lexer *lexer, char current,
 						char next);
 void				ft_tok_check_quoted(t_token *new_token);
+
+// lexer_processing.c
+int					process_lexer_result(t_minishell *ms, int tok_res);
+int					ft_cmd_complete(t_token *tokens);
+
 #endif

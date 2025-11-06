@@ -51,15 +51,10 @@ static void	handle_quotes(t_lexer *lexer, int *in_single, int *in_double)
 
 	c = lexer->input[lexer->pos];
 	if (c == '\'' && !*in_double)
-	{
 		*in_single = !*in_single;
-		ft_lexer_advance(lexer);
-	}
 	else if (c == '"' && !*in_single)
-	{
 		*in_double = !*in_double;
-		ft_lexer_advance(lexer);
-	}
+	ft_lexer_advance(lexer);
 }
 
 static void	process_word_chars(t_lexer *lexer, int *in_s, int *in_d)
