@@ -1,46 +1,41 @@
 #include "minishell.h"
 
-static char	*ft_get_target_dir(t_minishell *data, char *path)
+static char	*ft_get_target_dir(t_minishell *data, char *arg)
 {
-	t_env	*home;
-	t_env	*old_pwd;
+	t_env	*env;
 
-	if (!path || path[0] == '\0' || ft_strcmp(path, "~") == 0)
+	if (!arg || ft_strcmp(arg, "~") == 0)
 	{
-		home = ft_get_env_var(data->env_list, "HOME");
-		if (!home)
-		{
-			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			return (NULL);
-		}
-		return (home->value);
+		env = ft_get_env_var(data->env_list, "HOME");
+		if (!env || !env->value || env->value[0] == '\0')
+			return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), NULL);
+		return (env->value);
 	}
-	else if (ft_strcmp(path, "-") == 0)
+	if (ft_strcmp(arg, "-") == 0)
 	{
-		old_pwd = ft_get_env_var(data->env_list, "OLDPWD");
-		if (!old_pwd)
-		{
-			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
-			return (NULL);
-		}
-		return (old_pwd->value);
+		env = ft_get_env_var(data->env_list, "OLDPWD");
+		if (!env || !env->value)
+			return (ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2), NULL);
+		ft_putendl_fd(env->value, 1);
+		return (env->value);
 	}
-	return (path);
+	return (arg);
 }
 
-static int	ft_update_pwd_vars(t_minishell *data, char *old_pwd)
+static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
 {
-	char	*new_pwd;
+	char	*new_pwd_val;
 
-	new_pwd = getcwd(NULL, 0);
-	if (!new_pwd)
+	if (old_pwd_val)
+		ft_update_env_var(data->env_list, "OLDPWD", old_pwd_val);
+	new_pwd_val = getcwd(NULL, 0);
+	if (!new_pwd_val)
 	{
-		perror("minishell: cd: getcwd");
+		perror("minishell: cd: error retrieving current directory");
 		return (1);
 	}
-	ft_update_env_var(data->env_list, "OLDPWD", old_pwd);
-	ft_update_env_var(data->env_list, "PWD", new_pwd);
-	free(new_pwd);
+	ft_update_env_var(data->env_list, "PWD", new_pwd_val);
+	free(new_pwd_val);
 	return (0);
 }
 
@@ -48,33 +43,23 @@ int	ft_builtin_cd(t_minishell *data, char **args)
 {
 	char	*target_dir;
 	char	*old_pwd;
-	char	*path;
+	int		status;
 
-	path = args[1];
 	if (args[1] && args[2])
-	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		return (1);
-	}
-	target_dir = ft_get_target_dir(data, path);
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
+	target_dir = ft_get_target_dir(data, args[1]);
 	if (!target_dir)
 		return (1);
 	old_pwd = getcwd(NULL, 0);
-	if (!old_pwd)
-	{
-		perror("minishell: cd: getcwd");
-		return (1);
-	}
 	if (chdir(target_dir) == -1)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
 		ft_putstr_fd(target_dir, 2);
 		ft_putstr_fd(": ", 2);
-		perror("");
-		free(old_pwd);
-		return (1);
+		ft_putendl_fd(strerror(errno), 2);
+		return (free(old_pwd), 1);
 	}
-	ft_update_pwd_vars(data, old_pwd);
+	status = ft_cd_update_env(data, old_pwd);
 	free(old_pwd);
-	return (0);
+	return (status);
 }
