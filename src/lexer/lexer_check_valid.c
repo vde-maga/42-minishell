@@ -1,37 +1,5 @@
 #include "../includes/minishell.h"
 
-int	ft_is_operator(t_token_type type)
-{
-	return (type == TOKEN_PIPE || type == TOKEN_OR || type == TOKEN_AND
-		|| type == TOKEN_AND_IF);
-}
-
-int	ft_is_redirect(t_token_type type)
-{
-	return (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT
-		|| type == TOKEN_APPEND || type == TOKEN_HEREDOC);
-}
-
-t_token	*ft_check_operator_validity(t_token *current)
-{
-	if (!current->next)
-		return (current);
-	if (ft_is_operator(current->next->type))
-		return (current->next);
-	if (current->next->type == TOKEN_EOF)
-		return (current);
-	return (NULL);
-}
-
-t_token	*ft_check_redirect_validity(t_token *current)
-{
-	if (!current->next)
-		return (current);
-	if (current->next->type != TOKEN_WORD)
-		return (current->next);
-	return (NULL);
-}
-
 static int	ft_check_operator(t_token *token)
 {
 	if (!token->next)
@@ -52,38 +20,42 @@ static int	ft_check_redirect(t_token *token)
 	return (1);
 }
 
+static void	process_token(t_token *current, int *has_command, int *error)
+{
+	if (ft_is_operator(current->type))
+	{
+		if (ft_check_operator(current) == -1)
+			*error = 1;
+		*has_command = 0;
+	}
+	else if (ft_is_redirect(current->type))
+	{
+		if (ft_check_redirect(current) == -1)
+			*error = 1;
+	}
+	else if (current->type == TOKEN_WORD)
+		*has_command = 1;
+}
+
 int	ft_lexer_valid(t_token *tokens)
 {
 	t_token	*current;
 	int		has_command;
+	int		error;
 
 	if (!tokens)
 		return (1);
 	current = tokens;
 	if (ft_is_operator(current->type))
 		return (-1);
-	if (ft_is_redirect(current->type))
-		return (-1);
-
 	has_command = 0;
-	while (current)
+	error = 0;
+	while (current && !error)
 	{
-		if (ft_is_operator(current->type))
-		{
-			if (ft_check_operator(current) == -1)
-				return (-1);
-			has_command = 0; // Reset after operator
-		}
-		else if (ft_is_redirect(current->type))
-		{
-			if (ft_check_redirect(current) == -1)
-				return (-1);
-			if (!has_command)
-				return (-1); // Redirect without command
-		}
-		else if (current->type == TOKEN_WORD)
-			has_command = 1;
+		process_token(current, &has_command, &error);
 		current = current->next;
 	}
+	if (error)
+		return (-1);
 	return (1);
 }

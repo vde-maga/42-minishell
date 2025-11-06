@@ -2,8 +2,9 @@
 
 void	ft_lexer_skip_spaces(t_lexer *lexer)
 {
-	while (lexer->pos < lexer->len && lexer->input[lexer->pos] && 
-		(lexer->input[lexer->pos] == ' ' || lexer->input[lexer->pos] == '\t'))
+	while (lexer->pos < lexer->len && lexer->input[lexer->pos]
+		&& (lexer->input[lexer->pos] == ' '
+			|| lexer->input[lexer->pos] == '\t'))
 	{
 		lexer->pos++;
 		if (lexer->pos >= lexer->len)
@@ -13,7 +14,7 @@ void	ft_lexer_skip_spaces(t_lexer *lexer)
 	}
 }
 
-void ft_lexer_advance(t_lexer *lexer)
+void	ft_lexer_advance(t_lexer *lexer)
 {
 	lexer->pos++;
 	if (lexer->pos >= lexer->len)
