@@ -29,16 +29,8 @@ int	ft_builtin_unset(t_minishell *msdata, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-		}
-		else
-		{
+		if (is_valid_identifier(args[i]))
 			ft_unset_env_var(&msdata->env_list, args[i]);
-		}
 		i++;
 	}
 	return (0);
