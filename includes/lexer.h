@@ -3,6 +3,8 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+typedef struct s_minishell	t_minishell;
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
