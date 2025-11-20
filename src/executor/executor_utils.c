@@ -41,7 +41,7 @@ int	ft_exec_run_secondary_builtins(t_minishell *ms_data, char **args)
 	if (ft_strcmp(args[0], "env") == 0)
 		return (ft_builtin_env(ms_data));
 	if (ft_strcmp(args[0], "export") == 0)
-		return (ft_builtin_export(ms_data, args[1]));
+		return (ft_builtin_export(ms_data, args));
 	if (ft_strcmp(args[0], "exit") == 0)
 		return (ft_builtin_exit(ms_data, &args[1]));
 	if (ft_strcmp(args[0], ".") == 0)
