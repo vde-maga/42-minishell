@@ -1,8 +1,8 @@
 #include "signals.h"
 
-int	ft_exit_code(int value)
+sig_atomic_t	ft_exit_code(int value)
 {
-	static int	code = 0;
+	static volatile sig_atomic_t	code = 0;
 
 	if (value == -1)
 		return (code);

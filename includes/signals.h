@@ -8,13 +8,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-void	ft_signal_handle_signals(void);
-void	ft_signal_set_fork1_signal(void);
-void	ft_signal_set_main_signals(void);
+void	ft_signals_handle_signals(void);
+void	ft_signals_set_fork1_signal(void);
+void	ft_signals_block_execution(void);
 
 void	ft_signals_heredoc_signal(void);
 
 // Exit_code
-int		ft_exit_code(int value);
+sig_atomic_t		ft_exit_code(int value);
 
 #endif

@@ -1,6 +1,6 @@
 #include "signals.h"
 
-void	ft_signal_sig_main(int signal)
+void	ft_signals_signal_main(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -12,14 +12,7 @@ void	ft_signal_sig_main(int signal)
 	}
 }
 
-void	ft_signal_sig_pipe(int signal)
-{
-	if (signal == SIGPIPE)
-	{
-	}
-}
-
-void	ft_signal_set_main_signals(void)
+void	ft_signals_block_execution(void)
 {
 	struct sigaction	sa;
 
@@ -29,23 +22,23 @@ void	ft_signal_set_main_signals(void)
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
-	sa.sa_handler = &ft_signal_sig_pipe;
+	sa.sa_handler = SIG_IGN;
 	sigaction(SIGPIPE, &sa, NULL);
 }
 
-void	ft_signal_handle_signals(void)
+void	ft_signals_handle_signals(void)
 {
 	struct sigaction	sa;
 
 	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = &ft_signal_sig_main;
+	sa.sa_handler = &ft_signals_signal_main;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	ft_signal_set_fork1_signal(void)
+void	ft_signals_set_fork1_signal(void)
 {
 	struct sigaction	sa;
 
@@ -53,6 +46,6 @@ void	ft_signal_set_fork1_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_DFL;
 	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGPIPE, &sa, NULL);
 }

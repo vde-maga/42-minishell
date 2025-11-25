@@ -4,7 +4,7 @@ void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	char	**env_array;
 
-	ft_signal_set_fork1_signal();
+	ft_signals_set_fork1_signal();
 	if (ft_exec_apply_redirects(cmd) < 0)
 	{
 		ft_free_shell_child(ms_data);
@@ -37,7 +37,7 @@ int	ft_exec_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 	int	status;
 
 	waitpid(pid, &status, 0);
-	ft_signal_handle_signals();
+	ft_signals_handle_signals();
 	if (WIFEXITED(status))
 		ft_exit_code(WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
@@ -66,11 +66,11 @@ int	ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;
 
-	ft_signal_set_main_signals();
+	ft_signals_block_execution();
 	pid = fork();
 	if (pid == -1)
 	{
-		ft_signal_handle_signals();
+		ft_signals_handle_signals();
 		perror("fork");
 		return (ft_exit_code(1));
 	}
