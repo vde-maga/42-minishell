@@ -30,7 +30,7 @@ char	*ft_remove_spaces(char *value)
 	int		j;
 	char	*new_value;
 
-	new_value = malloc(ft_calculate_allocate_space(value) + 1);
+	new_value = (char *)malloc(ft_calculate_allocate_space(value) + 1);
 	if (!new_value)
 		return (NULL);
 	i = 0;
