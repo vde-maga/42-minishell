@@ -10,7 +10,7 @@ static int	ft_lex_add_operator(t_lexer *lexer)
 	c = lexer->input[lexer->pos];
 	n = lexer->input[lexer->pos + 1];
 	if ((c == '|' && n == '|') || (c == '<' && n == '<') || (c == '>'
-			&& n == '>') || (c == '&' && n == '&'))
+			&& n == '>') || (c == '&' && n == '&') || (c == '>' && n == '|'))
 		ft_lex_add_double_operator(lexer, c, n);
 	else if (c == '|' || c == '<' || c == '>' || c == '&')
 		ft_lex_add_single_operator(lexer, c);
