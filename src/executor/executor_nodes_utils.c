@@ -1,20 +1,21 @@
 #include "minishell.h"
 
-void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
+void ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	char	**env_array;
+    char **env_array;
 
-	ft_signals_set_fork1_signal();
-	if (ft_exec_apply_redirects(cmd) < 0)
-	{
-		ft_free_shell_child(ms_data);
-		_exit(1);
-	}
-	env_array = ft_env_list_to_array(ms_data->env_list);
-	if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
-		ft_handle_path_not_found(cmd->args[0], env_array, ms_data);
-	execve(cmd->args[0], cmd->args, env_array);
-	ft_handle_execve_error(cmd->args[0], env_array, ms_data);
+    ft_signals_set_fork1_signal();
+    if (ft_exec_apply_redirects(cmd) < 0)
+    {
+        ft_free_shell_child(ms_data);
+        _exit(1);
+    }
+    if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
+        ft_handle_path_not_found(cmd->args[0], NULL, ms_data);
+    ft_update_env_var(ms_data->env_list, "_", cmd->args[0]);
+    env_array = ft_env_list_to_array(ms_data->env_list);
+    execve(cmd->args[0], cmd->args, env_array);
+    ft_handle_execve_error(cmd->args[0], env_array, ms_data);
 }
 
 int	ft_exec_check_invalid_commands(char **args)
