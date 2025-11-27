@@ -1,11 +1,11 @@
 #include "../../includes/minishell.h"
 
-static void	process_c_command(t_minishell *ms_data, char *cmd_str)
+static int	process_c_command(t_minishell *ms_data, char *cmd_str)
 {
 	int	lexer_result;
 
 	if (!cmd_str || cmd_str[0] == '\0')
-		return ;
+		return (0);
 	lexer_result = ft_lexer(ms_data, cmd_str);
 	while (lexer_result == 0)
 	{
@@ -15,7 +15,7 @@ static void	process_c_command(t_minishell *ms_data, char *cmd_str)
 		lexer_result = ft_lexer(ms_data, ms_data->input_line);
 	}
 	if (lexer_result == -1)
-		return ;
+		return (-1);
 	ft_expander(ms_data, ms_data->env_list);
 	if (ms_data->tokens)
 	{
@@ -29,6 +29,7 @@ static void	process_c_command(t_minishell *ms_data, char *cmd_str)
 		ft_tokens_free(ms_data->tokens);
 		ms_data->tokens = NULL;
 	}
+	return (0);
 }
 
 int	ft_debug_c_flag(t_minishell *ms_data, char *cmd_string)
@@ -47,7 +48,8 @@ int	ft_debug_c_flag(t_minishell *ms_data, char *cmd_string)
 	i = 0;
 	while (commands[i])
 	{
-		process_c_command(ms_data, commands[i]);
+		if (process_c_command(ms_data, commands[i]) == -1)
+			break ;
 		i++;
 	}
 	ft_free_str_arrays(commands);

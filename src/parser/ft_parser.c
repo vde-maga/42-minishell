@@ -44,13 +44,30 @@ t_parser_node	*ft_parser_split_and_build(t_token *tokens, t_token *op)
 	else
 		node = ft_parser_new_node(NODE_PIPE);
 	if (!node)
-		return (NULL); // TODO: Proper error handling/freeing
+		return (NULL);
 	prev = ft_get_token_before(tokens, op);
 	op_next = op->next;
-	prev->next = NULL;
+	if (prev)
+		prev->next = NULL;
 	node->left = ft_parser_build_node_tree(tokens);
+	if (!node->left)
+	{
+		if (prev)
+			prev->next = op;
+		ft_parser_free(node);
+		return (NULL);
+	}
 	node->right = ft_parser_build_node_tree(op_next);
-	prev->next = op;
+	if (!node->right)
+	{
+		if (prev)
+			prev->next = op;
+		ft_parser_free(node->left);
+		ft_parser_free(node);
+		return (NULL);
+	}
+	if (prev)
+		prev->next = op;
 	return (node);
 }
 

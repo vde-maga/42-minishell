@@ -23,6 +23,8 @@ void	ft_tokens_free(t_token *tokens)
 	t_token	*current;
 	t_token	*next;
 
+	if (!tokens)
+		return ;
 	current = tokens;
 	while (current)
 	{

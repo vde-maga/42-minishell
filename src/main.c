@@ -25,7 +25,11 @@ int	main(int ac, char **av, char **envp)
 			lexer_result = ft_lexer(&ms_data, ms_data.input_line);
 		}
 		if (lexer_result == -1)
+		{
+			if (ms_data.input_line && ms_data.input_line[0] != '\0')
+				add_history(ms_data.input_line);
 			continue ;
+		}
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
 	}

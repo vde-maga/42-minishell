@@ -32,13 +32,12 @@ int	process_lexer_result(t_minishell *ms, int tok_res)
 			ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
 			ft_exit_code(2);
 		}
-		return (0);
+		return (tok_res == 2 ? -1 : 0);
 	}
 	bad_token = ft_lexer_invalid_token(ms->lexer->tokens);
 	if (bad_token)
 	{
 		handle_bad_token(bad_token);
-		ft_tokens_free(ms->lexer->tokens);
 		ms->lexer->tokens = NULL;
 		ft_lexer_free(ms->lexer);
 		ms->lexer = NULL;
