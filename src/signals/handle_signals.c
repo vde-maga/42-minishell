@@ -1,4 +1,4 @@
-#include "signals.h"
+#include "minishell.h"
 
 void	ft_signals_signal_main(int signal)
 {

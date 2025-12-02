@@ -50,6 +50,7 @@ static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_qu
 	char	*line;
 	char	*temp;
 
+	shell_struct(ms_data, 0);
 	ft_signals_heredoc_signal();
 	close(pipefd[0]);
 	while (1)

@@ -1,4 +1,4 @@
-#include "signals.h"
+#include "minishell.h"
 
 sig_atomic_t	ft_exit_code(int value)
 {

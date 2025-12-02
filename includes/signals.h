@@ -16,5 +16,6 @@ void	ft_signals_heredoc_signal(void);
 
 // Exit_code
 sig_atomic_t		ft_exit_code(int value);
+t_minishell	*shell_struct(t_minishell *shell, int flag);
 
 #endif
