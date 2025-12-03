@@ -29,6 +29,8 @@ typedef struct s_minishell
 	char						*input;
 	int							hdc_fds[2];
 	char						*hdc_delim;
+	int							saved_stdin;
+	int							saved_stdout;
 	char						cwd[PATH_MAX];
 	int							exit_status;
 	int							print_flag;

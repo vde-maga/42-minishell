@@ -63,6 +63,8 @@ void	ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av)
 	ms_data->hdc_fds[0] = -1;
 	ms_data->hdc_fds[1] = -1;
 	ms_data->hdc_delim = NULL;
+	ms_data->saved_stdin = -1;
+	ms_data->saved_stdout = -1;
 	ms_data->shell_pid = get_shell_pid_from_proc();
 	ft_exit_code(0);
 }

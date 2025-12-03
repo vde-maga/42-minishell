@@ -10,6 +10,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac == 3 && ft_strcmp(av[1], "-c") == 0 && av[2])
 		return (ft_debug_main_with_c_flag(ac, av, envp));
 	ft_init_vars(&ms_data, envp, ac, av);
+	shell_struct(&ms_data, 0);
 	ft_signals_handle_signals();
 	while (1)
 	{

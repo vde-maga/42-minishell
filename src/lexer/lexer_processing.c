@@ -38,6 +38,7 @@ int	process_lexer_result(t_minishell *ms, int tok_res)
 	if (bad_token)
 	{
 		handle_bad_token(bad_token);
+		ft_tokens_free(ms->lexer->tokens);
 		ms->lexer->tokens = NULL;
 		ft_lexer_free(ms->lexer);
 		ms->lexer = NULL;

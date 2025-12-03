@@ -74,25 +74,22 @@ int	ft_exec_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 	return (ft_exit_code(-1));
 }
 
-int	ft_exec_handle_empty_command(t_cmd_node *cmd)
+int	ft_exec_handle_empty_command(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	int	saved_stdin;
-	int	saved_stdout;
-
 	if (cmd && cmd->redirs)
 	{
-		if (ft_exec_save_standard_fds(&saved_stdin, &saved_stdout) < 0)
+		if (ft_exec_save_standard_fds(ms_data) < 0)
 		{
 			ft_close_heredoc_fds(cmd);
 			return (ft_exit_code(1));
 		}
 		if (ft_exec_apply_redirects(cmd) < 0)
 		{
-			ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+			ft_exec_restore_standard_fds(ms_data);
 			ft_close_heredoc_fds(cmd);
 			return (ft_exit_code(1));
 		}
-		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+		ft_exec_restore_standard_fds(ms_data);
 	}
 	ft_close_heredoc_fds(cmd);
 	return (ft_exit_code(0));

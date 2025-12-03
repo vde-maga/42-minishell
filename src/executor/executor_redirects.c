@@ -16,61 +16,75 @@ int	ft_exec_apply_redirects(t_cmd_node *cmd)
 	return (0);
 }
 
-int	ft_exec_save_standard_fds(int *saved_stdin, int *saved_stdout)
+int	ft_exec_save_standard_fds(t_minishell *ms_data)
 {
-	*saved_stdin = dup(STDIN_FILENO);
-	*saved_stdout = dup(STDOUT_FILENO);
-	if (*saved_stdin < 0 || *saved_stdout < 0)
+	ms_data->saved_stdin = dup(STDIN_FILENO);
+	ms_data->saved_stdout = dup(STDOUT_FILENO);
+	if (ms_data->saved_stdin < 0 || ms_data->saved_stdout < 0)
 	{
 		perror("dup");
-		if (*saved_stdin >= 0)
-			close(*saved_stdin);
-		if (*saved_stdout >= 0)
-			close(*saved_stdout);
+		if (ms_data->saved_stdin >= 0)
+			close(ms_data->saved_stdin);
+		if (ms_data->saved_stdout >= 0)
+			close(ms_data->saved_stdout);
+		ms_data->saved_stdin = -1;
+		ms_data->saved_stdout = -1;
 		return (-1);
 	}
 	return (0);
 }
 
-void	ft_exec_restore_standard_fds(int saved_stdin, int saved_stdout)
+void	ft_exec_restore_standard_fds(t_minishell *ms_data)
 {
-	if (saved_stdin >= 0)
+	if (ms_data->saved_stdin >= 0)
 	{
-		dup2(saved_stdin, STDIN_FILENO);
-		close(saved_stdin);
+		dup2(ms_data->saved_stdin, STDIN_FILENO);
+		close(ms_data->saved_stdin);
+		ms_data->saved_stdin = -1;
 	}
-	if (saved_stdout >= 0)
+	if (ms_data->saved_stdout >= 0)
 	{
-		dup2(saved_stdout, STDOUT_FILENO);
-		close(saved_stdout);
+		dup2(ms_data->saved_stdout, STDOUT_FILENO);
+		close(ms_data->saved_stdout);
+		ms_data->saved_stdout = -1;
 	}
 }
 
 int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	int	saved_stdin;
-	int	saved_stdout;
 	int	ret;
+	int	has_redirs;
 
-	if (ft_exec_save_standard_fds(&saved_stdin, &saved_stdout) < 0)
+	has_redirs = (cmd && cmd->redirs);
+	ft_signals_block_execution();
+	if (has_redirs)
 	{
-		ft_close_heredoc_fds(cmd);
-		return (ft_exit_code(1), 1);
-	}
-	if (ft_exec_apply_redirects(cmd) < 0)
-	{
-		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
-		ft_close_heredoc_fds(cmd);
-		return (ft_exit_code(1), 1);
+		if (ft_exec_save_standard_fds(ms_data) < 0)
+		{
+			ft_signals_handle_signals();
+			ft_close_heredoc_fds(cmd);
+			return (ft_exit_code(1), 1);
+		}
+		if (ft_exec_apply_redirects(cmd) < 0)
+		{
+			ft_exec_restore_standard_fds(ms_data);
+			ft_signals_handle_signals();
+			ft_close_heredoc_fds(cmd);
+			return (ft_exit_code(1), 1);
+		}
 	}
 	ret = ft_exec_run_builtin(ms_data, cmd->args);
 	if (ft_strcmp(cmd->args[0], "exit") == 0 && ret == 1)
 	{
-		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+		if (has_redirs)
+			ft_exec_restore_standard_fds(ms_data);
+		ft_signals_handle_signals();
 		ft_close_heredoc_fds(cmd);
 		return (ft_exit_code(1), 1);
 	}
-	ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+	if (has_redirs)
+		ft_exec_restore_standard_fds(ms_data);
+	ft_signals_handle_signals();
 	ft_close_heredoc_fds(cmd);
 	ft_exit_code(ret);
 	return (ret);
