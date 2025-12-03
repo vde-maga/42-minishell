@@ -76,8 +76,8 @@ int	ft_builtin_exit(t_minishell *msdata, char **args)
 	if (arg_count > 1)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		ft_exit_code(1);
-		return (1);
+		ft_exit_code(2);
+		return (2);
 	}
 	return (ft_process_single_arg(msdata, args[0]));
 }

@@ -4,7 +4,7 @@ static char	*ft_get_target_dir(t_minishell *data, char *arg)
 {
 	t_env	*env;
 
-	if (!arg || ft_strcmp(arg, "~") == 0)
+	if (!arg || ft_strcmp(arg, "~") == 0 || ft_strcmp(arg, "--") == 0)
 	{
 		env = ft_get_env_var(data->env_list, "HOME");
 		if (!env || !env->value || env->value[0] == '\0')

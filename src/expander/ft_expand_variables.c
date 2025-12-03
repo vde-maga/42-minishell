@@ -11,7 +11,9 @@ static int	ft_should_apply_word_split(t_token *current, int var_expanded)
 	if (current->was_quoted)
 		return (0);
 	if (!current->value)
-		return (0);
+		return (1);
+	if (current->value[0] == '\0')
+		return (1);
 	i = 0;
 	while (current->value[i])
 	{
