@@ -45,11 +45,13 @@ static char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
 	return (line);
 }
 
-static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_quoted, int *pipefd)
+static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim,
+	int was_quoted, int *pipefd)
 {
 	char	*line;
 	char	*temp;
 
+	ms_data->hdc_delim = clean_delim;
 	shell_struct(ms_data, 0);
 	ft_signals_heredoc_signal();
 	close(pipefd[0]);
@@ -79,6 +81,7 @@ static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_qu
 		free(line);
 	}
 	free(clean_delim);
+	ms_data->hdc_delim = NULL;
 	close(pipefd[1]);
 	pipefd[1] = -1;
 	ft_free_shell_child(ms_data);

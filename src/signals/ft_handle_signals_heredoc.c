@@ -68,31 +68,24 @@ t_minishell	*shell_struct(t_minishell *shell, int flag)
 	return (ptr);
 }
 
-static void ft_signals_heredoc_sigint_handler(int signal)
+static void	ft_signals_heredoc_sigint_handler(int signal)
 {
-    // Recuperamos a struct apenas para fechar FDs, o que é seguro
-    const t_minishell *ms_data = shell_struct(NULL, 1);
+	t_minishell	*ms_data;
 
-    (void)signal;
-    
-    // write é async-signal-safe: OK
-    write(2, "\n", 1); 
-    
-    // close é async-signal-safe: OK
-    if (ms_data) // Verificação de segurança
-    {
-        if (ms_data->hdc_fds[0] >= 0)
-            close(ms_data->hdc_fds[0]);
-        if (ms_data->hdc_fds[1] >= 0)
-            close(ms_data->hdc_fds[1]);
-    }
-    
-    // Atualizamos o código de erro (sua função estática)
-    ft_exit_code(130);
-    
-    // NÃO usamos free aqui. O OS limpa a memória do filho ao morrer.
-    // Usamos _exit para garantir segurança em sinais.
-    _exit(130); 
+	(void)signal;
+	ms_data = shell_struct(NULL, 1);
+	write(2, "\n", 1);
+	if (ms_data)
+	{
+		if (ms_data->hdc_fds[0] >= 0)
+			close(ms_data->hdc_fds[0]);
+		if (ms_data->hdc_fds[1] >= 0)
+			close(ms_data->hdc_fds[1]);
+		if (ms_data->hdc_delim)
+			free(ms_data->hdc_delim);
+		ft_free_shell_child(ms_data);
+	}
+	_exit(130);
 }
 
 void	ft_signals_heredoc_signal(void)
