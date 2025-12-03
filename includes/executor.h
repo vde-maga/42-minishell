@@ -12,6 +12,8 @@ int		ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd);
 int		ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node);
 int		ft_process_redir(t_redir *redir);
 int		ft_exec_apply_redirects(t_cmd_node *cmd);
+int		ft_exec_save_standard_fds(int *saved_stdin, int *saved_stdout);
+void	ft_exec_restore_standard_fds(int saved_stdin, int saved_stdout);
 int		ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd);
 void	ft_handle_execve_error(char *cmd_name, char **env_array,
 			t_minishell *ms_data);

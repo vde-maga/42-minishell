@@ -76,13 +76,26 @@ int	ft_exec_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 
 int	ft_exec_handle_empty_command(t_cmd_node *cmd)
 {
-	int	ret;
+	int	saved_stdin;
+	int	saved_stdout;
 
-	ret = 0;
 	if (cmd && cmd->redirs)
-		ret = ft_exec_apply_redirects(cmd);
+	{
+		if (ft_exec_save_standard_fds(&saved_stdin, &saved_stdout) < 0)
+		{
+			ft_close_heredoc_fds(cmd);
+			return (ft_exit_code(1));
+		}
+		if (ft_exec_apply_redirects(cmd) < 0)
+		{
+			ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+			ft_close_heredoc_fds(cmd);
+			return (ft_exit_code(1));
+		}
+		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+	}
 	ft_close_heredoc_fds(cmd);
-	return (ret);
+	return (ft_exit_code(0));
 }
 
 int	ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd)

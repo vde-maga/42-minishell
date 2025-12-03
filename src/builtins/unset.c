@@ -26,6 +26,13 @@ int	ft_builtin_unset(t_minishell *msdata, char **args)
 		return (1);
 	if (!args || !args[1])
 		return (0);
+	if (args[1][0] == '-' && args[1][1] != '\0')
+	{
+		ft_putstr_fd("minishell: unset: -", 2);
+		ft_putchar_fd(args[1][1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		return (2);
+	}
 	i = 1;
 	while (args[i])
 	{
