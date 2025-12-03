@@ -53,6 +53,7 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 	new_token->value = value;
 	new_token->quote = 0;
 	new_token->was_quoted = 0;
+	new_token->redir_fd = -1;
 	new_token->next = NULL;
 	ft_tok_check_quoted(new_token);
 	append_token(&lexer->tokens, new_token);

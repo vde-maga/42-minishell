@@ -2,13 +2,76 @@
 
 static int	ft_lex_read_word(t_lexer *lexer);
 
+static int	ft_is_fd_redir(t_lexer *lexer)
+{
+	t_token	*last;
+	int		fd;
+
+	if (!lexer->tokens)
+		return (-1);
+	last = lexer->tokens;
+	while (last->next)
+		last = last->next;
+	if (last->type != TOKEN_WORD || !last->value)
+		return (-1);
+	if (ft_strlen(last->value) != 1 || !ft_isdigit(last->value[0]))
+		return (-1);
+	if (last->was_quoted)
+		return (-1);
+	fd = last->value[0] - '0';
+	return (fd);
+}
+
+static void	ft_remove_last_token(t_lexer *lexer)
+{
+	t_token	*curr;
+	t_token	*prev;
+
+	if (!lexer->tokens)
+		return ;
+	if (!lexer->tokens->next)
+	{
+		ft_token_free(lexer->tokens);
+		lexer->tokens = NULL;
+		return ;
+	}
+	curr = lexer->tokens;
+	prev = NULL;
+	while (curr->next)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	ft_token_free(curr);
+	if (prev)
+		prev->next = NULL;
+}
+
+static void	ft_set_last_token_fd(t_lexer *lexer, int fd)
+{
+	t_token	*last;
+
+	if (!lexer->tokens)
+		return ;
+	last = lexer->tokens;
+	while (last->next)
+		last = last->next;
+	last->redir_fd = fd;
+}
+
 static int	ft_lex_add_operator(t_lexer *lexer)
 {
 	char	c;
 	char	n;
+	int		fd;
 
 	c = lexer->input[lexer->pos];
 	n = lexer->input[lexer->pos + 1];
+	fd = -1;
+	if (c == '>' || c == '<')
+		fd = ft_is_fd_redir(lexer);
+	if (fd >= 0)
+		ft_remove_last_token(lexer);
 	if ((c == '|' && n == '|') || (c == '<' && n == '<') || (c == '>'
 			&& n == '>') || (c == '&' && n == '&') || (c == '>' && n == '|'))
 		ft_lex_add_double_operator(lexer, c, n);
@@ -16,6 +79,8 @@ static int	ft_lex_add_operator(t_lexer *lexer)
 		ft_lex_add_single_operator(lexer, c);
 	else
 		return (0);
+	if (fd >= 0)
+		ft_set_last_token_fd(lexer, fd);
 	return (1);
 }
 

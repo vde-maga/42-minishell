@@ -19,6 +19,7 @@ typedef struct s_redir
 	char					*filename;
 	int						fd;
 	int						was_quoted;
+	int						target_fd;
 	struct s_redir			*next;
 }							t_redir;
 

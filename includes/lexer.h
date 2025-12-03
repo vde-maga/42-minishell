@@ -27,6 +27,7 @@ typedef struct s_token
 	char			*value;
 	char			quote;
 	int				was_quoted;
+	int				redir_fd;
 	struct s_token	*next;
 }					t_token;
 

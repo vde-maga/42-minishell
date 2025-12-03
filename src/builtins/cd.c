@@ -27,14 +27,14 @@ static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
 	char	*new_pwd_val;
 
 	if (old_pwd_val)
-		ft_update_env_var(data->env_list, "OLDPWD", old_pwd_val);
+		ft_set_env_var(&data->env_list, "OLDPWD", old_pwd_val);
 	new_pwd_val = getcwd(NULL, 0);
 	if (!new_pwd_val)
 	{
 		perror("minishell: cd: error retrieving current directory");
 		return (1);
 	}
-	ft_update_env_var(data->env_list, "PWD", new_pwd_val);
+	ft_set_env_var(&data->env_list, "PWD", new_pwd_val);
 	free(new_pwd_val);
 	return (0);
 }

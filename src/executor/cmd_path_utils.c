@@ -36,6 +36,28 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 	return (NULL);
 }
 
+static char	*ft_check_current_dir(char *cmd)
+{
+	char	*full_path;
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (NULL);
+	full_path = ft_strjoin(cwd, "/");
+	free(cwd);
+	if (!full_path)
+		return (NULL);
+	cwd = ft_strjoin(full_path, cmd);
+	free(full_path);
+	if (!cwd)
+		return (NULL);
+	if (access(cwd, F_OK | X_OK) == 0)
+		return (cwd);
+	free(cwd);
+	return (NULL);
+}
+
 char	*ft_get_cmd_path(char *cmd, t_env *env_list)
 {
 	char			*path;
@@ -56,6 +78,8 @@ char	*ft_get_cmd_path(char *cmd, t_env *env_list)
 		return (NULL);
 	}
 	path_dirs = ft_get_path_dirs(env_list);
+	if (!path_dirs)
+		return (ft_check_current_dir(cmd));
 	path = ft_find_cmd_in_path(cmd, path_dirs);
 	ft_free_str_arrays(path_dirs);
 	return (path);
