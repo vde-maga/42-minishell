@@ -29,6 +29,12 @@ int	main(int ac, char **av, char **envp)
 		{
 			if (ms_data.input_line && ms_data.input_line[0] != '\0')
 				add_history(ms_data.input_line);
+			ft_exit_code(2);
+			if (!isatty(STDIN_FILENO))
+			{
+				ft_free_shell(&ms_data);
+				exit(2);
+			}
 			continue ;
 		}
 		ft_collect_heredocs(&ms_data);

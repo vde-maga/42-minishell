@@ -44,6 +44,8 @@ void	ft_env_bubble_sort(t_env **env_array, int count)
 
 void	ft_print_env_var(t_env *env_var)
 {
+	if (ft_strcmp(env_var->var, "_") == 0)
+		return ;
 	if (env_var->has_value)
 		ft_printf("declare -x %s=\"%s\"\n", env_var->var, env_var->value);
 	else
