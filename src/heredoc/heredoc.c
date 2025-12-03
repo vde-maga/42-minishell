@@ -53,10 +53,11 @@ static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_qu
 	shell_struct(ms_data, 0);
 	ft_signals_heredoc_signal();
 	close(pipefd[0]);
+	pipefd[0] = -1;
 	while (1)
 	{
 		write(STDERR_FILENO, "heredoc> ", 9);
-		line = get_next_line(STDIN_FILENO);
+		line = ft_heredoc_readline(STDIN_FILENO);
 		if (!line)
 		{
 			write(STDERR_FILENO, "\n", 1);
@@ -79,7 +80,8 @@ static void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim, int was_qu
 	}
 	free(clean_delim);
 	close(pipefd[1]);
-	ft_free_shell(ms_data);
+	pipefd[1] = -1;
+	ft_free_shell_child(ms_data);
 	exit(EXIT_SUCCESS);
 }
 
@@ -87,8 +89,10 @@ static int	ft_heredoc_parent(pid_t pid, int *pipefd)
 {
 	int	status;
 	int	exit_code;
+	int	read_fd;
 
 	close(pipefd[1]);
+	pipefd[1] = -1;
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	ft_signals_handle_signals();
@@ -100,33 +104,35 @@ static int	ft_heredoc_parent(pid_t pid, int *pipefd)
 		{
 			ft_exit_code(130);
 			close(pipefd[0]);
+			pipefd[0] = -1;
 			return (-1);
 		}
 	}
-	return (pipefd[0]);
+	read_fd = pipefd[0];
+	pipefd[0] = -1;
+	return (read_fd);
 }
 
 int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
 {
 	char	*clean_delim;
-	int	pipefd[2];
 	pid_t	pid;
 
 	clean_delim = ft_remove_quotes(delimiter);
-	if (!clean_delim || pipe(pipefd) < 0)
+	if (!clean_delim || pipe(ms_data->hdc_fds) < 0)
 		return (free(clean_delim), -1);
 	pid = fork();
 	if (pid < 0)
 	{
 		free(clean_delim);
-		close(pipefd[0]);
-		close(pipefd[1]);
+		close(ms_data->hdc_fds[0]);
+		close(ms_data->hdc_fds[1]);
 		return (-1);
 	}
 	if (pid == 0)
-		ft_heredoc_child(ms_data, clean_delim, was_quoted, pipefd);
+		ft_heredoc_child(ms_data, clean_delim, was_quoted, ms_data->hdc_fds);
 	free(clean_delim);
-	return (ft_heredoc_parent(pid, pipefd));
+	return (ft_heredoc_parent(pid, ms_data->hdc_fds));
 }
 
 int	ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd)

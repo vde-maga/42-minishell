@@ -1,5 +1,23 @@
 #include "minishell.h"
 
+void	ft_close_heredoc_fds(t_cmd_node *cmd)
+{
+	t_redir	*redir;
+
+	if (!cmd)
+		return ;
+	redir = cmd->redirs;
+	while (redir)
+	{
+		if (redir->type == TOKEN_HEREDOC && redir->fd > 2)
+		{
+			close(redir->fd);
+			redir->fd = -1;
+		}
+		redir = redir->next;
+	}
+}
+
 void ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
     char **env_array;
@@ -58,24 +76,32 @@ int	ft_exec_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 
 int	ft_exec_handle_empty_command(t_cmd_node *cmd)
 {
+	int	ret;
+
+	ret = 0;
 	if (cmd && cmd->redirs)
-		return (ft_exec_apply_redirects(cmd));
-	return (0);
+		ret = ft_exec_apply_redirects(cmd);
+	ft_close_heredoc_fds(cmd);
+	return (ret);
 }
 
 int	ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;
+	int		status;
 
 	ft_signals_block_execution();
 	pid = fork();
 	if (pid == -1)
 	{
 		ft_signals_handle_signals();
+		ft_close_heredoc_fds(cmd);
 		perror("fork");
 		return (ft_exit_code(1));
 	}
 	if (pid == 0)
 		ft_exec_child_process(ms_data, cmd);
-	return (ft_exec_wait_and_get_status(pid, ms_data));
+	ft_close_heredoc_fds(cmd);
+	status = ft_exec_wait_and_get_status(pid, ms_data);
+	return (status);
 }

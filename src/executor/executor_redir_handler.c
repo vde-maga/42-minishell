@@ -44,8 +44,14 @@ static int	ft_handle_heredoc(t_redir *redir)
 	if (redir->fd < 0)
 		return (0);
 	if (dup2(redir->fd, STDIN_FILENO) < 0)
-		return (close(redir->fd), perror("dup2"), -1);
+	{
+		close(redir->fd);
+		redir->fd = -1;
+		perror("dup2");
+		return (-1);
+	}
 	close(redir->fd);
+	redir->fd = -1;
 	return (0);
 }
 

@@ -53,19 +53,25 @@ int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 	int	ret;
 
 	if (ft_exec_save_standard_fds(&saved_stdin, &saved_stdout) < 0)
+	{
+		ft_close_heredoc_fds(cmd);
 		return (ft_exit_code(1), 1);
+	}
 	if (ft_exec_apply_redirects(cmd) < 0)
 	{
 		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+		ft_close_heredoc_fds(cmd);
 		return (ft_exit_code(1), 1);
 	}
 	ret = ft_exec_run_builtin(ms_data, cmd->args);
 	if (ft_strcmp(cmd->args[0], "exit") == 0 && ret == 1)
 	{
 		ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+		ft_close_heredoc_fds(cmd);
 		return (ft_exit_code(1), 1);
 	}
 	ft_exec_restore_standard_fds(saved_stdin, saved_stdout);
+	ft_close_heredoc_fds(cmd);
 	ft_exit_code(ret);
 	return (ret);
 }

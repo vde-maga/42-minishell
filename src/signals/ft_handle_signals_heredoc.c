@@ -81,8 +81,10 @@ static void ft_signals_heredoc_sigint_handler(int signal)
     // close é async-signal-safe: OK
     if (ms_data) // Verificação de segurança
     {
-        close(ms_data->hdc_fds[0]);
-        close(ms_data->hdc_fds[1]);
+        if (ms_data->hdc_fds[0] >= 0)
+            close(ms_data->hdc_fds[0]);
+        if (ms_data->hdc_fds[1] >= 0)
+            close(ms_data->hdc_fds[1]);
     }
     
     // Atualizamos o código de erro (sua função estática)
