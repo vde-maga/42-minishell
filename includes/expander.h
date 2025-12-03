@@ -7,6 +7,7 @@ typedef struct s_expand_ctx
 	const char	*s;
 	int			in_d;
 	char		**res;
+	int			*unquoted_expand;
 }				t_expand_ctx;
 
 typedef struct s_qctx
@@ -28,7 +29,8 @@ int				ft_exp_special_param(t_minishell *msdata, t_token *current,
 int				is_valid_env_var_name(char *str);
 int				is_valid_special_param(char *str);
 int				get_shell_pid_from_proc(void);
-char			*ft_expand_variables_in_string(t_env *env, char *str);
+char			*ft_expand_variables_in_string(t_env *env, char *str,
+					int *unquoted_expand);
 char			*ft_strjoin_char(char *s1, char c);
 char			*ft_get_variable_value(t_env *env, char *var_name);
 char			**ft_word_split(char *str);

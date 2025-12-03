@@ -65,6 +65,8 @@ int	handle_dollar_ctx(t_expand_ctx *ctx, int i)
 		val = ft_get_variable_value(ctx->env, name);
 		if (val)
 		{
+			if (!ctx->in_d && ctx->unquoted_expand)
+				*ctx->unquoted_expand = 1;
 			tmp = ft_strjoin(*ctx->res, val);
 			free(*ctx->res);
 			*ctx->res = tmp;

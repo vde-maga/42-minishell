@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   heredoc_collect.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/03 12:00:00 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/03 15:58:54 by ruiferna         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 static char	*ft_join_heredoc_line(char *content, char *line, int was_quoted,
@@ -29,9 +17,7 @@ static char	*ft_join_heredoc_line(char *content, char *line, int was_quoted,
 	if (!content)
 		return (with_newline);
 	new_content = ft_strjoin(content, with_newline);
-	free(content);
-	free(with_newline);
-	return (new_content);
+	return (free(with_newline), free(content), new_content);
 }
 
 static int	ft_read_heredoc_content_loop(t_minishell *ms, char *delim,

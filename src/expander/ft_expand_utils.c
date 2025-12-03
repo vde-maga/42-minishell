@@ -40,7 +40,7 @@ void	process_escape(const char *s, int *i, char **res)
 		append_char_free(res, '\\');
 }
 
-char	*ft_expand_variables_in_string(t_env *env, char *s)
+char	*ft_expand_variables_in_string(t_env *env, char *s, int *unquoted_expand)
 {
 	t_expand_ctx	ctx;
 	char			*res;
@@ -56,6 +56,9 @@ char	*ft_expand_variables_in_string(t_env *env, char *s)
 	ctx.env = env;
 	ctx.s = s;
 	ctx.res = &res;
+	ctx.unquoted_expand = unquoted_expand;
+	if (unquoted_expand)
+		*unquoted_expand = 0;
 	i = 0;
 	in_s = 0;
 	in_d = 0;

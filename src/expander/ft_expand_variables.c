@@ -6,9 +6,7 @@ static int	ft_should_apply_word_split(t_token *current, int var_expanded)
 {
 	int	i;
 
-	if (!var_expanded)
-		return (0);
-	if (current->was_quoted)
+	if (var_expanded != 2)
 		return (0);
 	if (!current->value)
 		return (1);

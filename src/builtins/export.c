@@ -62,7 +62,6 @@ static int	ft_handle_export_with_equal(t_minishell *msdata, char *arg)
 		return (1);
 	}
 	value = ft_remove_quotes(equal_sign + 1);
-	value = ft_remove_spaces(value);
 	result = ft_set_env_var(&msdata->env_list, var_name, value);
 	free(value);
 	free(var_name);

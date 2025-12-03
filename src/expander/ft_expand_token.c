@@ -15,16 +15,18 @@ static int	ft_is_heredoc_delim(t_minishell *msdata, t_token *current)
 }
 
 static int	ft_expand_var_in_token(t_env *env, t_token *current,
-				int is_heredoc_delim)
+				int is_heredoc_delim, int *had_unquoted_expand)
 {
 	char	*expanded_value;
 	char	*old_value;
 
+	*had_unquoted_expand = 0;
 	if (!ft_strchr(current->value, '$'))
 		return (0);
 	if (is_heredoc_delim && current->was_quoted)
 		return (0);
-	expanded_value = ft_expand_variables_in_string(env, current->value);
+	expanded_value = ft_expand_variables_in_string(env, current->value,
+			had_unquoted_expand);
 	if (!expanded_value)
 		return (-1);
 	old_value = current->value;
@@ -66,15 +68,19 @@ int	ft_process_token_expansion(t_minishell *msdata, t_env *env,
 {
 	int	is_heredoc_delim;
 	int	var_expanded;
+	int	had_unquoted_expand;
 
 	if (!current->value || current->type != TOKEN_WORD)
 		return (0);
 	ft_expand_tilde_in_token(env, current);
 	is_heredoc_delim = ft_is_heredoc_delim(msdata, current);
-	var_expanded = ft_expand_var_in_token(env, current, is_heredoc_delim);
+	var_expanded = ft_expand_var_in_token(env, current, is_heredoc_delim,
+			&had_unquoted_expand);
 	if (var_expanded < 0)
 		return (-1);
 	if (ft_remove_quotes_from_token(current) < 0)
 		return (-1);
+	if (had_unquoted_expand)
+		return (2);
 	return (var_expanded);
 }

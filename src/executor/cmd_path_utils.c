@@ -16,9 +16,10 @@ char	**ft_get_path_dirs(t_env *env)
 
 static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 {
-	char	*full_path;
-	char	*temp_path;
-	int		i;
+	char		*full_path;
+	char		*temp_path;
+	int			i;
+	struct stat	st;
 
 	if (!paths)
 		return (NULL);
@@ -28,7 +29,8 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 		temp_path = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin(temp_path, cmd);
 		free(temp_path);
-		if (access(full_path, F_OK | X_OK) == 0)
+		if (stat(full_path, &st) == 0 && !S_ISDIR(st.st_mode)
+			&& access(full_path, X_OK) == 0)
 			return (full_path);
 		free(full_path);
 		i++;
@@ -38,8 +40,9 @@ static char	*ft_find_cmd_in_path(char *cmd, char **paths)
 
 static char	*ft_check_current_dir(char *cmd)
 {
-	char	*full_path;
-	char	*cwd;
+	char		*full_path;
+	char		*cwd;
+	struct stat	st;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
@@ -52,7 +55,8 @@ static char	*ft_check_current_dir(char *cmd)
 	free(full_path);
 	if (!cwd)
 		return (NULL);
-	if (access(cwd, F_OK | X_OK) == 0)
+	if (stat(cwd, &st) == 0 && !S_ISDIR(st.st_mode)
+		&& access(cwd, X_OK) == 0)
 		return (cwd);
 	free(cwd);
 	return (NULL);
