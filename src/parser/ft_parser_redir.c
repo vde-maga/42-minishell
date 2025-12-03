@@ -35,6 +35,10 @@ t_redir	*create_redir_node(t_token *redir_tok)
 	new_redirect->was_quoted = redir_tok->next->was_quoted;
 	new_redirect->target_fd = redir_tok->redir_fd;
 	new_redirect->next = NULL;
+	if (redir_tok->type == TOKEN_HEREDOC && redir_tok->heredoc_content)
+		new_redirect->heredoc_content = ft_strdup(redir_tok->heredoc_content);
+	else
+		new_redirect->heredoc_content = NULL;
 	return (new_redirect);
 }
 

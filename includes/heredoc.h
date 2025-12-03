@@ -3,6 +3,9 @@
 
 int		ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted);
 int		ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd);
+int		ft_collect_heredocs(t_minishell *ms);
+char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
+			int was_quoted);
 char	*ft_get_var_value(t_minishell *ms_data, char *var_name, int len);
 int		ft_get_var_name_len(char *str);
 int		ft_is_var_char(char c, char next_c);

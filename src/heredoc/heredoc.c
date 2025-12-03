@@ -26,12 +26,11 @@ static int	ft_heredoc_error(char *clean_delim)
 	ft_putstr_fd("(wanted `", 2);
 	ft_putstr_fd(clean_delim, 2);
 	ft_putstr_fd("')\n", 2);
-	//free(clean_delim);
 	clean_delim = NULL;
 	return (-1);
 }
 
-static char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
+char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
 	int was_quoted)
 {
 	char	*expanded;
@@ -138,6 +137,18 @@ int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
 	return (ft_heredoc_parent(pid, ms_data->hdc_fds));
 }
 
+static int	ft_heredoc_from_content(char *content)
+{
+	int	pipefd[2];
+
+	if (pipe(pipefd) < 0)
+		return (-1);
+	if (content)
+		write(pipefd[1], content, ft_strlen(content));
+	close(pipefd[1]);
+	return (pipefd[0]);
+}
+
 int	ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	t_redir	*redir;
@@ -151,8 +162,11 @@ int	ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd)
 		{
 			if (redir->fd > 2)
 				close(redir->fd);
-			redir->fd = ft_heredoc(ms_data, redir->filename,
-					redir->was_quoted);
+			if (redir->heredoc_content)
+				redir->fd = ft_heredoc_from_content(redir->heredoc_content);
+			else
+				redir->fd = ft_heredoc(ms_data, redir->filename,
+						redir->was_quoted);
 			if (redir->fd < 0)
 				return (-1);
 		}

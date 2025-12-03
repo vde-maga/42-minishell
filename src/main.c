@@ -31,6 +31,7 @@ int	main(int ac, char **av, char **envp)
 				add_history(ms_data.input_line);
 			continue ;
 		}
+		ft_collect_heredocs(&ms_data);
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
 	}

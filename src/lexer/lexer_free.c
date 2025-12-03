@@ -15,6 +15,8 @@ void	ft_token_free(t_token *token)
 		return ;
 	if (token->value)
 		free(token->value);
+	if (token->heredoc_content)
+		free(token->heredoc_content);
 	free(token);
 }
 
