@@ -33,11 +33,11 @@ void	ft_executor_error_eacces(char *cmd_name);
 void	ft_executor_error_eoent(char *cmd_name);
 void	ft_executor_error_eisdir(char *cmd_name);
 
-int	ft_handle_heredoc(t_redir *redir);
-int	ft_handle_append(t_redir *redir);
-int	ft_handle_redirect_out(t_redir *redir);
-int	ft_handle_redirect_in(t_redir *redir);
-int	ft_get_redir_target_fd(t_redir *redir, int default_fd);
+int		ft_handle_heredoc(t_redir *redir);
+int		ft_handle_append(t_redir *redir);
+int		ft_handle_redirect_out(t_redir *redir);
+int		ft_handle_redirect_in(t_redir *redir);
+int		ft_get_redir_target_fd(t_redir *redir, int default_fd);
 
 void	ft_close_heredoc_fds(t_cmd_node *cmd);
 

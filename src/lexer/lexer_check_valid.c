@@ -1,18 +1,6 @@
 #include "../includes/minishell.h"
 
-// Forward declaration from parser
 t_token	*ft_get_token_before(t_token *tokens, t_token *target);
-
-static int	ft_check_operator(t_token *token)
-{
-	if (!token->next)
-		return (-1);
-	if (ft_is_operator(token->next->type))
-		return (-1);
-	if (token->next->type == TOKEN_EOF)
-		return (-1);
-	return (1);
-}
 
 static int	ft_check_parentheses(t_token *tokens)
 {
@@ -29,12 +17,12 @@ static int	ft_check_parentheses(t_token *tokens)
 		{
 			paren_count--;
 			if (paren_count < 0)
-				return (-1); // Unmatched closing parenthesis
+				return (-1);
 		}
 		current = current->next;
 	}
 	if (paren_count != 0)
-		return (-1); // Unmatched opening parenthesis
+		return (-1);
 	return (1);
 }
 
@@ -51,7 +39,7 @@ static int	ft_check_parentheses_content(t_token *tokens)
 		{
 			in_paren++;
 			if (current->next && current->next->type == TOKEN_RPAREN)
-				return (-1); // Empty parentheses
+				return (-1);
 		}
 		else if (current->type == TOKEN_RPAREN)
 			in_paren--;
@@ -71,8 +59,11 @@ static int	ft_check_redirect(t_token *token)
 	return (1);
 }
 
-static void	process_token(t_token *tokens, t_token *current, int *has_command, int *error)
+static void	process_token(t_token *tokens, t_token *current,
+	int *has_command, int *error)
 {
+	t_token	*prev;
+
 	if (ft_is_operator(current->type))
 	{
 		if (ft_check_operator(current) == -1)
@@ -88,8 +79,6 @@ static void	process_token(t_token *tokens, t_token *current, int *has_command, i
 		*has_command = 0;
 	else if (current->type == TOKEN_RPAREN)
 	{
-		t_token	*prev;
-		
 		prev = ft_get_token_before(tokens, current);
 		if (!prev || (prev->type != TOKEN_WORD && prev->type != TOKEN_RPAREN))
 			*error = 1;

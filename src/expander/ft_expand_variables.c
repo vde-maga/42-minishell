@@ -23,40 +23,38 @@ static int	ft_should_apply_word_split(t_token *current, int var_expanded)
 	return (0);
 }
 
+static int	ft_handle_word_split(t_minishell *msdata, t_token *prev,
+			t_token *current, t_token **curr_ptr)
+{
+	char	**words;
+
+	words = ft_word_split(current->value);
+	if (ft_apply_word_splitting(&msdata->tokens, prev, current, words) < 0)
+		return (-1);
+	if (prev)
+		*curr_ptr = prev->next;
+	else
+		*curr_ptr = msdata->tokens;
+	return (1);
+}
+
 static int	ft_expand_and_split_token(t_minishell *msdata, t_env *env,
 			t_token **prev_ptr, t_token **curr_ptr)
 {
 	t_token	*current;
 	t_token	*prev;
-	char	**words;
 	int		var_expanded;
 
 	current = *curr_ptr;
 	prev = *prev_ptr;
-	var_expanded = ft_process_token_expansion(msdata, env, &msdata->tokens,
-			prev, current);
+	var_expanded = ft_process_token_expansion(msdata, env, prev, current);
 	if (var_expanded < 0)
 		return (-1);
 	if (ft_should_apply_word_split(current, var_expanded))
-	{
-		words = ft_word_split(current->value);
-		if (ft_apply_word_splitting(&msdata->tokens, prev, current, words) < 0)
-			return (-1);
-		if (prev)
-			*curr_ptr = prev->next;
-		else
-			*curr_ptr = msdata->tokens;
-		return (1);
-	}
-	if (var_expanded == 3)
-	{
-		*prev_ptr = current;
-		*curr_ptr = current->next;
-		return (1);
-	}
+		return (ft_handle_word_split(msdata, prev, current, curr_ptr));
 	*prev_ptr = current;
 	*curr_ptr = current->next;
-	return (0);
+	return (var_expanded == 3);
 }
 
 int	ft_expand_variables(t_minishell *msdata, t_env *env)

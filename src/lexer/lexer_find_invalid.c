@@ -19,40 +19,41 @@ static t_token	*ft_validate_token(t_token *current)
 	return (NULL);
 }
 
+static t_token	*ft_check_syntax_edge(t_token *head)
+{
+	t_token	*cur;
+
+	cur = head;
+	if (ft_is_operator(cur->type) || cur->type == TOKEN_RPAREN)
+		return (cur);
+	while (cur)
+	{
+		if (cur->type == TOKEN_LPAREN && cur->next
+			&& cur->next->type == TOKEN_RPAREN)
+			return (cur);
+		cur = cur->next;
+	}
+	return (head);
+}
+
 t_token	*ft_lexer_invalid_token(t_token *tokens)
 {
-	t_token	*current;
-	t_token	*result;
+	t_token	*cur;
+	t_token	*res;
 
 	if (!tokens)
 		return (NULL);
-	
-	// Check for parentheses validation first
 	if (ft_lexer_valid(tokens) == -1)
+		return (ft_check_syntax_edge(tokens));
+	cur = tokens;
+	if (ft_is_operator(cur->type))
+		return (cur);
+	while (cur)
 	{
-		// Find the specific invalid token
-		current = tokens;
-		if (ft_is_operator(current->type) || current->type == TOKEN_RPAREN)
-			return (current);
-		while (current)
-		{
-			if (current->type == TOKEN_LPAREN && current->next &&
-				current->next->type == TOKEN_RPAREN)
-				return (current);
-			current = current->next;
-		}
-		return (tokens); // Return first token if specific error not found
-	}
-	
-	current = tokens;
-	if (ft_is_operator(current->type))
-		return (current);
-	while (current)
-	{
-		result = ft_validate_token(current);
-		if (result)
-			return (result);
-		current = current->next;
+		res = ft_validate_token(cur);
+		if (res)
+			return (res);
+		cur = cur->next;
 	}
 	return (NULL);
 }

@@ -1,5 +1,5 @@
-#include "parser.h"
 #include "minishell.h"
+#include "parser.h"
 
 /*
  * Entry point for the parser
@@ -169,8 +169,8 @@ t_parser_node	*ft_parser_handle_parentheses(t_token *tokens)
 }
 
 /*
-	* Finds the last occurrence of specified operator types outside of parentheses.
-	*/
+ * Finds the last occurrence of specified operator types outside of parentheses.
+ */
 t_token	*ft_parser_find_last_operator_paren(t_token *tokens, t_token_type type1,
 		t_token_type type2)
 {
@@ -181,15 +181,14 @@ t_token	*ft_parser_find_last_operator_paren(t_token *tokens, t_token_type type1,
 	last_operator = NULL;
 	current = tokens;
 	paren_count = 0;
-	
 	while (current)
 	{
 		if (current->type == TOKEN_LPAREN)
 			paren_count++;
 		else if (current->type == TOKEN_RPAREN)
 			paren_count--;
-		else if (paren_count == 0 && (current->type == type1 ||
-			(type2 != (t_token_type) - 1 && current->type == type2)))
+		else if (paren_count == 0 && (current->type == type1
+				|| (type2 != (t_token_type) - 1 && current->type == type2)))
 			last_operator = current;
 		current = current->next;
 	}
