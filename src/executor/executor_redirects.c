@@ -50,6 +50,16 @@ void	ft_exec_restore_standard_fds(t_minishell *ms_data)
 	}
 }
 
+static int	ft_cleanup_return(t_minishell *ms, t_cmd_node *cmd,
+	int rest, int ret)
+{
+	if (rest)
+		ft_exec_restore_standard_fds(ms);
+	ft_signals_handle_signals();
+	ft_close_heredoc_fds(cmd);
+	return (ft_exit_code(ret), ret);
+}
+
 int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	int	ret;
@@ -60,32 +70,12 @@ int	ft_exec_builtin_with_redirects(t_minishell *ms_data, t_cmd_node *cmd)
 	if (has_redirs)
 	{
 		if (ft_exec_save_standard_fds(ms_data) < 0)
-		{
-			ft_signals_handle_signals();
-			ft_close_heredoc_fds(cmd);
-			return (ft_exit_code(1), 1);
-		}
+			return (ft_cleanup_return(ms_data, cmd, 0, 1));
 		if (ft_exec_apply_redirects(cmd) < 0)
-		{
-			ft_exec_restore_standard_fds(ms_data);
-			ft_signals_handle_signals();
-			ft_close_heredoc_fds(cmd);
-			return (ft_exit_code(1), 1);
-		}
+			return (ft_cleanup_return(ms_data, cmd, 1, 1));
 	}
 	ret = ft_exec_run_builtin(ms_data, cmd->args);
 	if (ft_strcmp(cmd->args[0], "exit") == 0 && ret == 1)
-	{
-		if (has_redirs)
-			ft_exec_restore_standard_fds(ms_data);
-		ft_signals_handle_signals();
-		ft_close_heredoc_fds(cmd);
-		return (ft_exit_code(1), 1);
-	}
-	if (has_redirs)
-		ft_exec_restore_standard_fds(ms_data);
-	ft_signals_handle_signals();
-	ft_close_heredoc_fds(cmd);
-	ft_exit_code(ret);
-	return (ret);
+		return (ft_cleanup_return(ms_data, cmd, has_redirs, 1));
+	return (ft_cleanup_return(ms_data, cmd, has_redirs, ret));
 }

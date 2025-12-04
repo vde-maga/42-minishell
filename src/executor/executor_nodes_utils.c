@@ -1,39 +1,21 @@
 #include "minishell.h"
 
-void	ft_close_heredoc_fds(t_cmd_node *cmd)
+void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
-	t_redir	*redir;
+	char	**env_array;
 
-	if (!cmd)
-		return ;
-	redir = cmd->redirs;
-	while (redir)
+	ft_signals_set_fork1_signal();
+	if (ft_exec_apply_redirects(cmd) < 0)
 	{
-		if (redir->type == TOKEN_HEREDOC && redir->fd > 2)
-		{
-			close(redir->fd);
-			redir->fd = -1;
-		}
-		redir = redir->next;
+		ft_free_shell_child(ms_data);
+		_exit(1);
 	}
-}
-
-void ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
-{
-    char **env_array;
-
-    ft_signals_set_fork1_signal();
-    if (ft_exec_apply_redirects(cmd) < 0)
-    {
-        ft_free_shell_child(ms_data);
-        _exit(1);
-    }
-    if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
-        ft_handle_path_not_found(cmd->args[0], NULL, ms_data);
-    ft_update_env_var(ms_data->env_list, "_", cmd->args[0]);
-    env_array = ft_env_list_to_array(ms_data->env_list);
-    execve(cmd->args[0], cmd->args, env_array);
-    ft_handle_execve_error(cmd->args[0], env_array, ms_data);
+	if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
+		ft_handle_path_not_found(cmd->args[0], NULL, ms_data);
+	ft_update_env_var(ms_data->env_list, "_", cmd->args[0]);
+	env_array = ft_env_list_to_array(ms_data->env_list);
+	execve(cmd->args[0], cmd->args, env_array);
+	ft_handle_execve_error(cmd->args[0], env_array, ms_data);
 }
 
 int	ft_exec_check_invalid_commands(char **args)
