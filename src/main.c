@@ -40,15 +40,12 @@ int	main(int ac, char **av, char **envp)
 
 void	ft_line_ready(t_minishell *ms_data)
 {
-	// ft_test_heredoc(ms_data);
-	// print_tokens(ms_data->tokens);
 	ft_expander(ms_data, ms_data->env_list);
 	if (ms_data->tokens)
 	{
 		ms_data->parser = ft_parser(ms_data->tokens);
 		if (ms_data->parser)
 		{
-			// ft_parser_tree_test(ms_data->parser);
 			ft_executor(ms_data, ms_data->parser);
 			ft_parser_free(ms_data->parser);
 			ms_data->parser = NULL;

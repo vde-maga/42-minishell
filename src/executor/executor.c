@@ -21,6 +21,8 @@ int	ft_exec_node(t_minishell *ms_data, t_parser_node *node)
 		return (0);
 	if (node->type == NODE_CMD)
 		return (ft_exec_cmd_node(ms_data, node->cmd_data));
+	else if (node->type == NODE_SUBSHELL)
+		return (ft_exec_subshell(ms_data, node->left));
 	else if (node->type == NODE_AND)
 	{
 		ft_exec_node(ms_data, node->left);
@@ -48,4 +50,49 @@ void	ft_executor(t_minishell *ms_data, t_parser_node *parser)
 		return ;
 	}
 	ft_exec_node(ms_data, parser);
+}
+
+/*
+	* Executes a subshell by forking and executing the contained command tree.
+	* The subshell runs in a separate process with its own environment.
+	*/
+int	ft_exec_subshell(t_minishell *ms_data, t_parser_node *node)
+{
+	pid_t	pid;
+	int		status;
+
+	if (!node)
+		return (1);
+	
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		return (1);
+	}
+	else if (pid == 0)
+	{
+		// Child process - execute the subshell content
+		ft_exec_node(ms_data, node);
+		exit(ft_exit_code(-1));
+	}
+	else
+	{
+		// Parent process - wait for child to complete
+		if (waitpid(pid, &status, 0) == -1)
+		{
+			perror("waitpid");
+			return (1);
+		}
+		
+		// Set exit code based on child's exit status
+		if (WIFEXITED(status))
+			ft_exit_code(WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			ft_exit_code(128 + WTERMSIG(status));
+		else
+			ft_exit_code(1);
+			
+		return (ft_exit_code(-1));
+	}
 }

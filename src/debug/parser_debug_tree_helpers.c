@@ -58,6 +58,8 @@ void	print_node_type(t_parser_node *node)
 		ft_printf("AND\n");
 	else if (node->type == NODE_OR)
 		ft_printf("OR\n");
+	else if (node->type == NODE_SUBSHELL)
+		ft_printf("SUBSHELL\n");
 	else
 		ft_printf("UNKNOWN\n");
 }
