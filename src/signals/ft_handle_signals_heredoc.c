@@ -45,7 +45,7 @@ if (pid == 0) // Processo filho
 {
     ft_process_heredoc(...);
     // Para evitar "still reachable", você teria que fazer:
-    ft_free_shell(shell); 
+    ft_free_shell(shell, 0);
     ft_free_env_list(env);
     // E qualquer outra coisa alocada
     exit(0);

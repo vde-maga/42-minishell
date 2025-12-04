@@ -1,26 +1,6 @@
 #include "minishell.h"
 
-char	*ft_get_var_value(t_minishell *ms_data, char *var_name, int len)
-{
-	t_env	*env_node;
-	char	*var_name_copy;
-	char	*result;
-
-	if (len == 1 && var_name[0] == '?')
-		return (ft_itoa(ft_exit_code(-1)));
-	if (len == 1 && var_name[0] == '$')
-		return (ft_itoa(get_shell_pid_from_proc()));
-	var_name_copy = ft_substr(var_name, 0, len);
-	if (!var_name_copy)
-		return (ft_strdup(""));
-	env_node = ft_get_env_var(ms_data->env_list, var_name_copy);
-	free(var_name_copy);
-	if (env_node && env_node->value)
-		result = ft_strdup(env_node->value);
-	else
-		result = ft_strdup("");
-	return (result);
-}
+// ft_get_var_value is now implemented as ft_get_variable_value_len in path_utils.c
 
 int	ft_get_var_name_len(char *str)
 {
@@ -52,7 +32,7 @@ char	*ft_append_var(t_minishell *ms_data, char *result,
 	int		var_len;
 
 	var_len = ft_get_var_name_len(&line[*i + 1]);
-	var_value = ft_get_var_value(ms_data, &line[*i + 1], var_len);
+	var_value = ft_get_variable_value_len(ms_data->env_list, &line[*i + 1], var_len);
 	temp = result;
 	result = ft_strjoin(result, var_value);
 	free(temp);
@@ -61,42 +41,15 @@ char	*ft_append_var(t_minishell *ms_data, char *result,
 	return (result);
 }
 
+// ft_append_char and ft_readline_append are now implemented as ft_string_append in utils/string_utils.c
 char	*ft_append_char(char *result, char c)
 {
-	char	char_str[2];
-	char	*temp;
-
-	char_str[0] = c;
-	char_str[1] = '\0';
-	temp = result;
-	result = ft_strjoin(result, char_str);
-	free(temp);
-	return (result);
+	return (ft_string_append(result, &c, APPEND_CHAR));
 }
 
 static char	*ft_readline_append(char *line, char c)
 {
-	char	*new_line;
-	size_t	len;
-
-	if (!line)
-	{
-		new_line = malloc(2);
-		if (!new_line)
-			return (NULL);
-		new_line[0] = c;
-		new_line[1] = '\0';
-		return (new_line);
-	}
-	len = ft_strlen(line);
-	new_line = malloc(len + 2);
-	if (!new_line)
-		return (free(line), NULL);
-	ft_memcpy(new_line, line, len);
-	new_line[len] = c;
-	new_line[len + 1] = '\0';
-	free(line);
-	return (new_line);
+	return (ft_string_append(line, &c, APPEND_READLINE));
 }
 
 char	*ft_heredoc_readline(int fd)

@@ -70,27 +70,8 @@ char	*ft_expand_variables_in_string(t_env *env, char *s, int *unquoted_expand)
 	return (res);
 }
 
+// ft_strjoin_char is now implemented as ft_string_append in utils/string_utils.c
 char	*ft_strjoin_char(char *s1, char c)
 {
-	char	*res;
-	int		len;
-
-	if (!s1)
-	{
-		res = malloc(2);
-		if (res)
-		{
-			res[0] = c;
-			res[1] = '\0';
-		}
-		return (res);
-	}
-	len = ft_strlen(s1);
-	res = malloc(len + 2);
-	if (!res)
-		return (NULL);
-	ft_strlcpy(res, s1, len + 1);
-	res[len] = c;
-	res[len + 1] = '\0';
-	return (res);
+	return (ft_string_append(s1, &c, APPEND_CHAR));
 }

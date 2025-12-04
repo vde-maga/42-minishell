@@ -6,7 +6,8 @@ void	append_char_free(char **res, char c)
 	char	*tmp;
 
 	tmp = ft_strjoin_char(*res, c);
-	free(*res);
+	// ft_strjoin_char now calls ft_string_append which already frees the original
+	// so we don't need to free(*res) here
 	*res = tmp;
 }
 

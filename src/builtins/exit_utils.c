@@ -49,12 +49,4 @@ int	ft_is_properly_quoted(char *arg)
 	return (1);
 }
 
-int	ft_count_args(char **args)
-{
-	int	arg_count;
-
-	arg_count = 0;
-	while (args && args[arg_count])
-		arg_count++;
-	return (arg_count);
-}
+// This function is now implemented in utils/string_utils.c as ft_count_array_elements

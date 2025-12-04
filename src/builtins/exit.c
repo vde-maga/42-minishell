@@ -29,7 +29,7 @@ void	ft_exit_free_and_exit(t_minishell *msdata, int exit_code)
 	if (msdata && msdata->parser)
 		ft_parser_free(msdata->parser);
 	if (msdata)
-		ft_free_shell(msdata);
+		ft_free_shell(msdata, 0);
 	exit(exit_code);
 }
 
@@ -63,7 +63,7 @@ int	ft_builtin_exit(t_minishell *msdata, char **args)
 	if (msdata && msdata->shell_pid == get_shell_pid_from_proc()
 		&& isatty(STDIN_FILENO))
 		ft_putstr_fd("exit\n", 2);
-	arg_count = ft_count_args(args);
+	arg_count = ft_count_array_elements(args, 0);
 	if (arg_count == 0)
 		return (ft_handle_no_args(msdata));
 	if (!ft_is_numeric(args[0]) || !ft_is_llong(args[0]))

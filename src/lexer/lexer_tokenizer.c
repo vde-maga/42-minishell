@@ -31,7 +31,7 @@ static void	ft_remove_last_token(t_lexer *lexer)
 		return ;
 	if (!lexer->tokens->next)
 	{
-		ft_token_free(lexer->tokens);
+		ft_free_token_node(lexer->tokens);
 		lexer->tokens = NULL;
 		return ;
 	}
@@ -42,7 +42,7 @@ static void	ft_remove_last_token(t_lexer *lexer)
 		prev = curr;
 		curr = curr->next;
 	}
-	ft_token_free(curr);
+	ft_free_token_node(curr);
 	if (prev)
 		prev->next = NULL;
 }

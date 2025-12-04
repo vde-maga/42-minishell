@@ -38,6 +38,23 @@ char	*ft_get_variable_value(t_env *env, char *var_name)
 	return (value);
 }
 
+char	*ft_get_variable_value_len(t_env *env, char *var_name, int len)
+{
+	char	*var_name_copy;
+	char	*result;
+
+	if (len == 1 && var_name[0] == '?')
+		return (ft_itoa(ft_exit_code(-1)));
+	if (len == 1 && var_name[0] == '$')
+		return (ft_itoa(get_shell_pid_from_proc()));
+	var_name_copy = ft_substr(var_name, 0, len);
+	if (!var_name_copy)
+		return (ft_strdup(""));
+	result = ft_get_variable_value(env, var_name_copy);
+	free(var_name_copy);
+	return (result);
+}
+
 char	*ft_path_tilde_expand(t_env *env, const char *path)
 {
 	char	*home_dir;

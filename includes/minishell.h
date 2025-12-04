@@ -14,6 +14,7 @@
 # include "heredoc.h"
 # include "builtins.h"
 # include "debug_funcs.h"
+# include "error.h"
 # include "signals.h"
 # include "wrappers.h"
 # include <errno.h>
@@ -33,6 +34,20 @@
 
 // ---------------------- Utils ------------------------------------------------
 long long	ft_atoll(const char *str);
+int			ft_count_array_elements(char **array, char delimiter);
+int			ft_count_words(char *str);
+// String append modes for ft_string_append
+typedef enum e_append_mode
+{
+	APPEND_CHAR,
+	APPEND_STRING,
+	APPEND_READLINE
+}	t_append_mode;
+
+void		ft_free_linked_list(void *list, void (*free_func)(void *));
+void		ft_free_token_node(void *token);
+void		ft_free_redir_node(void *redir);
+char		*ft_string_append(char *original, char *to_append, int append_mode);
 
 // ---------------------- User Input -------------------------------------------
 void		get_str_readline(t_minishell *ms_data, int type);
@@ -47,7 +62,7 @@ void		ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av);
 
 // ---------------------- Error ------------------------------------------------
 void		ft_exit_failure(t_minishell *ms_data, char *error);
-void		ft_free_shell(t_minishell *ms_data);
+void		ft_free_shell(t_minishell *ms_data, int is_child);
 void		ft_free_shell_child(t_minishell *ms_data);
 void		ft_free_str_arrays(char **str);
 

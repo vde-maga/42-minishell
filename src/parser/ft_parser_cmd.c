@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "minishell.h"
 
 /*
  *  Parses a simple command (no pipes or other operators).
@@ -50,7 +51,7 @@ int	ft_handle_word_token(t_cmd_node *cmd, int *i, char *value)
 	cmd->args[*i] = ft_strdup(value);
 	if (!cmd->args[*i])
 	{
-		free_string_array(cmd->args);
+		ft_free_str_arrays(cmd->args);
 		cmd->args = NULL;
 		return (1);
 	}

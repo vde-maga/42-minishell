@@ -32,7 +32,7 @@ int	main(int ac, char **av, char **envp)
 			ft_exit_code(2);
 			if (!isatty(STDIN_FILENO))
 			{
-				ft_free_shell(&ms_data);
+				ft_free_shell(&ms_data, 0);
 				exit(2);
 			}
 			continue ;
@@ -41,7 +41,7 @@ int	main(int ac, char **av, char **envp)
 		if (ms_data.input_line && ms_data.input_line[0] != '\0')
 			ft_line_ready(&ms_data);
 	}
-	return (ft_free_shell(&ms_data), EXIT_SUCCESS);
+	return (ft_free_shell(&ms_data, 0), EXIT_SUCCESS);
 }
 
 void	ft_line_ready(t_minishell *ms_data)

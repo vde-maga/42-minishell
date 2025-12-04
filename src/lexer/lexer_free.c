@@ -9,29 +9,11 @@ void	ft_lexer_free(t_lexer *lexer)
 	free(lexer);
 }
 
-void	ft_token_free(t_token *token)
-{
-	if (!token)
-		return ;
-	if (token->value)
-		free(token->value);
-	if (token->heredoc_content)
-		free(token->heredoc_content);
-	free(token);
-}
+// ft_token_free is now implemented as ft_free_token_node in utils/string_utils.c
 
 void	ft_tokens_free(t_token *tokens)
 {
-	t_token	*current;
-	t_token	*next;
-
 	if (!tokens)
 		return ;
-	current = tokens;
-	while (current)
-	{
-		next = current->next;
-		ft_token_free(current);
-		current = next;
-	}
+	ft_free_linked_list(tokens, ft_free_token_node);
 }

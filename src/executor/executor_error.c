@@ -11,11 +11,7 @@ void	ft_handle_execve_error(char *cmd_name, char **env_array,
 		ft_executor_error_eoent(cmd_name);
 	else
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
+		ft_print_error(cmd_name, strerror(errno), NULL);
 	}
 	ft_free_str_arrays(env_array);
 	ft_free_shell_child(ms_data);
@@ -31,20 +27,16 @@ void	ft_handle_path_not_found(char *cmd_name, char **env_array,
 
 	if (errno == EISDIR)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
+		ft_executor_error_eisdir(cmd_name);
 		ft_free_str_arrays(env_array);
 		ft_free_shell_child(ms_data);
 		_exit(126);
 	}
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd_name, 2);
 	path_var = ft_get_env_var(ms_data->env_list, "PATH");
 	if (ft_strchr(cmd_name, '/') || !path_var || !path_var->value)
-		ft_putstr_fd(": No such file or directory\n", 2);
+		ft_print_error(cmd_name, "No such file or directory", NULL);
 	else
-		ft_putstr_fd(": command not found\n", 2);
+		ft_print_error(cmd_name, "command not found", NULL);
 	ft_free_str_arrays(env_array);
 	ft_free_shell_child(ms_data);
 	_exit(127);

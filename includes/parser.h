@@ -81,7 +81,6 @@ void						append_redir_to_list(t_cmd_node *cmd_data,
 */
 void						ft_parser_free(t_parser_node *node);
 void						ft_parser_free_cmd_data(t_cmd_node *cmd_data);
-void						free_string_array(char **arr);
 void						free_redir_list(t_redir *list);
 
 /*
