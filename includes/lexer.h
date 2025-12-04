@@ -17,6 +17,8 @@ typedef enum e_token_type
 	TOKEN_FORCE_REDIRECT_OUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
+	TOKEN_LPAREN,
+	TOKEN_RPAREN,
 	TOKEN_EOF,
 	TOKEN_ERROR
 }					t_token_type;

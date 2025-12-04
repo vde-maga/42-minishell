@@ -10,6 +10,10 @@ void	ft_lex_add_single_operator(t_lexer *lexer, char current)
 		ft_add_token(lexer, TOKEN_REDIRECT_OUT, NULL);
 	else if (current == '&')
 		ft_add_token(lexer, TOKEN_AND, NULL);
+	else if (current == '(')
+		ft_add_token(lexer, TOKEN_LPAREN, NULL);
+	else if (current == ')')
+		ft_add_token(lexer, TOKEN_RPAREN, NULL);
 	ft_lexer_advance(lexer);
 }
 

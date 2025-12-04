@@ -10,7 +10,8 @@ typedef enum e_node_type
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_AND,
-	NODE_OR
+	NODE_OR,
+	NODE_SUBSHELL
 }							t_node_type;
 
 typedef struct s_redir
@@ -50,6 +51,9 @@ t_parser_node				*ft_parser_split_and_build(t_token *tokens,
 t_token						*ft_get_token_before(t_token *tokens,
 								t_token *target);
 t_token						*ft_parser_find_last_operator(t_token *tokens,
+								t_token_type t1, t_token_type t2);
+t_parser_node				*ft_parser_handle_parentheses(t_token *tokens);
+t_token						*ft_parser_find_last_operator_paren(t_token *tokens,
 								t_token_type t1, t_token_type t2);
 
 /*

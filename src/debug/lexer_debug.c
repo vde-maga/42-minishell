@@ -14,6 +14,10 @@ static char	*get_token_type_string(t_token_type type)
 		return ("APPEND");
 	if (type == TOKEN_HEREDOC)
 		return ("HEREDOC");
+	if (type == TOKEN_LPAREN)
+		return ("LPAREN");
+	if (type == TOKEN_RPAREN)
+		return ("RPAREN");
 	if (type == TOKEN_EOF)
 		return ("EOF");
 	if (type == TOKEN_AND_IF)
