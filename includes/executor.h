@@ -3,6 +3,7 @@
 
 void	ft_executor(t_minishell *ms_data, t_parser_node *parser);
 int		ft_exec_node(t_minishell *ms_data, t_parser_node *node);
+int		ft_exec_subshell(t_minishell *ms_data, t_parser_node *node);
 char	**ft_get_path_dirs(t_env *env);
 char	*ft_get_cmd_path(char *cmd, t_env *env_list);
 int		ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd);

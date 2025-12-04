@@ -29,6 +29,10 @@ void	handle_bad_token(t_token *bad_token)
 		print_token_error("&");
 	else if (bad_token->type == TOKEN_AND_IF)
 		print_token_error("&&");
+	else if (bad_token->type == TOKEN_LPAREN)
+		print_token_error("(");
+	else if (bad_token->type == TOKEN_RPAREN)
+		print_token_error(")");
 	else
 		print_token_error("");
 }
