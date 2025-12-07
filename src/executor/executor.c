@@ -15,6 +15,26 @@ int	ft_exec_replace_cmd_with_path(t_minishell *ms_data, t_cmd_node *cmd)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exec_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes a parsed AST node by dispatching to appropriate handlers
+ *   based on node type (command, subshell, logical operators, pipe)
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @node: AST node to execute
+ *
+ * RETURN VALUE
+ *   Exit code of the executed command (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Handles logical AND (&&) and OR (||) operators with short-circuiting
+ *   - Recursive function that processes the entire AST tree
+ *   - Memory management is handled by child functions
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_node(t_minishell *ms_data, t_parser_node *node)
 {
 	if (!node)
@@ -42,6 +62,25 @@ int	ft_exec_node(t_minishell *ms_data, t_parser_node *node)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_executor
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main entry point for command execution from the parsed AST
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @parser: Root AST node containing the complete command structure
+ *
+ * RETURN VALUE
+ *   void (exit code is stored globally via ft_exit_code)
+ *
+ * NOTES
+ *   - Acts as the primary interface between parser and executor
+ *   - Validates parser input before execution
+ *   - Global exit code is used to communicate execution status
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_executor(t_minishell *ms_data, t_parser_node *parser)
 {
 	if (!parser)
@@ -53,9 +92,26 @@ void	ft_executor(t_minishell *ms_data, t_parser_node *parser)
 }
 
 /*
-	* Executes a subshell by forking and executing the contained command tree.
-	* The subshell runs in a separate process with its own environment.
-	*/
+ * FUNCTION: ft_exec_subshell
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes commands in a subshell by forking a child process
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @node: AST node representing the subshell command(s)
+ *
+ * RETURN VALUE
+ *   Exit code of the subshell execution (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Creates isolated process environment for subshell execution
+ *   - Child process exits with the command's exit code
+ *   - Parent waits for child completion and propagates exit status
+ *   - Signal safety: handles SIGINT and SIGQUIT appropriately
+ *   - Memory cleanup occurs in both parent and child processes
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_subshell(t_minishell *ms_data, t_parser_node *node)
 {
 	pid_t	pid;

@@ -69,6 +69,25 @@ static int	ft_collect_single_heredoc(t_minishell *ms, t_token *heredoc_tok)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_collect_heredocs
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Collects all heredoc content from tokens before execution
+ *
+ * PARAMETERS
+ *   ms: Minishell data structure containing tokens
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on error
+ *
+ * NOTES
+ *   - Iterates through token list looking for heredoc tokens
+ *   - Collects content for each heredoc before command execution
+ *   - Handles delimiter matching and content storage
+ *   - Processes variable expansion based on quoting
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_collect_heredocs(t_minishell *ms)
 {
 	t_token	*current;

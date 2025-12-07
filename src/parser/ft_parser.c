@@ -2,7 +2,21 @@
 #include "parser.h"
 
 /*
- * Entry point for the parser
+ * FUNCTION: ft_parser
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Entry point for the parser that converts token list to AST
+ *
+ * PARAMETERS
+ *   @tokens: Linked list of tokens to be parsed
+ *
+ * RETURN VALUE
+ *   Pointer to root of AST tree, or NULL if tokens is NULL or parsing fails
+ *
+ * NOTES
+ *   - Validates input tokens before processing
+ *   - Delegates actual tree construction to ft_parser_build_node_tree
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_parser_node	*ft_parser(t_token *tokens)
 {
@@ -12,11 +26,26 @@ t_parser_node	*ft_parser(t_token *tokens)
 }
 
 /*
- * Builds the abstract syntax tree recursively.
- * Operator precedence (lowest to highest):
- * 1. && and || (logical operators, left-to-right)
- * 2. | (pipe)
- * 3. Parentheses (grouping)
+ * FUNCTION: ft_parser_build_node_tree
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Recursively builds the abstract syntax tree from tokens following
+ *   operator precedence rules
+ *
+ * PARAMETERS
+ *   @tokens: Linked list of tokens to be converted to AST nodes
+ *
+ * RETURN VALUE
+ *   Pointer to root of constructed AST subtree, or NULL on failure
+ *
+ * NOTES
+ *   - Operator precedence (lowest to highest):
+ *     1. && and || (logical operators, left-to-right)
+ *     2. | (pipe)
+ *     3. Parentheses (grouping)
+ *   - Uses recursive descent parsing strategy
+ *   - Handles subshell creation for parenthesized expressions
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_parser_node	*ft_parser_build_node_tree(t_token *tokens)
 {

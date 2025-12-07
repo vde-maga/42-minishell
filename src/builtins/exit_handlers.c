@@ -1,6 +1,25 @@
 #include "minishell.h"
 #include "exit_utils.h"
 
+/*
+ * FUNCTION: ft_handle_mixed_quotes_exit
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle exit argument with mixed or invalid quotes
+ *
+ * PARAMETERS
+ *   @arg: Argument string potentially containing quotes
+ *
+ * RETURN VALUE
+ *   Exit code (0-255) if valid numeric, -1 on error
+ *
+ * NOTES
+ *   - Removes all quotes from argument before processing
+ *   - Returns -1 for empty strings or non-numeric values
+ *   - Frees allocated memory before returning
+ *   - Memory allocation responsibility: function frees its own allocations
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_handle_mixed_quotes_exit(char *arg)
 {
 	char	*processed;
@@ -20,6 +39,25 @@ int	ft_handle_mixed_quotes_exit(char *arg)
 	return (exit_code);
 }
 
+/*
+ * FUNCTION: ft_handle_quoted_exit
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle exit argument with properly matched quotes
+ *
+ * PARAMETERS
+ *   @arg: Quoted argument string
+ *
+ * RETURN VALUE
+ *   Exit code (0-255) if valid numeric, -1 on error
+ *
+ * NOTES
+ *   - Expects properly matched opening and closing quotes
+ *   - Removes outer quotes and validates inner content
+ *   - Falls back to mixed quotes handler for invalid quote patterns
+ *   - Memory allocation responsibility: function frees its own allocations
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_handle_quoted_exit(char *arg)
 {
 	char	*unquoted;
@@ -41,6 +79,25 @@ int	ft_handle_quoted_exit(char *arg)
 	return (free(unquoted), exit_code);
 }
 
+/*
+ * FUNCTION: ft_process_single_arg
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Process exit command with a single numeric argument
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing shell state
+ *   @arg: Numeric exit code argument
+ *
+ * RETURN VALUE
+ *   Does not return (calls exit())
+ *
+ * NOTES
+ *   - Converts argument to long long and applies modulo 256
+ *   - Frees all shell memory before exiting
+ *   - This function never returns under normal operation
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_process_single_arg(t_minishell *msdata, char *arg)
 {
 	long long	exit_code;
@@ -50,6 +107,24 @@ int	ft_process_single_arg(t_minishell *msdata, char *arg)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_handle_no_args
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle exit command with no arguments
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing shell state
+ *
+ * RETURN VALUE
+ *   Does not return (calls exit())
+ *
+ * NOTES
+ *   - Uses the last command's exit code
+ *   - Frees all shell memory before exiting
+ *   - This function never returns under normal operation
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_handle_no_args(t_minishell *msdata)
 {
 	int	exit_code;

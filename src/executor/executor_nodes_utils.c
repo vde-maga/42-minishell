@@ -1,5 +1,30 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_exec_child_process
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes an external command in a child process after applying
+ *   redirections and resolving the command path
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @cmd: Command node containing arguments and redirections
+ *
+ * RETURN VALUE
+ *   void (function exits with _exit() on success or error)
+ *
+ * NOTES
+ *   - Called from child process after fork()
+ *   - Sets default signal handlers for child process
+ *   - Applies all redirections before execution
+ *   - Resolves command path using PATH environment variable
+ *   - Updates "_" environment variable with executed command
+ *   - Uses execve() to replace process image
+ *   - Never returns - exits on success or error
+ *   - Memory cleanup handled before exit
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	char	**env_array;
@@ -33,6 +58,30 @@ int	ft_exec_check_invalid_commands(char **args)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exec_wait_and_get_status
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Waits for child process completion and processes exit status
+ *   to determine appropriate exit code and signal handling
+ *
+ * PARAMETERS
+ *   @pid: Process ID of the child to wait for
+ *   @ms_data: Minishell data structure containing state and flags
+ *
+ * RETURN VALUE
+ *   Exit code of the child process (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Uses waitpid() to wait for specific child process
+ *   - Restores signal handling after child completion
+ *   - Handles both normal exit and signal termination
+ *   - Prints appropriate messages for SIGQUIT and SIGINT
+ *   - Sets exit code to 128 + signal number for signal termination
+ *   - Uses print_flag to prevent duplicate signal messages
+ *   - Signal safety: ensures proper cleanup after waiting
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_wait_and_get_status(pid_t pid, t_minishell *ms_data)
 {
 	int	status;
@@ -77,6 +126,30 @@ int	ft_exec_handle_empty_command(t_minishell *ms_data, t_cmd_node *cmd)
 	return (ft_exit_code(0));
 }
 
+/*
+ * FUNCTION: ft_exec_fork_and_exec_external
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Forks a child process and executes an external command,
+ *   handling the complete lifecycle of process creation and cleanup
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @cmd: Command node containing arguments and redirections
+ *
+ * RETURN VALUE
+ *   Exit code of the executed command (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Blocks signals during critical fork operation
+ *   - Handles fork failure with proper cleanup and error reporting
+ *   - Parent process closes heredoc file descriptors
+ *   - Parent waits for child completion and processes exit status
+ *   - Child process never returns (executed by ft_exec_child_process)
+ *   - Signal safety: ensures consistent signal state across fork
+ *   - Memory management: proper cleanup on all execution paths
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	pid_t	pid;

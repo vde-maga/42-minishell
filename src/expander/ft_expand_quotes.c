@@ -1,5 +1,23 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: handle_char
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle single character during quote removal process
+ *
+ * PARAMETERS
+ *   @c: Quote context structure containing state
+ *
+ * RETURN VALUE
+ *   None (modifies context structure)
+ *
+ * NOTES
+ *   - Toggles quote mode when encountering quote characters
+ *   - Copies non-quote characters to destination
+ *   - Single quotes don't affect double quotes and vice versa
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static void	handle_char(t_qctx *c)
 {
 	if (c->s[c->i] == '\'' && c->mode != 2)
@@ -22,6 +40,26 @@ static void	handle_char(t_qctx *c)
 		c->d[c->j++] = c->s[c->i++];
 }
 
+/*
+ * FUNCTION: fill_without_quotes
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Copy string to destination while removing quote characters
+ *
+ * PARAMETERS
+ *   @str: Source string with quotes
+ *   @dest: Destination buffer
+ *   @mode: Final quote mode (output parameter)
+ *
+ * RETURN VALUE
+ *   Length of destination string
+ *
+ * NOTES
+ *   - Handles nested quotes and quote state tracking
+ *   - Mode: 0 = no quotes, 1 = single quotes, 2 = double quotes
+ *   - Used internally by ft_remove_quotes
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	fill_without_quotes(const char *str, char *dest, int *mode)
 {
 	t_qctx			c;
@@ -38,6 +76,25 @@ static int	fill_without_quotes(const char *str, char *dest, int *mode)
 	return (c.j);
 }
 
+/*
+ * FUNCTION: ft_remove_quotes
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Remove quotes from string while preserving escaped content
+ *
+ * PARAMETERS
+ *   @str: Input string potentially containing quotes
+ *
+ * RETURN VALUE
+ *   New string without quotes, or NULL on allocation failure
+ *
+ * NOTES
+ *   - Handles both single and double quotes
+ *   - Preserves quote content (except quote characters themselves)
+ *   - Returns original string duplicated if no quotes found
+ *   - Memory allocation responsibility: caller must free returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	*ft_remove_quotes(char *str)
 {
 	char			*dest;
@@ -58,6 +115,26 @@ char	*ft_remove_quotes(char *str)
 	return (dest);
 }
 
+/*
+ * FUNCTION: ft_exp_replace_content
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Replace token value with environment variable content
+ *
+ * PARAMETERS
+ *   @env: Environment list for variable lookup
+ *   @current: Token to modify
+ *   @var_name: Name of variable to look up
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on memory allocation failure
+ *
+ * NOTES
+ *   - Replaces token value with variable value or empty string if not found
+ *   - Frees old token value before replacement
+ *   - Memory allocation responsibility: function manages token value memory
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)
 {
 	char		*new_value;
@@ -77,6 +154,27 @@ int	ft_exp_replace_content(t_env *env, t_token *current, char *var_name)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exp_special_param
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle special shell parameters ($$, $?, etc.)
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure (unused)
+ *   @current: Token to modify
+ *   @var_name: Variable name (unused)
+ *
+ * RETURN VALUE
+ *   0 on success
+ *
+ * NOTES
+ *   - $$ expands to shell PID
+ *   - $? expands to last exit code
+ *   - Falls back to 42 for unknown special parameters
+ *   - Memory allocation responsibility: function manages token value memory
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exp_special_param(t_minishell *msdata, t_token *current, char *var_name)
 {
 	char		*new_value;

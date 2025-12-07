@@ -2,7 +2,22 @@
 #include "parser.h"
 
 /*
- * Finds the token immediately preceding a target token in a list.
+ * FUNCTION: ft_get_token_before
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Finds the token immediately preceding a target token in a list
+ *
+ * PARAMETERS
+ *   @tokens: Head of token list to search
+ *   @target: Token to find the predecessor of
+ *
+ * RETURN VALUE
+ *   Pointer to token before target, or NULL if target is first or not found
+ *
+ * NOTES
+ *   - Used extensively in parser for splitting token lists
+ *   - Handles case where target is not in list gracefully
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_token	*ft_get_token_before(t_token *tokens, t_token *target)
 {
@@ -15,7 +30,24 @@ t_token	*ft_get_token_before(t_token *tokens, t_token *target)
 }
 
 /*
- * Finds the last occurrence of specified operator types in the token list.
+ * FUNCTION: ft_parser_find_last_operator
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Finds the last occurrence of specified operator types in the token list
+ *
+ * PARAMETERS
+ *   @tokens: Token list to search
+ *   @type1: First operator type to match
+ *   @type2: Second operator type to match (or -1 to ignore)
+ *
+ * RETURN VALUE
+ *   Pointer to last matching operator token, or NULL if none found
+ *
+ * NOTES
+ *   - Used for implementing operator precedence in parsing
+ *   - Returns rightmost operator to ensure left-to-right associativity
+ *   - type2 of -1 indicates single type search
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_token	*ft_parser_find_last_operator(t_token *tokens, t_token_type type1,
 		t_token_type type2)
@@ -36,7 +68,24 @@ t_token	*ft_parser_find_last_operator(t_token *tokens, t_token_type type1,
 }
 
 /*
- * Finds the last occurrence of specified operator types outside of parentheses.
+ * FUNCTION: ft_parser_find_last_operator_paren
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Finds the last occurrence of specified operator types outside of parentheses
+ *
+ * PARAMETERS
+ *   @tokens: Token list to search
+ *   @type1: First operator type to match
+ *   @type2: Second operator type to match (or -1 to ignore)
+ *
+ * RETURN VALUE
+ *   Pointer to last matching operator outside parentheses, or NULL if none found
+ *
+ * NOTES
+ *   - Critical for proper operator precedence handling
+ *   - Tracks parenthesis nesting level to ignore operators inside subshells
+ *   - Only matches operators at parenthesess level 0 (top level)
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_token	*ft_parser_find_last_operator_paren(t_token *tokens, t_token_type type1,
 		t_token_type type2)

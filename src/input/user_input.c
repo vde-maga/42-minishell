@@ -45,6 +45,26 @@ static void	get_str_non_interactive(t_minishell *ms_data, int type)
 	}
 }
 
+/*
+ * FUNCTION: get_str_readline
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Reads user input using readline library, handling both interactive and non-interactive modes
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure
+ *   type: Input type (1 = new line, 2 = continuation line)
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Uses readline for interactive mode with history and editing
+ *   - Falls back to get_next_line for non-interactive mode
+ *   - Handles line continuation (type 2) by appending to existing input
+ *   - Manages memory for input line properly
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	get_str_readline(t_minishell *ms_data, int type)
 {
 	char	prompt[PATH_MAX + 32];

@@ -2,6 +2,25 @@
 
 void	ft_line_ready(t_minishell *ms_data);
 
+/*
+ * FUNCTION: ft_line_ready
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Processes a complete line of input through expansion, parsing, and execution
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing tokens and parser
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Expands variables and wildcards in tokens
+ *   - Parses tokens into abstract syntax tree
+ *   - Executes the parsed command structure
+ *   - Cleans up resources and adds to history
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_line_ready(t_minishell *ms_data)
 {
 	ft_expander(ms_data, ms_data->env_list);

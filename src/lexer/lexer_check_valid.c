@@ -89,6 +89,25 @@ static void	process_token(t_token *tokens, t_token *current,
 		*has_command = 1;
 }
 
+/*
+ * FUNCTION: ft_lexer_valid
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Validates token sequence for correct syntax and structure
+ *
+ * PARAMETERS
+ *   tokens: Linked list of tokens to validate
+ *
+ * RETURN VALUE
+ *   1 on valid syntax, -1 on syntax error
+ *
+ * NOTES
+ *   - Checks parentheses balance and content
+ *   - Validates operator and token sequences
+ *   - Ensures proper command structure
+ *   - Validates redirection syntax
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_lexer_valid(t_token *tokens)
 {
 	t_token	*current;

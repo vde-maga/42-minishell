@@ -2,6 +2,25 @@
 #include "exit_utils.h"
 #include "exit_handlers.h"
 
+/*
+ * FUNCTION: ft_is_numeric
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Check if a string represents a valid numeric value
+ *
+ * PARAMETERS
+ *   @str: String to validate
+ *
+ * RETURN VALUE
+ *   1 if string is numeric, 0 if not
+ *
+ * NOTES
+ *   - Allows optional leading '+' or '-' sign
+ *   - Requires at least one digit after optional sign
+ *   - Empty strings or sign-only strings are invalid
+ *   - Used for validating exit command arguments
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_is_numeric(char *str)
 {
 	int	i;
@@ -22,6 +41,26 @@ int	ft_is_numeric(char *str)
 	return (1);
 }
 
+/*
+ * FUNCTION: ft_exit_free_and_exit
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free all allocated memory and exit the shell
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing shell state
+ *   @exit_code: Exit code to pass to exit()
+ *
+ * RETURN VALUE
+ *   Does not return (calls exit())
+ *
+ * NOTES
+ *   - Frees tokens, parser, and shell data structures
+ *   - Handles NULL pointers gracefully
+ *   - This is the final cleanup before process termination
+ *   - Memory allocation responsibility: function frees all shell memory
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_exit_free_and_exit(t_minishell *msdata, int exit_code)
 {
 	if (msdata && msdata->tokens)
@@ -56,6 +95,28 @@ static int	ft_is_llong(const char *str)
 	return (str[i] == '\0');
 }
 
+/*
+ * FUNCTION: ft_builtin_exit
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Exit the shell with an optional exit code
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing shell state
+ *   @args: Array of arguments where args[0] is the exit code (optional)
+ *
+ * RETURN VALUE
+ *   Does not return under normal conditions (calls exit())
+ *
+ * NOTES
+ *   - Prints "exit" message in interactive mode
+ *   - No arguments: exits with last command's exit code
+ *   - Non-numeric argument: exits with code 2 and error message
+ *   - Too many arguments: returns error without exiting
+ *   - Numeric argument: exits with specified code (mod 256)
+ *   - Frees all allocated memory before exiting
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_builtin_exit(t_minishell *msdata, char **args)
 {
 	int	arg_count;

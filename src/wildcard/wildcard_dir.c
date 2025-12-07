@@ -75,6 +75,25 @@ static char	**ft_process_matches(DIR **dir, t_wildcard_ctx *ctx)
 	return (ft_collect_matches(*dir, ctx, count));
 }
 
+/*
+ * FUNCTION: ft_get_matching_files
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Expands wildcard pattern and returns array of matching file names
+ *
+ * PARAMETERS
+ *   pattern: Wildcard pattern to match against directory contents
+ *
+ * RETURN VALUE
+ *   NULL-terminated array of matching file names, NULL on error
+ *
+ * NOTES
+ *   - Handles patterns like *, ?, and character classes
+ *   - Skips hidden files unless explicitly matched
+ *   - Returns full paths for matched files
+ *   - Caller is responsible for freeing the array and strings
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	**ft_get_matching_files(const char *pattern)
 {
 	t_wildcard_ctx	ctx;

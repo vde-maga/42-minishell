@@ -29,6 +29,26 @@ static t_env	*ft_create_env_var(char *var_name, char *value, int has_value)
 	return (new_node);
 }
 
+/*
+ * FUNCTION: ft_set_env_var
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Set or update an environment variable
+ *
+ * PARAMETERS
+ *   @env_list: Pointer to environment list head
+ *   @var_name: Name of variable to set
+ *   @value: Value to set (NULL for variable without value)
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error
+ *
+ * NOTES
+ *   - Updates existing variable if found, creates new if not
+ *   - Handles variables with and without values
+ *   - Memory allocation responsibility: function manages list modifications
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_set_env_var(t_env **env_list, char *var_name, char *value)
 {
 	t_env	*var_node;
@@ -65,6 +85,26 @@ void	ft_env_add_back(t_env **lst, t_env *new_node)
 	last->next = new_node;
 }
 
+/*
+ * FUNCTION: ft_update_env_var
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Update the value of an existing environment variable
+ *
+ * PARAMETERS
+ *   @env_list: Environment list containing the variable
+ *   @var_name: Name of variable to update
+ *   @new_value: New value (NULL to remove value)
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error or variable not found
+ *
+ * NOTES
+ *   - Frees old value before setting new one
+ *   - Updates has_value flag based on new_value
+ *   - Memory allocation responsibility: function manages value memory
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_update_env_var(t_env *env_list, char *var_name, char *new_value)
 {
 	t_env	*var_node;
@@ -93,6 +133,26 @@ int	ft_update_env_var(t_env *env_list, char *var_name, char *new_value)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_unset_env_var
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Remove an environment variable from the list
+ *
+ * PARAMETERS
+ *   @env_list: Pointer to environment list head
+ *   @var_name: Name of variable to remove
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error or variable not found
+ *
+ * NOTES
+ *   - Maintains list integrity when removing nodes
+ *   - Frees variable name, value, and node structure
+ *   - Updates list head if removing first node
+ *   - Memory allocation responsibility: function manages cleanup
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_unset_env_var(t_env **env_list, char *var_name)
 {
 	t_env	*previous;

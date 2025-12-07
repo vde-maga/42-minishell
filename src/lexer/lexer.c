@@ -32,6 +32,26 @@ static void	append_token(t_token **head, t_token *new)
 	current->next = new;
 }
 
+/*
+ * FUNCTION: ft_add_token
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates a new token with specified type and value, adds to lexer's token list
+ *
+ * PARAMETERS
+ *   lexer: Lexer structure to which the token will be added
+ *   type: Token type (operator, word, pipe, etc.)
+ *   value: String value of the token (can be NULL for operators)
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Allocates memory for new token and initializes all fields
+ *   - Handles memory cleanup if lexer is NULL or allocation fails
+ *   - Sets quote and redirection fields to default values
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 {
 	t_token	*new_token;
@@ -60,6 +80,25 @@ void	ft_add_token(t_lexer *lexer, t_token_type type, char *value)
 	append_token(&lexer->tokens, new_token);
 }
 
+/*
+ * FUNCTION: ft_lexer
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main lexer function that tokenizes input string and processes tokens
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing lexer and tokens
+ *   input: Raw input string to be tokenized
+ *
+ * RETURN VALUE
+ *   1 on success, 0 or other values on error
+ *
+ * NOTES
+ *   - Initializes lexer, tokenizes input, and processes results
+ *   - Transfers ownership of tokens from lexer to ms_data
+ *   - Cleans up lexer structure after processing
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_lexer(t_minishell *ms_data, char *input)
 {
 	int		tok_res;

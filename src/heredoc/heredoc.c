@@ -9,6 +9,27 @@ int	ft_heredoc_error(char *clean_delim)
 	return (-1);
 }
 
+/*
+ * FUNCTION: ft_heredoc
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main heredoc function that creates a pipe and forks to handle heredoc input
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing heredoc file descriptors
+ *   delimiter: String that marks the end of heredoc input
+ *   was_quoted: Flag indicating if delimiter was quoted (affects variable expansion)
+ *
+ * RETURN VALUE
+ *   File descriptor on success, -1 on error
+ *
+ * NOTES
+ *   - Creates pipe for communication between parent and child processes
+ *   - Forks to handle heredoc input collection in child process
+ *   - Parent process waits for child and returns file descriptor
+ *   - Handles signal safety and proper cleanup on error
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
 {
 	char	*clean_delim;
@@ -31,6 +52,26 @@ int	ft_heredoc(t_minishell *ms_data, char *delimiter, int was_quoted)
 	return (ft_heredoc_parent(pid, ms_data->hdc_fds));
 }
 
+/*
+ * FUNCTION: ft_process_heredocs
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Processes all heredoc redirections for a command node
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure
+ *   cmd: Command node containing redirections to process
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on error
+ *
+ * NOTES
+ *   - Iterates through all redirections looking for heredoc types
+ *   - Closes existing file descriptors to prevent leaks
+ *   - Handles both pre-collected and interactive heredoc content
+ *   - Sets up file descriptors for command execution
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_process_heredocs(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	t_redir	*redir;

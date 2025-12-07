@@ -2,7 +2,22 @@
 #include "minishell.h"
 
 /*
- *  Parses a simple command (no pipes or other operators).
+ * FUNCTION: ft_parse_command
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Parses a simple command without pipes or logical operators
+ *
+ * PARAMETERS
+ *   @tokens: Token list representing a simple command
+ *
+ * RETURN VALUE
+ *   Pointer to new command node, or NULL on allocation failure
+ *
+ * NOTES
+ *   - Creates NODE_CMD type parser node
+ *   - Allocates and populates command data structure
+ *   - Handles memory cleanup on failure
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_parser_node	*ft_parse_command(t_token *tokens)
 {
@@ -30,7 +45,22 @@ t_parser_node	*ft_parse_command(t_token *tokens)
 }
 
 /*
- * Fills the t_cmd_node with arguments and redirection data.
+ * FUNCTION: ft_populate_cmd_data
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Fills the t_cmd_node with arguments and redirection data
+ *
+ * PARAMETERS
+ *   @cmd: Command node to populate with data
+ *   @toks: Token list containing command arguments and redirects
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on failure
+ *
+ * NOTES
+ *   - Initializes command arguments array
+ *   - Processes token list to extract args and redirects
+ * ─────────────────────────────────────────────────────────────────────────
  */
 int	ft_populate_cmd_data(t_cmd_node *cmd, t_token *toks)
 {
@@ -42,7 +72,24 @@ int	ft_populate_cmd_data(t_cmd_node *cmd, t_token *toks)
 }
 
 /*
- * Handles a single word token: duplicates it and adds to the args array.
+ * FUNCTION: ft_handle_word_token
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handles a single word token by duplicating it and adding to args array
+ *
+ * PARAMETERS
+ *   @cmd: Command node containing args array
+ *   @i: Pointer to current index in args array
+ *   @value: String value to duplicate and add to args
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on memory allocation failure
+ *
+ * NOTES
+ *   - Duplicates string value using ft_strdup
+ *   - Updates args array index on success
+ *   - Cleans up args array on failure
+ * ─────────────────────────────────────────────────────────────────────────
  */
 int	ft_handle_word_token(t_cmd_node *cmd, int *i, char *value)
 {
@@ -60,7 +107,22 @@ int	ft_handle_word_token(t_cmd_node *cmd, int *i, char *value)
 }
 
 /*
- * Counts how many WORD tokens are in a list, skipping redirections.
+ * FUNCTION: ft_parser_count_args
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Counts how many WORD tokens are in a list, skipping redirections
+ *
+ * PARAMETERS
+ *   @tokens: Token list to analyze
+ *
+ * RETURN VALUE
+ *   Number of WORD tokens found
+ *
+ * NOTES
+ *   - Skips redirection tokens and their associated filenames
+ *   - Only counts actual command arguments
+ *   - Handles NULL token values safely
+ * ─────────────────────────────────────────────────────────────────────────
  */
 int	ft_parser_count_args(t_token *tokens)
 {
@@ -87,7 +149,22 @@ int	ft_parser_count_args(t_token *tokens)
 }
 
 /*
- * Allocates and initializes a new parser node.
+ * FUNCTION: ft_parser_new_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Allocates and initializes a new parser node of specified type
+ *
+ * PARAMETERS
+ *   @type: Node type (NODE_CMD, NODE_PIPE, NODE_AND, etc.)
+ *
+ * RETURN VALUE
+ *   Pointer to new parser node, or NULL on allocation failure
+ *
+ * NOTES
+ *   - Zero-initializes all node fields
+ *   - Caller responsible for filling node-specific data
+ *   - Memory must be freed by caller using ft_parser_free
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_parser_node	*ft_parser_new_node(t_node_type type)
 {

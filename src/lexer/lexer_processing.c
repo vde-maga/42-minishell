@@ -19,6 +19,26 @@ int	ft_cmd_complete(t_token *tokens)
 	return (1);
 }
 
+/*
+ * FUNCTION: process_lexer_result
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Processes lexer results, handles errors, and validates token sequence
+ *
+ * PARAMETERS
+ *   ms: Minishell data structure containing lexer and tokens
+ *   tok_res: Result code from tokenization process
+ *
+ * RETURN VALUE
+ *   1 on success, 0 on general error, -1 on syntax error
+ *
+ * NOTES
+ *   - Handles different error conditions from tokenization
+ *   - Checks for invalid tokens and syntax errors
+ *   - Cleans up lexer and tokens on error conditions
+ *   - Sets appropriate exit codes for different error types
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	process_lexer_result(t_minishell *ms, int tok_res)
 {
 	t_token	*bad_token;

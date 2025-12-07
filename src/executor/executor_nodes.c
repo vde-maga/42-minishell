@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_exec_cmd_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes a command node by processing heredocs, validating commands,
+ *   and dispatching to appropriate execution path (builtin or external)
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @cmd: Command node containing arguments and redirections
+ *
+ * RETURN VALUE
+ *   Exit code of the executed command (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Handles heredoc processing before command execution
+ *   - Validates command arguments for invalid inputs
+ *   - Distinguishes between builtin and external commands
+ *   - Ensures proper cleanup of heredoc file descriptors
+ *   - Error handling propagates through global exit code
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 {
 	int	error_code;

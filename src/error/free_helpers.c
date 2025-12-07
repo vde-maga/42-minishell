@@ -1,5 +1,23 @@
 #include <minishell.h>
 
+/*
+ * FUNCTION: ft_free_str_arrays
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free a NULL-terminated array of strings
+ *
+ * PARAMETERS
+ *   @str: Array of strings to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Frees each string in the array and the array itself
+ *   - Handles NULL input gracefully
+ *   - Commonly used for freeing argv-style arrays
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_free_str_arrays(char **str)
 {
 	int	i;
@@ -15,6 +33,24 @@ void	ft_free_str_arrays(char **str)
 	free(str);
 }
 
+/*
+ * FUNCTION: ft_free_shell_data
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free basic shell data structures (env array, input strings)
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell structure containing data to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Frees env array (not env_list), input_line, and input strings
+ *   - Sets pointers to NULL after freeing to prevent double-free
+ *   - Memory allocation responsibility: function manages its own cleanup
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_free_shell_data(t_minishell *ms_data)
 {
 	if (ms_data->env)
@@ -34,6 +70,24 @@ void	ft_free_shell_data(t_minishell *ms_data)
 	}
 }
 
+/*
+ * FUNCTION: ft_close_shell_fds
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Close all file descriptors used by the shell
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell structure containing file descriptors
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Closes heredoc pipe file descriptors and saved stdin/stdout
+ *   - Only closes descriptors that are not -1 (invalid/unset)
+ *   - Does not set descriptors to -1 after closing
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_close_shell_fds(t_minishell *ms_data)
 {
 	if (ms_data->hdc_fds[0] != -1)
@@ -46,6 +100,24 @@ void	ft_close_shell_fds(t_minishell *ms_data)
 		close(ms_data->saved_stdout);
 }
 
+/*
+ * FUNCTION: ft_free_child_resources
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free resources specific to child processes (tokens, parser)
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell structure containing child resources
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Frees token list and parser AST tree
+ *   - Used for child process cleanup to avoid parent resource conflicts
+ *   - Does not set pointers to NULL after freeing
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_free_child_resources(t_minishell *ms_data)
 {
 	if (ms_data->tokens)

@@ -1,5 +1,26 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_get_var_value
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Retrieves the value of a variable for heredoc expansion
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing environment variables
+ *   var_name: Variable name string
+ *   len: Length of variable name
+ *
+ * RETURN VALUE
+ *   Newly allocated string with variable value
+ *
+ * NOTES
+ *   - Handles special variables $? (exit code) and $$ (PID)
+ *   - Looks up regular variables in environment list
+ *   - Returns empty string for undefined variables
+ *   - Caller is responsible for freeing the returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	*ft_get_var_value(t_minishell *ms_data, char *var_name, int len)
 {
 	t_env	*env_node;
@@ -22,6 +43,26 @@ char	*ft_get_var_value(t_minishell *ms_data, char *var_name, int len)
 	return (result);
 }
 
+/*
+ * FUNCTION: ft_expand_heredoc_line
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Expands variables in a heredoc line
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing environment variables
+ *   line: Line to expand variables in
+ *
+ * RETURN VALUE
+ *   Newly allocated string with expanded variables
+ *
+ * NOTES
+ *   - Iterates through line character by character
+ *   - Identifies and expands variable patterns
+ *   - Preserves non-variable characters unchanged
+ *   - Caller is responsible for freeing the returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static char	*ft_expand_heredoc_line(t_minishell *ms_data, char *line)
 {
 	char	*result;
@@ -42,6 +83,27 @@ static char	*ft_expand_heredoc_line(t_minishell *ms_data, char *line)
 	return (result);
 }
 
+/*
+ * FUNCTION: ft_process_heredoc_line
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Processes a heredoc line, applying variable expansion if needed
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing environment variables
+ *   line: Line to process
+ *   was_quoted: Flag indicating if delimiter was quoted
+ *
+ * RETURN VALUE
+ *   Processed line (may be original or newly allocated)
+ *
+ * NOTES
+ *   - Only expands variables if delimiter was not quoted
+ *   - Frees original line when expansion occurs
+ *   - Returns original line unchanged when quoted
+ *   - Caller is responsible for freeing the returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	*ft_process_heredoc_line(t_minishell *ms_data, char *line,
 	int was_quoted)
 {

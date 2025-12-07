@@ -1,6 +1,24 @@
 #include "parser.h"
 
-// Main function to add a redirection to a command node.
+/*
+ * FUNCTION: ft_parser_add_redirect
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main function to add a redirection to a command node
+ *
+ * PARAMETERS
+ *   @cmd_data: Command node to add redirection to
+ *   @redirect_tok: Token representing the redirection operator
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Validates redirect token and filename token
+ *   - Creates redirection node and appends to command's redirect list
+ *   - Handles memory allocation failures gracefully
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok)
 {
 	t_redir	*new_redirect;
@@ -17,7 +35,25 @@ void	ft_parser_add_redirect(t_cmd_node *cmd_data, t_token *redirect_tok)
 	append_redir_to_list(cmd_data, new_redirect);
 }
 
-// Creates and populates a new redirection node from a token.
+/*
+ * FUNCTION: create_redir_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates and populates a new redirection node from a token
+ *
+ * PARAMETERS
+ *   @redir_tok: Token representing the redirection operator
+ *
+ * RETURN VALUE
+ *   Pointer to new redirection node, or NULL on allocation failure
+ *
+ * NOTES
+ *   - Extracts filename from next token in sequence
+ *   - Handles heredoc content duplication if applicable
+ *   - Initializes file descriptor to -1 (unassigned)
+ *   - Memory must be freed by caller
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 t_redir	*create_redir_node(t_token *redir_tok)
 {
 	t_redir	*new_redirect;
@@ -43,7 +79,25 @@ t_redir	*create_redir_node(t_token *redir_tok)
 	return (new_redirect);
 }
 
-// Appends a new redirection node to the end of the list in cmd_data.
+/*
+ * FUNCTION: append_redir_to_list
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Appends a new redirection node to the end of the list in cmd_data
+ *
+ * PARAMETERS
+ *   @cmd_data: Command node containing redirection list
+ *   @new_redirect: New redirection node to append
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Handles empty list case by setting head pointer
+ *   - Traverses to end of list for non-empty cases
+ *   - Maintains linked list structure integrity
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	append_redir_to_list(t_cmd_node *cmd_data, t_redir *new_redirect)
 {
 	t_redir	*last;

@@ -1,5 +1,24 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: is_valid_identifier
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Validate if a string is a valid shell variable identifier
+ *
+ * PARAMETERS
+ *   @str: String to validate
+ *
+ * RETURN VALUE
+ *   1 if valid identifier, 0 if invalid
+ *
+ * NOTES
+ *   - Valid identifiers start with letter or underscore
+ *   - Subsequent characters can be alphanumeric or underscore
+ *   - Empty strings are invalid
+ *   - Follows POSIX shell identifier rules
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	is_valid_identifier(char *str)
 {
 	int	i;
@@ -18,6 +37,26 @@ static int	is_valid_identifier(char *str)
 	return (1);
 }
 
+/*
+ * FUNCTION: ft_builtin_unset
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Remove environment variables from the shell's environment
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing environment list
+ *   @args: Array of variable names to remove
+ *
+ * RETURN VALUE
+ *   0 on success, 1 if msdata is NULL, 2 for invalid options
+ *
+ * NOTES
+ *   - Validates each variable name before removal
+ *   - Silently ignores invalid identifiers
+ *   - Rejects options starting with '-' (except empty string)
+ *   - Continues processing remaining arguments even if some fail
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_builtin_unset(t_minishell *msdata, char **args)
 {
 	int	i;

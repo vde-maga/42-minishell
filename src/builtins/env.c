@@ -1,5 +1,25 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_builtin_env
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Display all environment variables with their values
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing environment list
+ *   @args: Array of arguments (should be empty for env command)
+ *
+ * RETURN VALUE
+ *   0 on success, 127 if arguments provided
+ *
+ * NOTES
+ *   - Only displays variables that have values (has_value = true)
+ *   - Prints in format "variable=value" one per line
+ *   - Rejects any arguments (unlike some env implementations)
+ *   - Preserves original order from environment list
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_builtin_env(t_minishell *msdata, char **args)
 {
 	t_env	*current;

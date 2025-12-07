@@ -17,6 +17,25 @@ static t_env	*ft_init_minimal_env(void)
 	return (head);
 }
 
+/*
+ * FUNCTION: ft_get_env_list
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Convert external environment array to internal linked list format
+ *
+ * PARAMETERS
+ *   @envp: External environment array (from main function)
+ *
+ * RETURN VALUE
+ *   Pointer to environment list head, or NULL on error
+ *
+ * NOTES
+ *   - Creates minimal environment if envp is NULL/empty
+ *   - Converts "VAR=value" strings to internal t_env nodes
+ *   - Cleans up on allocation failure
+ *   - Memory allocation responsibility: caller owns the list
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 t_env	*ft_get_env_list(char **envp)
 {
 	t_env	*head;
@@ -42,6 +61,25 @@ t_env	*ft_get_env_list(char **envp)
 	return (head);
 }
 
+/*
+ * FUNCTION: ft_get_env_var
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Search environment list for a variable by name
+ *
+ * PARAMETERS
+ *   @env_list: Head of environment variable list
+ *   @var_name: Name of variable to find
+ *
+ * RETURN VALUE
+ *   Pointer to environment node if found, NULL if not found
+ *
+ * NOTES
+ *   - Performs linear search through linked list
+ *   - Returns pointer to actual node (not a copy)
+ *   - Used by variable expansion and builtin commands
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 t_env	*ft_get_env_var(t_env *env_list, char *var_name)
 {
 	t_env	*current;

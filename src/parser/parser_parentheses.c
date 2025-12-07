@@ -1,12 +1,48 @@
 #include "minishell.h"
 #include "parser.h"
 
+/*
+ * FUNCTION: ft_restore_chain
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Restores the token chain after temporarily breaking it for parsing
+ *
+ * PARAMETERS
+ *   @before_close: Token that should point to closing parenthesis
+ *   @closing_paren: The closing parenthesis token
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Used to maintain token list integrity after subshell parsing
+ *   - Handles NULL case safely
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static void	ft_restore_chain(t_token *before_close, t_token *closing_paren)
 {
 	if (before_close)
 		before_close->next = closing_paren;
 }
 
+/*
+ * FUNCTION: find_matching_paren
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Finds the matching closing parenthesis for an opening parenthesis
+ *
+ * PARAMETERS
+ *   @tokens: Token list starting with TOKEN_LPAREN
+ *
+ * RETURN VALUE
+ *   Pointer to matching TOKEN_RPAREN, or NULL if not found
+ *
+ * NOTES
+ *   - Handles nested parentheses correctly
+ *   - Returns NULL for mismatched parentheses
+ *   - Uses paren counting to track nesting level
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static t_token	*find_matching_paren(t_token *tokens)
 {
 	t_token	*closing_paren;
@@ -28,6 +64,27 @@ static t_token	*find_matching_paren(t_token *tokens)
 	return (closing_paren);
 }
 
+/*
+ * FUNCTION: build_subshell_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates a subshell node and parses the content inside parentheses
+ *
+ * PARAMETERS
+ *   @content_start: First token inside parentheses
+ *   @before_close: Token before closing parenthesis
+ *   @closing_paren: The closing parenthesis token
+ *
+ * RETURN VALUE
+ *   Pointer to subshell node, or NULL on failure
+ *
+ * NOTES
+ *   - Creates NODE_SUBSHELL type parser node
+ *   - Recursively parses content as left child
+ *   - Restores token chain on failure using comma operator
+ *   - Memory cleanup handled on failure path
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static t_parser_node	*build_subshell_node(t_token *content_start,
 		t_token *before_close, t_token *closing_paren)
 {
@@ -46,8 +103,24 @@ static t_parser_node	*build_subshell_node(t_token *content_start,
 }
 
 /*
- * Handles parentheses by finding matching closing parenthesis and
- * parsing content inside as a subshell.
+ * FUNCTION: ft_parser_handle_parentheses
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handles parentheses by finding matching closing parenthesis and
+ *   parsing content inside as a subshell
+ *
+ * PARAMETERS
+ *   @tokens: Token list starting with TOKEN_LPAREN
+ *
+ * RETURN VALUE
+ *   Pointer to subshell node, or NULL on failure
+ *
+ * NOTES
+ *   - Temporarily breaks token chain to isolate subshell content
+ *   - Restores original token chain after parsing
+ *   - Creates NODE_SUBSHELL type with parsed content as left child
+ *   - Handles mismatched parentheses gracefully
+ * ─────────────────────────────────────────────────────────────────────────
  */
 t_parser_node	*ft_parser_handle_parentheses(t_token *tokens)
 {

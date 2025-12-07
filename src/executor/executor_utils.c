@@ -1,11 +1,30 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_exec_is_builtin
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Determines if a command is a builtin function by checking against
+ *   the list of supported builtin commands
+ *
+ * PARAMETERS
+ *   @cmd: Command name to check
+ *
+ * RETURN VALUE
+ *   1 if command is a builtin, 0 otherwise
+ *
+ * NOTES
+ *   - Supports: cd, echo, pwd, export, unset, env, exit
+ *   - Case-sensitive comparison
+ *   - Returns 0 for NULL input for safety
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
 	if (!ft_strcmp(cmd, "cd") || !ft_strcmp(cmd, "echo") || !ft_strcmp(cmd,
-			"pwd") || !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset")
+		"pwd") || !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset")
 		|| !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "exit"))
 		return (1);
 	return (0);
@@ -48,6 +67,28 @@ int	ft_exec_run_secondary_builtins(t_minishell *ms_data, char **args)
 	return (-1);
 }
 
+/*
+ * FUNCTION: ft_exec_run_builtin
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes builtin commands by dispatching to appropriate handler
+ *   functions based on command type
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @args: Command arguments array (args[0] is the command name)
+ *
+ * RETURN VALUE
+ *   Exit code of builtin command (0 = success, non-zero = error)
+ *   Returns -1 if command is not a builtin
+ *
+ * NOTES
+ *   - First checks primary builtins (cd, echo, pwd, unset)
+ *   - Then checks secondary builtins (env, export, exit, .)
+ *   - Two-tier system for optimization and organization
+ *   - NULL-safe input handling
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_run_builtin(t_minishell *ms_data, char **args)
 {
 	int	exit_code;

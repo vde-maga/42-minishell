@@ -59,6 +59,29 @@ static void	ft_heredoc_child_loop(t_minishell *ms_data, char *clean_delim,
 	}
 }
 
+/*
+ * FUNCTION: ft_heredoc_child
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Child process handler for heredoc input collection
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure
+ *   clean_delim: Clean delimiter string (quotes removed)
+ *   was_quoted: Flag indicating if delimiter was quoted
+ *   pipefd: Array containing pipe file descriptors
+ *
+ * RETURN VALUE
+ *   None (function exits child process)
+ *
+ * NOTES
+ *   - Sets up heredoc-specific signal handlers
+ *   - Reads input lines until delimiter is found
+ *   - Processes variable expansion if delimiter was not quoted
+ *   - Writes processed lines to pipe for parent process
+ *   - Exits with success status after completion
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_heredoc_child(t_minishell *ms_data, char *clean_delim,
 	int was_quoted, int *pipefd)
 {

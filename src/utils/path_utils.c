@@ -55,6 +55,25 @@ char	*ft_get_variable_value_len(t_env *env, char *var_name, int len)
 	return (result);
 }
 
+/*
+ * FUNCTION: ft_path_tilde_expand
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Expands tilde (~) to home directory in file paths
+ *
+ * PARAMETERS
+ *   env: Environment list containing HOME variable
+ *   path: Path string that may start with tilde
+ *
+ * RETURN VALUE
+ *   Newly allocated string with expanded path
+ *
+ * NOTES
+ *   - Only expands ~ at start of path when followed by / or end
+ *   - Returns original path if HOME not set or tilde not at start
+ *   - Caller is responsible for freeing the returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	*ft_path_tilde_expand(t_env *env, const char *path)
 {
 	char	*home_dir;
@@ -77,6 +96,26 @@ char	*ft_path_tilde_expand(t_env *env, const char *path)
 	return (ft_strdup(path));
 }
 
+/*
+ * FUNCTION: ft_path_tilde_shorten
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Replaces home directory prefix with tilde (~) for shorter display
+ *
+ * PARAMETERS
+ *   env: Environment list containing HOME variable
+ *   path: Full path string that may start with home directory
+ *
+ * RETURN VALUE
+ *   Newly allocated string with shortened path
+ *
+ * NOTES
+ *   - Only replaces exact HOME directory prefix
+ *   - Returns original path if HOME not set or not a prefix
+ *   - Used for prompt display to show compact paths
+ *   - Caller is responsible for freeing the returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	*ft_path_tilde_shorten(t_env *env, const char *path)
 {
 	char	*home_dir;

@@ -1,5 +1,25 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_get_target_dir
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Determine the target directory for cd command, handling special cases
+ *
+ * PARAMETERS
+ *   @data: Minishell structure containing environment list
+ *   @arg: Directory argument or NULL
+ *
+ * RETURN VALUE
+ *   Pointer to target directory string, or NULL on error
+ *
+ * NOTES
+ *   - Handles "~" and "--" as HOME directory
+ *   - Handles "-" as previous directory (OLDPWD) and prints the path
+ *   - Returns original arg if no special case matches
+ *   - Does not free returned strings - they point to env values or original arg
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static char	*ft_get_target_dir(t_minishell *data, char *arg)
 {
 	t_env	*env;
@@ -22,6 +42,26 @@ static char	*ft_get_target_dir(t_minishell *data, char *arg)
 	return (arg);
 }
 
+/*
+ * FUNCTION: ft_cd_update_env
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Update PWD and OLDPWD environment variables after directory change
+ *
+ * PARAMETERS
+ *   @data: Minishell structure containing environment list
+ *   @old_pwd_val: Previous working directory path
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error
+ *
+ * NOTES
+ *   - Sets OLDPWD to the previous directory if provided
+ *   - Gets current directory using getcwd() and sets PWD
+ *   - Frees the allocated new_pwd_val before returning
+ *   - Memory allocation responsibility: caller must free old_pwd_val
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
 {
 	char	*new_pwd_val;
@@ -39,6 +79,25 @@ static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_builtin_cd
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Change the current working directory and update PWD and OLDPWD environment variables
+ *
+ * PARAMETERS
+ *   @data: Minishell structure containing environment list
+ *   @args: Array of arguments where args[1] is the target directory
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error, 2 if too many arguments
+ *
+ * NOTES
+ *   - Handles special cases: "~", "--" (HOME), "-" (OLDPWD)
+ *   - Updates PWD and OLDPWD environment variables after successful directory change
+ *   - Frees allocated memory for old_pwd before returning
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_builtin_cd(t_minishell *data, char **args)
 {
 	char	*target_dir;

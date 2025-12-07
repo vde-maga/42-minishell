@@ -11,6 +11,26 @@ static void	ft_prompt_append(char *p, const char *s)
 	ft_strlcat(p, s, PATH_MAX + 32);
 }
 
+/*
+ * FUNCTION: ft_prompt_print_default
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates and displays the default shell prompt with colors and current directory
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing environment and cwd
+ *   prompt: Buffer to store the formatted prompt string
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Displays colored "minishell$>" prefix
+ *   - Shows shortened current working directory in blue
+ *   - Uses tilde (~) for home directory when possible
+ *   - Ends with green ">" prompt character
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_prompt_print_default(t_minishell *ms_data, char *prompt)
 {
 	char	*short_cwd;
@@ -32,6 +52,24 @@ void	ft_prompt_print_default(t_minishell *ms_data, char *prompt)
 	ft_prompt_append(prompt, " ");
 }
 
+/*
+ * FUNCTION: ft_prompt_print_incomplete
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates and displays the continuation prompt for incomplete commands
+ *
+ * PARAMETERS
+ *   prompt: Buffer to store the formatted prompt string
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Shows simple yellow ">" character for line continuation
+ *   - Used when command spans multiple lines (unclosed quotes, etc.)
+ *   - Minimal design to distinguish from main prompt
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_prompt_print_incomplete(char *prompt)
 {
 	ft_prompt_clear(prompt);

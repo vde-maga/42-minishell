@@ -29,6 +29,24 @@ static void	process_input_loop(t_minishell *ms_data, int *lexer_result)
 	handle_lexer_error(ms_data, *lexer_result);
 }
 
+/*
+ * FUNCTION: execute_command
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes the parsed command by processing heredocs and running pipeline
+ *
+ * PARAMETERS
+ *   ms_data: Minishell data structure containing tokens and parser
+ *
+ * RETURN VALUE
+ *   None (void function)
+ *
+ * NOTES
+ *   - Collects heredoc content before execution
+ *   - Only processes non-empty commands
+ *   - Coordinates expansion, parsing, and execution phases
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static void	execute_command(t_minishell *ms_data)
 {
 	ft_collect_heredocs(ms_data);
@@ -36,6 +54,27 @@ static void	execute_command(t_minishell *ms_data)
 		ft_line_ready(ms_data);
 }
 
+/*
+ * FUNCTION: main
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main entry point for the minishell program
+ *
+ * PARAMETERS
+ *   ac: Argument count from command line
+ *   av: Argument vector from command line
+ *   envp: Environment variables from parent process
+ *
+ * RETURN VALUE
+ *   EXIT_SUCCESS on normal termination, other values on error
+ *
+ * NOTES
+ *   - Handles -c flag for command execution without interactive mode
+ *   - Initializes shell environment and signal handlers
+ *   - Main loop reads input, tokenizes, and executes commands
+ *   - Cleans up resources before exit
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms_data;

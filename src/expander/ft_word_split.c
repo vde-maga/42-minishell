@@ -2,6 +2,25 @@
 
 // ft_count_words is now implemented in utils/string_utils.c
 
+/*
+ * FUNCTION: ft_extract_word
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Extract next word from string starting at given position
+ *
+ * PARAMETERS
+ *   @str: Source string to extract word from
+ *   @pos: Position pointer (updated to after extracted word)
+ *
+ * RETURN VALUE
+ *   Newly allocated word string, or NULL on allocation failure
+ *
+ * NOTES
+ *   - Skips leading whitespace before extraction
+ *   - Updates position pointer to point after extracted word
+ *   - Memory allocation responsibility: caller must free returned string
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static char	*ft_extract_word(char *str, int *pos)
 {
 	int		start;
@@ -23,6 +42,26 @@ static char	*ft_extract_word(char *str, int *pos)
 	return (word);
 }
 
+/*
+ * FUNCTION: fill_words
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Fill word array by extracting words from string
+ *
+ * PARAMETERS
+ *   @words: Pre-allocated array to fill with word strings
+ *   @str: Source string to extract words from
+ *   @count: Number of words to extract
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on memory allocation failure
+ *
+ * NOTES
+ *   - Cleans up allocated memory on failure
+ *   - Uses position pointer to track extraction progress
+ *   - Memory allocation responsibility: function manages word string allocation
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	fill_words(char **words, char *str, int count)
 {
 	int	i;
@@ -44,6 +83,24 @@ static int	fill_words(char **words, char *str, int count)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_word_split
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Split a string into words based on whitespace delimiters
+ *
+ * PARAMETERS
+ *   @str: String to split into words
+ *
+ * RETURN VALUE
+ *   Array of word strings, or NULL on error/empty input
+ *
+ * NOTES
+ *   - Uses space, tab, and newline as delimiters
+ *   - Returns NULL-terminated array of strings
+ *   - Memory allocation responsibility: caller must free array and strings
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 char	**ft_word_split(char *str)
 {
 	char	**words;

@@ -1,6 +1,25 @@
 #include "export_helpers.h"
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_handle_export_no_equal
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle export argument without '=' (variable name only)
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing environment list
+ *   @arg: Variable name to export
+ *
+ * RETURN VALUE
+ *   0 on success, 1 if invalid identifier
+ *
+ * NOTES
+ *   - Validates identifier format before adding to environment
+ *   - Sets variable with NULL value (exported but no value)
+ *   - Error message printed to stderr for invalid identifiers
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	ft_handle_export_no_equal(t_minishell *msdata, char *arg)
 {
 	if (!ft_is_valid_identifier(arg))
@@ -13,6 +32,26 @@ static int	ft_handle_export_no_equal(t_minishell *msdata, char *arg)
 	return (ft_set_env_var(&msdata->env_list, arg, NULL));
 }
 
+/*
+ * FUNCTION: ft_handle_export_with_equal
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Handle export argument with '=' (variable assignment)
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing environment list
+ *   @arg: Variable assignment string in format "name=value"
+ *
+ * RETURN VALUE
+ *   0 on success, 1 on error (memory allocation or invalid identifier)
+ *
+ * NOTES
+ *   - Extracts variable name and value from argument
+ *   - Removes quotes from value before assignment
+ *   - Frees allocated memory for var_name and value before returning
+ *   - Memory allocation responsibility: function frees its own allocations
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	ft_handle_export_with_equal(t_minishell *msdata, char *arg)
 {
 	char	*equal_sign;
@@ -57,6 +96,26 @@ static int	ft_process_export_arg(t_minishell *msdata, char *arg)
 	return (ft_handle_export_with_equal(msdata, arg));
 }
 
+/*
+ * FUNCTION: ft_builtin_export
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Set or export environment variables, or display all exported variables
+ *
+ * PARAMETERS
+ *   @msdata: Minishell structure containing environment list
+ *   @args: Array of arguments where args[1+] are variables to export
+ *
+ * RETURN VALUE
+ *   0 on success, non-zero on error (preserves last error status)
+ *
+ * NOTES
+ *   - With no arguments, displays all exported variables in sorted order
+ *   - Handles variable assignment with and without values
+ *   - Supports append operation with "+=" syntax
+ *   - Invalid identifiers cause error but processing continues for other args
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_builtin_export(t_minishell *msdata, char **args)
 {
 	int	status;

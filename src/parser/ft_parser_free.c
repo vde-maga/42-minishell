@@ -2,6 +2,25 @@
 #include "minishell.h"
 
 // Recursively frees the entire parser node tree.
+/*
+ * FUNCTION: ft_parser_free
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Recursively free the entire parser AST tree
+ *
+ * PARAMETERS
+ *   @node: Root node of parser tree to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Uses post-order traversal to free children before parent
+ *   - Frees command data if present
+ *   - Safely handles NULL input
+ *   - Memory allocation responsibility: function manages entire tree cleanup
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_parser_free(t_parser_node *node)
 {
 	if (!node)
@@ -16,6 +35,24 @@ void	ft_parser_free(t_parser_node *node)
 }
 
 // Frees the contents of a command node (args, redirections).
+/*
+ * FUNCTION: ft_parser_free_cmd_data
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free command node data including arguments and redirections
+ *
+ * PARAMETERS
+ *   @cmd_data: Command node structure to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Frees argument array and redirection list
+ *   - Safely handles NULL input
+ *   - Memory allocation responsibility: function manages command data cleanup
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_parser_free_cmd_data(t_cmd_node *cmd_data)
 {
 	if (!cmd_data)
@@ -27,6 +64,24 @@ void	ft_parser_free_cmd_data(t_cmd_node *cmd_data)
 	free(cmd_data);
 }
 
+/*
+ * FUNCTION: free_redir_list
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free an entire redirection list
+ *
+ * PARAMETERS
+ *   @list: Head of redirection list to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Uses generic linked list freer with redirection-specific cleanup
+ *   - Safely handles NULL input
+ *   - Memory allocation responsibility: function manages entire list cleanup
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	free_redir_list(t_redir *list)
 {
 	if (!list)

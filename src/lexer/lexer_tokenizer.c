@@ -89,6 +89,24 @@ static int	ft_lex_add_operator(t_lexer *lexer)
 	return (1);
 }
 
+/*
+ * FUNCTION: ft_lexer_tokenize
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Main tokenization function that processes input string and creates tokens
+ *
+ * PARAMETERS
+ *   lexer: Lexer structure containing input string and position information
+ *
+ * RETURN VALUE
+ *   1 on success, 0 on error, 2 on specific error condition
+ *
+ * NOTES
+ *   - Iterates through input string, identifying operators and words
+ *   - Handles spaces, operators, and word tokens
+ *   - Returns specific error codes for different failure scenarios
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_lexer_tokenize(t_lexer *lexer)
 {
 	int	r;

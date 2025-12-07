@@ -1,5 +1,22 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_free_word_array
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Free an array of word strings
+ *
+ * PARAMETERS
+ *   @words: Array of strings to free
+ *
+ * RETURN VALUE
+ *   None
+ *
+ * NOTES
+ *   - Frees each string in the array and the array itself
+ *   - Handles NULL input gracefully
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static void	ft_free_word_array(char **words)
 {
 	int	i;
@@ -15,6 +32,27 @@ static void	ft_free_word_array(char **words)
 	free(words);
 }
 
+/*
+ * FUNCTION: ft_replace_token_with_split
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Replace a single token with a chain of word tokens
+ *
+ * PARAMETERS
+ *   @head: Pointer to token list head
+ *   @prev: Previous token in list
+ *   @current: Current token to replace
+ *   @words: Array of words to create tokens from
+ *
+ * RETURN VALUE
+ *   Pointer to last new token, or NULL on error
+ *
+ * NOTES
+ *   - Builds token chain from words and links into list
+ *   - Frees the original token after replacement
+ *   - Memory allocation responsibility: modifies token list in place
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static t_token	*ft_replace_token_with_split(t_token **head,
 		t_token *prev, t_token *current, char **words)
 {
@@ -31,6 +69,27 @@ static t_token	*ft_replace_token_with_split(t_token **head,
 	return (last);
 }
 
+/*
+ * FUNCTION: ft_apply_word_splitting
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Apply word splitting by replacing token with multiple word tokens
+ *
+ * PARAMETERS
+ *   @head: Pointer to token list head
+ *   @prev: Previous token in list
+ *   @current: Current token to replace
+ *   @words: Array of words to create tokens from
+ *
+ * RETURN VALUE
+ *   1 on success, -1 on error
+ *
+ * NOTES
+ *   - Removes current token and replaces with word tokens
+ *   - Handles empty word arrays by removing token entirely
+ *   - Memory allocation responsibility: modifies token list in place
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_apply_word_splitting(t_token **head, t_token *prev,
 		t_token *current, char **words)
 {

@@ -1,5 +1,25 @@
 #include "minishell.h"
 
+/*
+ * FUNCTION: ft_exec_apply_redirects
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Applies all redirections associated with a command by iterating
+ *   through the redirection list and processing each one
+ *
+ * PARAMETERS
+ *   @cmd: Command node containing the list of redirections to apply
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on error (redirection failure)
+ *
+ * NOTES
+ *   - Processes redirections in order (important for multiple redirects)
+ *   - Handles input (<), output (>), append (>>), and heredoc (<<) redirects
+ *   - Early termination on first redirection failure
+ *   - File descriptor management handled by ft_process_redir
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_apply_redirects(t_cmd_node *cmd)
 {
 	t_redir	*redir;
@@ -16,6 +36,26 @@ int	ft_exec_apply_redirects(t_cmd_node *cmd)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exec_save_standard_fds
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Saves the current standard input and output file descriptors
+ *   so they can be restored later (typically after builtin execution)
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure to store the saved file descriptors
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on error (dup() failure)
+ *
+ * NOTES
+ *   - Uses dup() to create copies of STDIN_FILENO and STDOUT_FILENO
+ *   - Stores saved descriptors in ms_data structure
+ *   - Proper cleanup on error (closes any successfully duplicated fds)
+ *   - Critical for builtin commands with redirections
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_save_standard_fds(t_minishell *ms_data)
 {
 	ms_data->saved_stdin = dup(STDIN_FILENO);
@@ -34,6 +74,27 @@ int	ft_exec_save_standard_fds(t_minishell *ms_data)
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exec_restore_standard_fds
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Restores previously saved standard input and output file descriptors
+ *   to their original state
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing the saved file descriptors
+ *
+ * RETURN VALUE
+ *   void
+ *
+ * NOTES
+ *   - Uses dup2() to restore original file descriptors
+ *   - Closes saved descriptors after restoration
+ *   - Resets saved descriptor values to -1 (invalid)
+ *   - Safe to call even if no descriptors were saved
+ *   - Essential for builtin commands with redirections
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 void	ft_exec_restore_standard_fds(t_minishell *ms_data)
 {
 	if (ms_data->saved_stdin >= 0)

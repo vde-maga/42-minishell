@@ -69,6 +69,30 @@ static void	ft_exec_pipe_wait(pid_t pid1, pid_t pid2, t_minishell *ms_data)
 	ft_signals_handle_signals();
 }
 
+/*
+ * FUNCTION: ft_exec_pipe_fork_children
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Creates and manages child processes for pipe execution with proper
+ *   cleanup and error handling
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @node: AST node representing the pipe operation
+ *   @pipefd: Array containing pipe file descriptors
+ *
+ * RETURN VALUE
+ *   0 on success, -1 on error
+ *
+ * NOTES
+ *   - Blocks signals during critical fork operations
+ *   - Forks left child process first, then right child
+ *   - Handles fork failure by killing first child and cleaning up
+ *   - Closes pipe ends in parent after both children are created
+ *   - Waits for both children to complete and handles their exit status
+ *   - Memory and resource cleanup on all error paths
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	t_parser_node *node, int pipefd[2])
 {
@@ -96,6 +120,29 @@ static int	ft_exec_pipe_fork_children(t_minishell *ms_data,
 	return (0);
 }
 
+/*
+ * FUNCTION: ft_exec_pipe_node
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Executes pipe operations by creating a pipe and forking child processes
+ *   for left and right sides of the pipe with proper I/O redirection
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment and state
+ *   @node: AST node representing the pipe operation with left and right children
+ *
+ * RETURN VALUE
+ *   Exit code of the pipe operation (0 = success, non-zero = error)
+ *
+ * NOTES
+ *   - Creates pipe with pipe() system call
+ *   - Forks two child processes for left and right commands
+ *   - Left child writes to pipe, right child reads from pipe
+ *   - Handles signal blocking during critical sections
+ *   - Proper cleanup of pipe file descriptors
+ *   - Error handling sets appropriate exit codes
+ * ─────────────────────────────────────────────────────────────────────────
+ */
 int	ft_exec_pipe_node(t_minishell *ms_data, t_parser_node *node)
 {
 	int	pipefd[2];
