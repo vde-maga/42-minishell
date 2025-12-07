@@ -16,10 +16,11 @@ static void	process_word_chars(t_lexer *lexer, int *in_s, int *in_d)
 {
 	char	c;
 
-	while (lexer->pos < lexer->len && lexer->input[lexer->pos]
-		&& ft_isprint_byte((int)lexer->input[lexer->pos]))
+	while (lexer->pos < lexer->len && lexer->input[lexer->pos])
 	{
 		c = lexer->input[lexer->pos];
+		if (!ft_isprint_byte((int)c) && c != '\t')
+			break ;
 		if (c == '\'' || c == '"')
 		{
 			handle_quotes(lexer, in_s, in_d);
