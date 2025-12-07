@@ -1,4 +1,15 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
+
+int	ft_check_operator(t_token *token)
+{
+	if (!token->next)
+		return (-1);
+	if (ft_is_operator(token->next->type))
+		return (-1);
+	if (token->next->type == TOKEN_EOF)
+		return (-1);
+	return (1);
+}
 
 void	ft_lexer_skip_spaces(t_lexer *lexer)
 {

@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "wildcard.h"
 
 static int	ft_is_heredoc_delim(t_minishell *msdata, t_token *current)
 {
@@ -65,7 +64,7 @@ static int	ft_expand_tilde_in_token(t_env *env, t_token *current)
 }
 
 int	ft_process_token_expansion(t_minishell *msdata, t_env *env,
-		t_token **head, t_token *prev, t_token *current)
+		t_token *prev, t_token *current)
 {
 	int	is_heredoc_delim;
 	int	var_expanded;
@@ -82,7 +81,7 @@ int	ft_process_token_expansion(t_minishell *msdata, t_env *env,
 		return (-1);
 	if (ft_remove_quotes_from_token(current) < 0)
 		return (-1);
-	wildcard_result = ft_expand_wildcards(head, prev, current);
+	wildcard_result = ft_expand_wildcards(&msdata->tokens, prev, current);
 	if (wildcard_result < 0)
 		return (-1);
 	if (had_unquoted_expand)

@@ -69,10 +69,7 @@ char	*ft_heredoc_readline(int fd)
 			return (line);
 		}
 		if (c == '\n')
-		{
-			line = ft_readline_append(line, c);
-			return (line);
-		}
+			return (ft_readline_append(line, c));
 		line = ft_readline_append(line, c);
 		if (!line)
 			return (NULL);

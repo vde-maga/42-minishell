@@ -76,6 +76,7 @@ int	ft_expand_wildcards(t_token **head, t_token *prev, t_token *current)
 {
 	char	**matches;
 	int		count;
+	int		result;
 
 	(void)head;
 	(void)prev;
@@ -88,11 +89,7 @@ int	ft_expand_wildcards(t_token **head, t_token *prev, t_token *current)
 		return (0);
 	count = ft_count_matches(matches);
 	ft_sort_matches(matches, count);
-	if (!ft_insert_tokens(current, matches, count))
-	{
-		free(matches);
-		return (0);
-	}
+	result = ft_insert_tokens(current, matches, count);
 	free(matches);
-	return (1);
+	return (result);
 }

@@ -63,36 +63,21 @@ int	ft_exec_subshell(t_minishell *ms_data, t_parser_node *node)
 
 	if (!node)
 		return (1);
-	
 	pid = fork();
 	if (pid < 0)
+		return (perror("fork"), 1);
+	if (pid == 0)
 	{
-		perror("fork");
-		return (1);
-	}
-	else if (pid == 0)
-	{
-		// Child process - execute the subshell content
 		ft_exec_node(ms_data, node);
 		exit(ft_exit_code(-1));
 	}
+	if (waitpid(pid, &status, 0) == -1)
+		return (perror("waitpid"), 1);
+	if (WIFEXITED(status))
+		ft_exit_code(WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		ft_exit_code(128 + WTERMSIG(status));
 	else
-	{
-		// Parent process - wait for child to complete
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			perror("waitpid");
-			return (1);
-		}
-		
-		// Set exit code based on child's exit status
-		if (WIFEXITED(status))
-			ft_exit_code(WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			ft_exit_code(128 + WTERMSIG(status));
-		else
-			ft_exit_code(1);
-			
-		return (ft_exit_code(-1));
-	}
+		ft_exit_code(1);
+	return (ft_exit_code(-1));
 }

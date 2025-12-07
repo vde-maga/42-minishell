@@ -12,7 +12,8 @@ static t_env	*ft_init_minimal_env(void)
 	ft_set_env_var(&head, "SHLVL", "0");
 	ft_set_env_var(&head, "_", "/usr/bin/env");
 	ft_set_env_var(&head, "OLDPWD", NULL);
-	ft_set_env_var(&head, "PATH", "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.");
+	ft_set_env_var(&head, "PATH",
+		"/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.");
 	return (head);
 }
 

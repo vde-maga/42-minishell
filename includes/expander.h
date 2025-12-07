@@ -37,7 +37,7 @@ char			**ft_word_split(char *str);
 int				ft_apply_word_splitting(t_token **head, t_token *prev,
 					t_token *current, char **words);
 int				ft_process_token_expansion(t_minishell *msdata, t_env *env,
-					t_token **head, t_token *prev, t_token *current);
+					t_token *prev, t_token *current);
 
 /* wildcard expansion */
 int				ft_expand_wildcards(t_token **head, t_token *prev,

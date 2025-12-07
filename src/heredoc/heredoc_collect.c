@@ -1,5 +1,13 @@
 #include "minishell.h"
 
+static void	ft_heredoc_eof_warning(char *delim)
+{
+	ft_putstr_fd("minishell: warning: heredoc delimited by EOF ", 2);
+	ft_putstr_fd("(wanted `", 2);
+	ft_putstr_fd(delim, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
 static char	*ft_join_heredoc_line(char *content, char *line, int was_quoted,
 	t_minishell *ms)
 {
@@ -33,13 +41,7 @@ static int	ft_read_heredoc_content_loop(t_minishell *ms, char *delim,
 			write(STDERR_FILENO, "heredoc> ", 9);
 		line = get_next_line(fileno(stdin));
 		if (!line)
-		{
-			ft_putstr_fd("minishell: warning: heredoc delimited by EOF ", 2);
-			ft_putstr_fd("(wanted `", 2);
-			ft_putstr_fd(delim, 2);
-			ft_putstr_fd("')\n", 2);
-			return (0);
-		}
+			return (ft_heredoc_eof_warning(delim), 0);
 		trimmed = ft_strtrim(line, "\n");
 		free(line);
 		if (ft_strcmp(trimmed, delim) == 0)
