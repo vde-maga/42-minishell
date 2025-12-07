@@ -82,6 +82,8 @@ static void	process_token(t_token *tokens, t_token *current,
 		prev = ft_get_token_before(tokens, current);
 		if (!prev || (prev->type != TOKEN_WORD && prev->type != TOKEN_RPAREN))
 			*error = 1;
+		if (current->next && current->next->type == TOKEN_LPAREN)
+			*error = 1;
 	}
 	else if (current->type == TOKEN_WORD)
 		*has_command = 1;

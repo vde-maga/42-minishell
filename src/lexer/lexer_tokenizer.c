@@ -6,8 +6,12 @@ static int	ft_is_fd_redir(t_lexer *lexer)
 {
 	t_token	*last;
 	int		fd;
+	int		prev_idx;
 
 	if (!lexer->tokens)
+		return (-1);
+	prev_idx = lexer->pos - 1;
+	if (prev_idx < 0 || !ft_isdigit((int)lexer->input[prev_idx]))
 		return (-1);
 	last = lexer->tokens;
 	while (last->next)

@@ -9,7 +9,7 @@ static int	ft_init_shlvl_calculate(int current_shlvl)
 {
 	int	new_shlvl;
 
-	new_shlvl = current_shlvl + 1;
+	new_shlvl = current_shlvl;
 	if (new_shlvl >= 1000)
 	{
 		ft_putstr_fd("minishell: warning: shell level (", 2);
