@@ -9,7 +9,8 @@ void	ft_lexer_free(t_lexer *lexer)
 	free(lexer);
 }
 
-// ft_token_free is now implemented as ft_free_token_node in utils/string_utils.c
+// ft_token_free is now implemented as ft_free_token_node
+// in utils/string_utils.c
 
 void	ft_tokens_free(t_token *tokens)
 {

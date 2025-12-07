@@ -1,19 +1,7 @@
 #include "../../includes/minishell.h"
 
-static int	process_c_command(t_minishell *ms_data, char *cmd_str)
+static int	handle_lexer_error(t_minishell *ms_data, int lexer_result)
 {
-	int	lexer_result;
-
-	if (!cmd_str || cmd_str[0] == '\0')
-		return (0);
-	lexer_result = ft_lexer(ms_data, cmd_str);
-	while (lexer_result == 0)
-	{
-		get_str_readline(ms_data, 2);
-		if (ms_data->input_line == NULL)
-			break ;
-		lexer_result = ft_lexer(ms_data, ms_data->input_line);
-	}
 	if (lexer_result == -1)
 		return (-1);
 	ft_expander(ms_data, ms_data->env_list);
@@ -32,6 +20,37 @@ static int	process_c_command(t_minishell *ms_data, char *cmd_str)
 	return (0);
 }
 
+static int	process_c_command(t_minishell *ms_data, char *cmd_str)
+{
+	int	lexer_result;
+
+	if (!cmd_str || cmd_str[0] == '\0')
+		return (0);
+	lexer_result = ft_lexer(ms_data, cmd_str);
+	while (lexer_result == 0)
+	{
+		get_str_readline(ms_data, 2);
+		if (ms_data->input_line == NULL)
+			break ;
+		lexer_result = ft_lexer(ms_data, ms_data->input_line);
+	}
+	return (handle_lexer_error(ms_data, lexer_result));
+}
+
+static int	process_commands(t_minishell *ms_data, char **commands)
+{
+	int	i;
+
+	i = 0;
+	while (commands[i])
+	{
+		if (process_c_command(ms_data, commands[i]) == -1)
+			break ;
+		i++;
+	}
+	return (i);
+}
+
 int	ft_debug_c_flag(t_minishell *ms_data, char *cmd_string)
 {
 	char	**commands;
@@ -45,15 +64,9 @@ int	ft_debug_c_flag(t_minishell *ms_data, char *cmd_string)
 		ft_putstr_fd("minishell: -c: memory allocation error\n", 2);
 		return (1);
 	}
-	i = 0;
-	while (commands[i])
-	{
-		if (process_c_command(ms_data, commands[i]) == -1)
-			break ;
-		i++;
-	}
+	i = process_commands(ms_data, commands);
 	ft_free_str_arrays(commands);
-	return (ft_exit_code(-1));
+	return (ft_exit_code(i));
 }
 
 int	ft_debug_main_with_c_flag(int argc, char **argv, char **envp)

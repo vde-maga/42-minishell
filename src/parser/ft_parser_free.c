@@ -27,7 +27,6 @@ void	ft_parser_free_cmd_data(t_cmd_node *cmd_data)
 	free(cmd_data);
 }
 
-
 void	free_redir_list(t_redir *list)
 {
 	if (!list)

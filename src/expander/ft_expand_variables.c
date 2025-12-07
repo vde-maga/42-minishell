@@ -50,17 +50,12 @@ static int	ft_expand_and_split_token(t_minishell *msdata, t_env *env,
 	var_expanded = ft_process_token_expansion(msdata, env, prev, current);
 	if (var_expanded < 0)
 		return (-1);
-	
-	// Apply wildcard expansion after variable expansion
 	if (ft_expand_wildcards(&msdata->tokens, prev, current))
 	{
-		// After wildcard expansion, we need to restart from the beginning
-		// of the token list as it may have changed
 		*curr_ptr = msdata->tokens;
 		*prev_ptr = NULL;
 		return (1);
 	}
-	
 	if (ft_should_apply_word_split(current, var_expanded))
 		return (ft_handle_word_split(msdata, prev, current, curr_ptr));
 	*prev_ptr = current;

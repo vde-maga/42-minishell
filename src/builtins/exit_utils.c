@@ -49,4 +49,5 @@ int	ft_is_properly_quoted(char *arg)
 	return (1);
 }
 
-// This function is now implemented in utils/string_utils.c as ft_count_array_elements
+// This function is now implemented in utils/string_utils.c
+// as ft_count_array_elements
