@@ -48,5 +48,7 @@ void	ft_free_redir_node(void *redir)
 		free(r->filename);
 	if (r->heredoc_content)
 		free(r->heredoc_content);
+	if (r->fd > 2)
+		close(r->fd);
 	free(r);
 }

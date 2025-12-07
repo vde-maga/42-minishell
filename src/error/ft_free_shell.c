@@ -1,47 +1,16 @@
 #include <minishell.h>
-
-void	ft_free_str_arrays(char **str)
-{
-	int	i;
-
-	if (!str)
-		return ;
-	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-}
+#include "free_helpers.h"
 
 void	ft_free_shell(t_minishell *ms_data, int is_child)
 {
 	if (!ms_data)
 		return ;
-	if (ms_data->env)
-	{
-		ft_free_str_arrays(ms_data->env);
-		ms_data->env = NULL;
-	}
-	if (ms_data->input_line)
-	{
-		free(ms_data->input_line);
-		ms_data->input_line = NULL;
-	}
-	if (ms_data->input)
-	{
-		free(ms_data->input);
-		ms_data->input = NULL;
-	}
+	ft_free_shell_data(ms_data);
+	ft_close_shell_fds(ms_data);
+	ft_cleanup_gnl_buffer(STDIN_FILENO);
 	ft_free_env_list(ms_data->env_list);
 	if (is_child)
-	{
-		if (ms_data->tokens)
-			ft_tokens_free(ms_data->tokens);
-		if (ms_data->parser)
-			ft_parser_free(ms_data->parser);
-	}
+		ft_free_child_resources(ms_data);
 }
 
 // Wrapper functions for backward compatibility

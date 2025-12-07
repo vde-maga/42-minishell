@@ -59,6 +59,14 @@ void	ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av)
 	ms_data->input = NULL;
 	ms_data->tokens = NULL;
 	ms_data->parser = NULL;
+	ms_data->lexer = NULL;
+	ms_data->hdc_delim = NULL;
+	ms_data->shell_pid = 0;
+	ms_data->exit_status = 0;
+	ms_data->print_flag = 0;
+	ms_data->hdc_fds[0] = -1;
+	ms_data->hdc_fds[1] = -1;
+	ms_data->parser = NULL;
 	ms_data->print_flag = 0;
 	ms_data->hdc_fds[0] = -1;
 	ms_data->hdc_fds[1] = -1;

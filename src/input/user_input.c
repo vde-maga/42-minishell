@@ -1,5 +1,21 @@
 #include "../includes/minishell.h"
 
+void	ft_cleanup_gnl_buffer(int fd)
+{
+	char	*line;
+
+	(void)fd;
+	if (isatty(STDIN_FILENO))
+		return ;
+	while (1)
+	{
+		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			break ;
+		free(line);
+	}
+}
+
 static void	get_str_non_interactive(t_minishell *ms_data, int type)
 {
 	char	*line;

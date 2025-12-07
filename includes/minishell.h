@@ -56,6 +56,7 @@ void		ft_usr_print_prompt_color(t_minishell *ms_data, int type,
 				char *prompt);
 void		ft_prompt_print_default(t_minishell *ms_data, char *prompt);
 void		ft_prompt_print_incomplete(char *prompt);
+void		ft_cleanup_gnl_buffer(int fd);
 
 // ---------------------- Init -------------------------------------------------
 void		ft_init_vars(t_minishell *ms_data, char **envp, int ac, char **av);

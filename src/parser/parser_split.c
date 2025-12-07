@@ -61,6 +61,8 @@ t_parser_node	*ft_parser_split_and_build(t_token *tokens, t_token *op)
 	}
 	if (!build_right_branch(node, op_next))
 	{
+		if (prev)
+			prev->next = op;
 		ft_parser_free(node);
 		return (NULL);
 	}

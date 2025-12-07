@@ -69,6 +69,7 @@ int	ft_exec_subshell(t_minishell *ms_data, t_parser_node *node)
 	if (pid == 0)
 	{
 		ft_exec_node(ms_data, node);
+		ft_free_shell(ms_data, 1);
 		exit(ft_exit_code(-1));
 	}
 	if (waitpid(pid, &status, 0) == -1)
