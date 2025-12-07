@@ -49,7 +49,8 @@ static void	get_str_non_interactive(t_minishell *ms_data, int type)
  * FUNCTION: get_str_readline
  * ─────────────────────────────────────────────────────────────────────────
  * PURPOSE
- *   Reads user input using readline library, handling both interactive and non-interactive modes
+ *   Reads user input using readline library,
+ *   handling both interactive and non-interactive modes
  *
  * PARAMETERS
  *   ms_data: Minishell data structure

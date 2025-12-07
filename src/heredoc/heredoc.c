@@ -18,7 +18,8 @@ int	ft_heredoc_error(char *clean_delim)
  * PARAMETERS
  *   ms_data: Minishell data structure containing heredoc file descriptors
  *   delimiter: String that marks the end of heredoc input
- *   was_quoted: Flag indicating if delimiter was quoted (affects variable expansion)
+ *   was_quoted: Flag indicating if delimiter was quoted 
+ *	             (affects variable expansion)
  *
  * RETURN VALUE
  *   File descriptor on success, -1 on error

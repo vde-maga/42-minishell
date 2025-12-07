@@ -49,7 +49,12 @@ static void	process_input_loop(t_minishell *ms_data, int *lexer_result)
  */
 static void	execute_command(t_minishell *ms_data)
 {
-	ft_collect_heredocs(ms_data);
+	if (ft_collect_heredocs(ms_data) < 0)
+	{
+		ft_tokens_free(ms_data->tokens);
+		ms_data->tokens = NULL;
+		return ;
+	}
 	if (ms_data->input_line && ms_data->input_line[0] != '\0')
 		ft_line_ready(ms_data);
 }

@@ -2,6 +2,7 @@
 
 static void	ft_heredoc_eof_warning(char *delim)
 {
+	write(STDERR_FILENO, "\n", 1);
 	ft_putstr_fd("minishell: warning: heredoc delimited by EOF ", 2);
 	ft_putstr_fd("(wanted `", 2);
 	ft_putstr_fd(delim, 2);
@@ -28,28 +29,32 @@ static char	*ft_join_heredoc_line(char *content, char *line, int was_quoted,
 	return (free(with_newline), free(content), new_content);
 }
 
-static int	ft_read_heredoc_content_loop(t_minishell *ms, char *delim,
+static int	ft_handle_heredoc_line(t_minishell *ms, char *delim,
 	int was_quoted, t_token *tok)
 {
 	char	*line;
 	char	*trimmed;
 
-	tok->heredoc_content = NULL;
-	while (1)
+	if (isatty(STDIN_FILENO))
+		write(STDERR_FILENO, "heredoc> ", 9);
+	line = get_next_line(STDIN_FILENO);
+	if (!line)
 	{
-		if (isatty(STDIN_FILENO))
-			write(STDERR_FILENO, "heredoc> ", 9);
-		line = get_next_line(STDIN_FILENO);
-		if (!line)
-			return (ft_heredoc_eof_warning(delim), 0);
-		trimmed = ft_strtrim(line, "\n");
-		free(line);
-		if (ft_strcmp(trimmed, delim) == 0)
-			return (free(trimmed), 0);
-		tok->heredoc_content = ft_join_heredoc_line(tok->heredoc_content,
-				trimmed, was_quoted, ms);
-		free(trimmed);
+		if (ft_exit_code(-1) == 130)
+		{
+			free(tok->heredoc_content);
+			tok->heredoc_content = NULL;
+			return (-1);
+		}
+		return (ft_heredoc_eof_warning(delim), 1);
 	}
+	trimmed = ft_strtrim(line, "\n");
+	free(line);
+	if (ft_strcmp(trimmed, delim) == 0)
+		return (free(trimmed), 1);
+	tok->heredoc_content = ft_join_heredoc_line(tok->heredoc_content,
+			trimmed, was_quoted, ms);
+	free(trimmed);
 	return (0);
 }
 
@@ -57,6 +62,7 @@ static int	ft_collect_single_heredoc(t_minishell *ms, t_token *heredoc_tok)
 {
 	char	*clean_delim;
 	int		was_quoted;
+	int		result;
 
 	if (!heredoc_tok->next || heredoc_tok->next->type != TOKEN_WORD)
 		return (-1);
@@ -64,8 +70,19 @@ static int	ft_collect_single_heredoc(t_minishell *ms, t_token *heredoc_tok)
 	clean_delim = ft_remove_quotes(heredoc_tok->next->value);
 	if (!clean_delim)
 		return (-1);
-	ft_read_heredoc_content_loop(ms, clean_delim, was_quoted, heredoc_tok);
+	heredoc_tok->heredoc_content = ft_strdup("");
+	if (!heredoc_tok->heredoc_content)
+		return (free(clean_delim), -1);
+	while (1)
+	{
+		result = ft_handle_heredoc_line(ms, clean_delim, was_quoted,
+				heredoc_tok);
+		if (result != 0)
+			break ;
+	}
 	free(clean_delim);
+	if (result == -1)
+		return (-1);
 	return (0);
 }
 
@@ -91,18 +108,27 @@ static int	ft_collect_single_heredoc(t_minishell *ms, t_token *heredoc_tok)
 int	ft_collect_heredocs(t_minishell *ms)
 {
 	t_token	*current;
+	int		result;
 
 	if (!ms || !ms->tokens)
 		return (0);
+	ms->in_heredoc = 1;
+	ft_signals_heredoc_collect();
 	current = ms->tokens;
+	result = 0;
 	while (current)
 	{
 		if (current->type == TOKEN_HEREDOC)
 		{
 			if (ft_collect_single_heredoc(ms, current) < 0)
-				return (-1);
+			{
+				result = -1;
+				break ;
+			}
 		}
 		current = current->next;
 	}
-	return (0);
+	ms->in_heredoc = 0;
+	ft_signals_handle_signals();
+	return (result);
 }

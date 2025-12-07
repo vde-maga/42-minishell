@@ -24,13 +24,18 @@
  */
 void	ft_signals_signal_main(int signal)
 {
+	t_minishell	*ms_data;
+
 	if (signal == SIGINT)
 	{
+		ms_data = shell_struct(NULL, 1);
 		write(2, "\n", 1);
+		ft_exit_code(130);
+		if (ms_data && ms_data->in_heredoc)
+			return ;
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		ft_exit_code(130);
 	}
 }
 
@@ -75,6 +80,18 @@ void	ft_signals_handle_signals(void)
 	struct sigaction	sa;
 
 	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = &ft_signals_signal_main;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void	ft_signals_heredoc_collect(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &ft_signals_signal_main;
 	sigaction(SIGINT, &sa, NULL);

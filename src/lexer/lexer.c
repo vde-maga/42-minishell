@@ -36,7 +36,8 @@ static void	append_token(t_token **head, t_token *new)
  * FUNCTION: ft_add_token
  * ─────────────────────────────────────────────────────────────────────────
  * PURPOSE
- *   Creates a new token with specified type and value, adds to lexer's token list
+ *   Creates a new token with specified type and value,
+ *   adds to lexer's token list
  *
  * PARAMETERS
  *   lexer: Lexer structure to which the token will be added

@@ -63,7 +63,6 @@ int	ft_heredoc_parent(pid_t pid, int *pipefd)
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	ft_signals_handle_signals();
-	ft_signals_heredoc_signal();
 	if (WIFEXITED(status))
 	{
 		exit_code = WEXITSTATUS(status);

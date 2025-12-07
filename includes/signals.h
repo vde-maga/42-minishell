@@ -11,6 +11,7 @@
 void			ft_signals_handle_signals(void);
 void			ft_signals_set_fork1_signal(void);
 void			ft_signals_block_execution(void);
+void			ft_signals_heredoc_collect(void);
 
 void			ft_signals_heredoc_signal(void);
 

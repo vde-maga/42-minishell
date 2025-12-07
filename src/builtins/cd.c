@@ -83,7 +83,8 @@ static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
  * FUNCTION: ft_builtin_cd
  * ─────────────────────────────────────────────────────────────────────────
  * PURPOSE
- *   Change the current working directory and update PWD and OLDPWD environment variables
+ *   Change the current working directory
+ *   and update PWD and OLDPWD environment variables
  *
  * PARAMETERS
  *   @data: Minishell structure containing environment list
@@ -94,7 +95,8 @@ static int	ft_cd_update_env(t_minishell *data, char *old_pwd_val)
  *
  * NOTES
  *   - Handles special cases: "~", "--" (HOME), "-" (OLDPWD)
- *   - Updates PWD and OLDPWD environment variables after successful directory change
+ *   - Updates PWD and OLDPWD environment variables
+ *     after successful directory change
  *   - Frees allocated memory for old_pwd before returning
  * ─────────────────────────────────────────────────────────────────────────
  */

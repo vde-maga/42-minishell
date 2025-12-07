@@ -14,7 +14,8 @@
  *   0 on success, negative value on error (specific to redirection type)
  *
  * NOTES
- *   - Handles input (<), output (>), force output (>), append (>>), and heredoc (<<)
+ *   - Handles input (<), output (>), force output (>),
+ *     append (>>), and heredoc (<<)
  *   - Both TOKEN_REDIRECT_OUT and TOKEN_FORCE_REDIRECT_OUT use same handler
  *   - Error codes propagate up through the execution chain
  *   - File descriptor management handled by individual handlers

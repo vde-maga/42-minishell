@@ -15,7 +15,8 @@ static void	ft_prompt_append(char *p, const char *s)
  * FUNCTION: ft_prompt_print_default
  * ─────────────────────────────────────────────────────────────────────────
  * PURPOSE
- *   Creates and displays the default shell prompt with colors and current directory
+ *   Creates and displays the default shell prompt
+ *   with colors and current directory
  *
  * PARAMETERS
  *   ms_data: Minishell data structure containing environment and cwd
