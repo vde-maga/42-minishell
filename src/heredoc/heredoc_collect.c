@@ -37,9 +37,9 @@ static int	ft_read_heredoc_content_loop(t_minishell *ms, char *delim,
 	tok->heredoc_content = NULL;
 	while (1)
 	{
-		if (isatty(fileno(stdin)))
+		if (isatty(STDIN_FILENO))
 			write(STDERR_FILENO, "heredoc> ", 9);
-		line = get_next_line(fileno(stdin));
+		line = get_next_line(STDIN_FILENO);
 		if (!line)
 			return (ft_heredoc_eof_warning(delim), 0);
 		trimmed = ft_strtrim(line, "\n");

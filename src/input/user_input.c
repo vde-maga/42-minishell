@@ -6,7 +6,7 @@ static void	get_str_non_interactive(t_minishell *ms_data, int type)
 	char	*trimmed;
 	char	*old_ref;
 
-	line = get_next_line(fileno(stdin));
+	line = get_next_line(STDIN_FILENO);
 	if (!line)
 	{
 		free(ms_data->input_line);
@@ -35,7 +35,7 @@ void	get_str_readline(t_minishell *ms_data, int type)
 	char	*old_ref;
 
 	ft_usr_print_prompt_color(ms_data, type, prompt);
-	if (!isatty(fileno(stdin)))
+	if (!isatty(STDIN_FILENO))
 	{
 		get_str_non_interactive(ms_data, type);
 		return ;

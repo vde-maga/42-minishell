@@ -47,7 +47,6 @@ static char	**ft_collect_matches(DIR *dir, t_wildcard_ctx *ctx, int count)
 	matches = ft_calloc(count + 1, sizeof(char *));
 	if (!matches)
 		return (NULL);
-	rewinddir(dir);
 	i = 0;
 	entry = readdir(dir);
 	while (entry != NULL && i < count)
@@ -62,14 +61,18 @@ static char	**ft_collect_matches(DIR *dir, t_wildcard_ctx *ctx, int count)
 	return (matches);
 }
 
-static char	**ft_process_matches(DIR *dir, t_wildcard_ctx *ctx)
+static char	**ft_process_matches(DIR **dir, t_wildcard_ctx *ctx)
 {
 	int	count;
 
-	count = ft_count_dir_matches(dir, ctx);
+	count = ft_count_dir_matches(*dir, ctx);
 	if (count == 0)
 		return (NULL);
-	return (ft_collect_matches(dir, ctx, count));
+	closedir(*dir);
+	*dir = opendir(ctx->dir_path);
+	if (!*dir)
+		return (NULL);
+	return (ft_collect_matches(*dir, ctx, count));
 }
 
 char	**ft_get_matching_files(const char *pattern)
@@ -86,8 +89,9 @@ char	**ft_get_matching_files(const char *pattern)
 		ft_free_wildcard_ctx(&ctx);
 		return (NULL);
 	}
-	matches = ft_process_matches(dir, &ctx);
-	closedir(dir);
+	matches = ft_process_matches(&dir, &ctx);
+	if (dir)
+		closedir(dir);
 	ft_free_wildcard_ctx(&ctx);
 	return (matches);
 }
