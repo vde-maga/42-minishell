@@ -52,6 +52,7 @@ static void	ft_init_vars_defaults(t_minishell *ms_data)
 	ms_data->saved_stdin = -1;
 	ms_data->saved_stdout = -1;
 	ms_data->in_heredoc = 0;
+	ms_data->in_subshell = 0;
 	ms_data->shell_pid = get_shell_pid_from_proc();
 	ft_exit_code(0);
 }

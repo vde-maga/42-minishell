@@ -6,6 +6,7 @@ static void	ft_exec_pipe_child_left(t_minishell *ms_data, t_parser_node *node,
 	int	status;
 
 	ft_signals_set_fork1_signal();
+	ms_data->in_subshell = 1;
 	close(pipefd[0]);
 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 	{
@@ -29,6 +30,7 @@ static void	ft_exec_pipe_child_right(t_minishell *ms_data, t_parser_node *node,
 	int	status;
 
 	ft_signals_set_fork1_signal();
+	ms_data->in_subshell = 1;
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 	{

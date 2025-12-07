@@ -42,5 +42,7 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 	}
 	if (ft_exec_is_builtin(cmd->args[0]))
 		return (ft_exec_builtin_with_redirects(ms_data, cmd));
+	if (ms_data->in_subshell)
+		ft_exec_child_process(ms_data, cmd);
 	return (ft_exec_fork_and_exec_external(ms_data, cmd));
 }

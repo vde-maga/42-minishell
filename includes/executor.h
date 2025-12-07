@@ -26,6 +26,7 @@ int		ft_exec_check_invalid_commands(char **args);
 int		ft_exec_handle_empty_command(t_minishell *ms_data, t_cmd_node *cmd);
 int		ft_wait_and_get_status(pid_t pid, t_minishell *ms_data);
 int		ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd);
+void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd);
 void	ft_close_heredoc_fds(t_cmd_node *cmd);
 
 //	Error

@@ -36,6 +36,7 @@ typedef struct s_minishell
 	int							print_flag;
 	int							shell_pid;
 	int							in_heredoc;
+	int							in_subshell;
 }								t_minishell;
 
 #endif
