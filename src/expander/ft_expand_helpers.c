@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_expand_helpers.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 16:31:35 by ruiferna          #+#    #+#             */
+/*   Updated: 2025/12/08 16:31:36 by ruiferna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "expander.h"
 
@@ -36,11 +48,20 @@ int	collect_or_special(const char *s, int j, char *name)
 static int	handle_dollar_quoted(t_expand_ctx *ctx, int i, int j)
 {
 	char	q;
+	char	inner_q;
 
 	q = ctx->s[j];
+	if (q == '"')
+		inner_q = '\'';
+	else
+		inner_q = '"';
 	j = i + 2;
 	while (ctx->s[j] && ctx->s[j] != q)
+	{
+		if (ctx->s[j] == inner_q)
+			append_char_free(ctx->res, '\\');
 		append_char_free(ctx->res, ctx->s[j++]);
+	}
 	if (ctx->s[j] == q)
 		j++;
 	return (j);

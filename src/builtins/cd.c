@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/08 16:28:35 by ruiferna          #+#    #+#             */
+/*   Updated: 2025/12/08 16:28:36 by ruiferna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -107,7 +119,7 @@ int	ft_builtin_cd(t_minishell *data, char **args)
 	int		status;
 
 	if (args[1] && args[2])
-		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 2);
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	target_dir = ft_get_target_dir(data, args[1]);
 	if (!target_dir)
 		return (1);
