@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:33:07 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:48:36 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 12:16:55 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ static void	process_word_chars(t_lexer *lexer, int *in_s, int *in_d)
 				|| c == '|' || c == '<' || c == '>' || c == '&'
 				|| c == '(' || c == ')'))
 			break ;
+		if (c == '\\' && !*in_s && !*in_d)
+		{
+			ft_lexer_advance(lexer);
+			if (lexer->pos < lexer->len && lexer->input[lexer->pos])
+				ft_lexer_advance(lexer);
+			continue ;
+		}
 		ft_lexer_advance(lexer);
 	}
 }
