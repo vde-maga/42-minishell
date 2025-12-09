@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_nodes_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:31:07 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:47:03 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:37:43 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd)
 	}
 	if (!ft_exec_replace_cmd_with_path(ms_data, cmd))
 		ft_handle_path_not_found(cmd->args[0], NULL, ms_data);
-	ft_update_env_var(ms_data->env_list, "_", cmd->args[0]);
 	env_array = ft_env_list_to_array(ms_data->env_list);
 	execve(cmd->args[0], cmd->args, env_array);
 	ft_handle_execve_error(cmd->args[0], env_array, ms_data);
@@ -181,4 +180,31 @@ int	ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd)
 	ft_close_heredoc_fds(cmd);
 	status = ft_exec_wait_and_get_status(pid, ms_data);
 	return (status);
+}
+
+/*
+ * FUNCTION: ft_exec_update_underscore
+ * ─────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Updates the "_" environment variable with the last argument of the
+ *   command being executed.
+ *
+ * PARAMETERS
+ *   @ms_data: Minishell data structure containing environment
+ *   @cmd: Command node containing arguments
+ *
+ * RETURN VALUE
+ *   void
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+void	ft_exec_update_underscore(t_minishell *ms_data, t_cmd_node *cmd)
+{
+	int	i;
+
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return ;
+	i = 0;
+	while (cmd->args[i + 1])
+		i++;
+	ft_update_env_var(ms_data->env_list, "_", cmd->args[i]);
 }

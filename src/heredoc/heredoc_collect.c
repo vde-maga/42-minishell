@@ -6,7 +6,7 @@
 /*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:32:04 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 11:50:23 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:13:16 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ static int	ft_collect_single_heredoc(t_minishell *ms, t_token *heredoc_tok)
 int	ft_collect_heredocs(t_minishell *ms)
 {
 	t_token	*current;
-	int		result;
 	int		stdin_backup;
+	int		result;
 
 	if (!ms || !ms->tokens)
 		return (0);
@@ -131,20 +131,13 @@ int	ft_collect_heredocs(t_minishell *ms)
 	while (current)
 	{
 		if (current->type == TOKEN_HEREDOC)
-		{
 			if (ft_collect_single_heredoc(ms, current) < 0)
-			{
 				result = -1;
-				break ;
-			}
-		}
 		current = current->next;
 	}
 	ms->in_heredoc = 0;
 	if (result == -1 && ft_exit_code(-1) == 130)
-	{
 		dup2(stdin_backup, STDIN_FILENO);
-	}
 	close(stdin_backup);
 	ft_signals_handle_signals();
 	return (result);

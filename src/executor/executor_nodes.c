@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_nodes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:31:12 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:46:59 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:37:45 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	ft_exec_cmd_node(t_minishell *ms_data, t_cmd_node *cmd)
 	}
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (ft_exec_handle_empty_command(ms_data, cmd));
+	ft_exec_update_underscore(ms_data, cmd);
 	error_code = ft_exec_check_invalid_commands(cmd->args);
 	if (error_code != 0)
 	{

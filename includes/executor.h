@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:27:57 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:43:56 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:37:45 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int		ft_wait_and_get_status(pid_t pid, t_minishell *ms_data);
 int		ft_exec_fork_and_exec_external(t_minishell *ms_data, t_cmd_node *cmd);
 void	ft_exec_child_process(t_minishell *ms_data, t_cmd_node *cmd);
 void	ft_close_heredoc_fds(t_cmd_node *cmd);
+void	ft_exec_update_underscore(t_minishell *ms_data, t_cmd_node *cmd);
 
 //	Error
 void	ft_executor_error_eacces(char *cmd_name);
