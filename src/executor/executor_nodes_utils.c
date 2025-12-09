@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_nodes_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:31:07 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/08 16:31:08 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:47:03 by vde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

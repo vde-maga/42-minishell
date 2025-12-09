@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parentheses.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:34:30 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/08 16:34:31 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:48:51 by vde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

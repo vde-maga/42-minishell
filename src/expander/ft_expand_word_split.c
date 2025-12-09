@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_word_split.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:31:50 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/08 16:31:51 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:47:42 by vde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

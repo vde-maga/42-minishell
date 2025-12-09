@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_check_valid_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:32:45 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/08 16:32:46 by ruiferna         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:48:20 by vde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
