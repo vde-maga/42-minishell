@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_helpers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:37:35 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:49:25 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:53:51 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ static void	execute_command(t_minishell *ms_data)
 {
 	if (ft_collect_heredocs(ms_data) < 0)
 	{
+		if (isatty(STDIN_FILENO) && ms_data->input_line
+			&& ms_data->input_line[0] != '\0')
+			add_history(ms_data->input_line);
 		ft_tokens_free(ms_data->tokens);
 		ms_data->tokens = NULL;
 		return ;

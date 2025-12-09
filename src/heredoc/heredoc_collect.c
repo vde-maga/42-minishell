@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_collect.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:32:04 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:47:55 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:50:23 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ static int	ft_handle_heredoc_line(t_minishell *ms, char *delim,
 	char	*line;
 	char	*trimmed;
 
-	if (isatty(STDIN_FILENO))
-		write(STDERR_FILENO, "heredoc> ", 9);
-	line = get_next_line(STDIN_FILENO);
+	line = readline("heredoc> ");
 	if (!line)
 	{
 		if (ft_exit_code(-1) == 130)
@@ -121,9 +119,11 @@ int	ft_collect_heredocs(t_minishell *ms)
 {
 	t_token	*current;
 	int		result;
+	int		stdin_backup;
 
 	if (!ms || !ms->tokens)
 		return (0);
+	stdin_backup = dup(STDIN_FILENO);
 	ms->in_heredoc = 1;
 	ft_signals_heredoc_collect();
 	current = ms->tokens;
@@ -141,6 +141,11 @@ int	ft_collect_heredocs(t_minishell *ms)
 		current = current->next;
 	}
 	ms->in_heredoc = 0;
+	if (result == -1 && ft_exit_code(-1) == 130)
+	{
+		dup2(stdin_backup, STDIN_FILENO);
+	}
+	close(stdin_backup);
 	ft_signals_handle_signals();
 	return (result);
 }

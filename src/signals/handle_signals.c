@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_signals.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:34:41 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:49:00 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:49:59 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ void	ft_signals_signal_main(int signal)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+	}
+}
+
+void	ft_signals_heredoc_handler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		write(2, "\n", 1);
+		ft_exit_code(130);
+		rl_replace_line("", 0);
+		rl_done = 1;
+		close(STDIN_FILENO);
 	}
 }
 
@@ -105,7 +117,7 @@ void	ft_signals_heredoc_collect(void)
 
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = &ft_signals_signal_main;
+	sa.sa_handler = &ft_signals_heredoc_handler;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);

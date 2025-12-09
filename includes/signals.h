@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ruiferna <ruiferna@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: ruiferna <ruiferna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:28:15 by ruiferna          #+#    #+#             */
-/*   Updated: 2025/12/09 09:44:17 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:48:29 by ruiferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void			ft_signals_handle_signals(void);
 void			ft_signals_set_fork1_signal(void);
 void			ft_signals_block_execution(void);
 void			ft_signals_heredoc_collect(void);
+void			ft_signals_heredoc_handler(int signal);
 
 void			ft_signals_heredoc_signal(void);
 
