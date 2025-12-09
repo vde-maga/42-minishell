@@ -48,5 +48,6 @@ void	ft_line_ready(t_minishell *ms_data)
 		ft_tokens_free(ms_data->tokens);
 		ms_data->tokens = NULL;
 	}
-	add_history(ms_data->input_line);
+	if (isatty(STDIN_FILENO))
+		add_history(ms_data->input_line);
 }

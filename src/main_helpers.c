@@ -18,7 +18,8 @@ static void	handle_lexer_error(t_minishell *ms_data, int lexer_result)
 {
 	if (lexer_result == -1)
 	{
-		if (ms_data->input_line && ms_data->input_line[0] != '\0')
+		if (isatty(STDIN_FILENO) && ms_data->input_line
+			&& ms_data->input_line[0] != '\0')
 			add_history(ms_data->input_line);
 		ft_exit_code(2);
 		if (!isatty(STDIN_FILENO))

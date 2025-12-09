@@ -43,6 +43,7 @@ void	ft_free_shell(t_minishell *ms_data, int is_child)
 	ft_free_env_list(ms_data->env_list);
 	if (is_child)
 		ft_free_child_resources(ms_data);
+	rl_clear_history();
 }
 
 /*
