@@ -123,4 +123,24 @@ unset MY_VAR
 
 ## Execution Flow
 
-![Execution Flow](/screenshots/chart.png)
+```mermaid
+graph TD
+    A[User Input] --> B[Lexer]
+    B --> C[Tokens]
+    C --> D[Parser]
+    D --> E[Syntactic Validation]
+    E --> F[AST Construction]
+    F --> G[Expander]
+    G --> H[Variable Expansion]
+    H --> I[Wildcard Expansion]
+    I --> J[Executor]
+    J --> K[Bultins?]
+
+    K -- Yes --> L[Execute Directly]
+    K -- No --> M[Fork + Exec]
+
+    L --> N[Update State]
+    M --> N
+
+    N --> O[Next Command]
+```
